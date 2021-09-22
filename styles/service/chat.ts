@@ -11,7 +11,7 @@ export const chatStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
     },
     emptyWrapper: {
-      width: 'calc(100% - 220px)',
+      flex: 1,
       height: '100%',
       color: theme.font.high.color,
       fontSize: theme.font.high.size,

@@ -11,8 +11,8 @@ interface IContentProps {
   userId: string
   threadMessageRef: React.RefObject<HTMLInputElement>
   threadEndRef: React.RefObject<HTMLDivElement>
-  setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   particiapntList: IUser[]
+  setThread: React.Dispatch<React.SetStateAction<IThread | null>>
 }
 
 function Content(props: IContentProps) {
@@ -38,7 +38,7 @@ function Content(props: IContentProps) {
   return (
     <div className={classes.activitybarContent}>
       <div className={classes.contentBox}>
-        <MessageBox messageInfo={messageInfo} reverse={false} setThread={setThread} particiapntList={particiapntList} target={null} />
+        <MessageBox messageInfo={messageInfo} reverse={thread.parentUser === userId} setThread={setThread} particiapntList={particiapntList} target={null} />
         {thread.messageList.length > 0 && <Boundary text={`${thread.messageList.length} replies`} />}
         {renderMessage(thread.messageList, userId, true, setThread, null, particiapntList)}
         <div ref={threadEndRef} />

@@ -7,6 +7,7 @@ import Activitybar from './activitybar/activitybar'
 import Content from './content/content'
 import Sidebar from './sidebar/sidebar'
 import Modal from '../../../items/modal/modal'
+import { fetchSet } from '../../../context/fetch'
 
 function Chat(ctx: any) {
   const { userId } = ctx
@@ -26,16 +27,25 @@ function Chat(ctx: any) {
 
   const handleModalSubmit = () => {}
 
+  const getUserList = async () => {
+    await fetchSet('/userList', 'GET', true).then((res) => {
+      if (res.code === 200) {
+        setUserList(res.user)
+      }
+    })
+  }
+
   useEffect(() => {
     setMessageList([])
 
     if (target !== null) {
-      setMessageList([
-        { chatId: '', message: '', threadList: [], time: '2021-09-12 12:35:35', user: '' },
-        { chatId: '123', message: '123', threadList: [], time: '2021-09-12 12:35:35', user: '' },
-      ])
+      //
     }
   }, [target])
+
+  useEffect(() => {
+    // getUserList()
+  }, [])
 
   return (
     <div className={classes.chat}>
@@ -45,7 +55,7 @@ function Chat(ctx: any) {
       ) : (
         <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
       )}
-      {thread !== null && <Activitybar thread={thread} userId={userId} target={target} threadEndRef={threadEndRef} setThread={setThread} />}
+      {thread !== null && <Activitybar thread={thread} userId={userId} threadMessageRef={threadMessageRef} threadEndRef={threadEndRef} setThread={setThread} particiapntList={[]} />}
       <Modal modal={modal} setModal={setModal} onSubmit={handleModalSubmit}></Modal>
     </div>
   )

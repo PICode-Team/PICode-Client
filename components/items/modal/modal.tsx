@@ -59,8 +59,8 @@ function Modal(props: IModalProps) {
           <div className={`${classes.modal} ${classes[size ?? 'md']}`}>
             {children}
             <div>
-              <CustomButton text="cancel" onClick={handleCloseModal} />
-              <CustomButton text="ok" onClick={onSubmit} />
+              <CustomButton text="cancel" onClick={handleCloseModal} color="primary" />
+              <CustomButton text="ok" onClick={onSubmit} color="secondary" />
             </div>
           </div>
           <div className={classes.overlay} onClick={handleCloseModal} />
