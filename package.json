@@ -3,14 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "ts-node --project tsconfig.server.json server/index.ts",
+    "build:next": "next build",
+    "build:server": "tsc --project tsconfig.server.json",
+    "build": "npm run build:next && npm run build:server",
+    "start": "set NODE_ENV=production && node dist/index.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^2.0.1",
+    "logger": "0.0.1",
     "next": "11.1.2",
     "next-redux-wrapper": "^7.0.5",
     "react": "17.0.2",
@@ -19,6 +26,10 @@
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/logger": "0.0.0",
     "@types/react": "17.0.21",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",
