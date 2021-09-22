@@ -72,7 +72,7 @@ Connect with PICode server, input ID and password in the vscode extension. Once 
 
 1. Install all of our npm module on terminal ( `npm i` )
 2. Create .env file (essential)
-3. Enter `PORT=portNum FE_API_URL=be_url` in the env file (essential)
+3. Enter `PORT=portNum FE_API_URL=be_url NEXT_WS_PORT=ws_port` in the env file (essential)
 4. Enter `npm run-script build` on terminal
 5. Enter `npm run-script start` on terminal
 6. Enter the url on web browser and login
