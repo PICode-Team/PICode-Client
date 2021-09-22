@@ -1,7 +1,11 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import Layout from '../components/layout'
+import Chat from '../components/service/chatspace/chat/chat'
 
 export default function Home(pageProps: any) {
-  return <Layout />
+  return (
+    <Layout {...pageProps}>
+      <Chat />
+    </Layout>
+  )
 }

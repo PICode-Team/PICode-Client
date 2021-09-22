@@ -1,7 +1,13 @@
 import { FiberManualRecord } from '@material-ui/icons'
 import { enteringStyle } from '../../../../styles/service/chat'
+import { IUser } from '../../../../types/user.types'
 
-function Entering({ typingUserList }: { typingUserList: string[] }) {
+interface IEnteringProps {
+  typingUserList: IUser[]
+}
+
+function Entering(props: IEnteringProps) {
+  const { typingUserList } = props
   const classes = enteringStyle()
 
   return (

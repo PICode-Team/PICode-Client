@@ -14,13 +14,15 @@ import {
 } from '@material-ui/icons'
 
 import { chatInputStyle } from '../../../../styles/service/chat'
+import { IChannel } from '../../../../types/chat.types'
+import { IUser } from '../../../../types/user.types'
 import Entering from './entering'
 
 interface IChatInputProps {
   messageRef: React.RefObject<HTMLInputElement>
   endRef: React.RefObject<HTMLDivElement>
-  typingUserList: string[]
-  target: string
+  typingUserList: IUser[]
+  target: IChannel
 }
 
 function ChatInput(props: IChatInputProps) {
@@ -70,7 +72,7 @@ function ChatInput(props: IChatInputProps) {
             </div>
             <div
               onClick={() => {
-                if (messageRef.current && target !== '' && messageRef.current.value !== '') {
+                if (messageRef.current && messageRef.current.value !== '') {
                   // sendMessage(target, messageRef.current.value)
                   messageRef.current.value = ''
                   endRef.current!.scrollIntoView()

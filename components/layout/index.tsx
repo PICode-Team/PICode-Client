@@ -3,7 +3,11 @@ import { layoutStyle } from '../../styles/layout/layout'
 import Sidebar from './sidebar'
 import Topbar from './topbar'
 
-function Layout() {
+interface ILayoutProps {
+  children: JSX.Element
+}
+
+function Layout(props: ILayoutProps) {
   const classes = layoutStyle()
   const [toggle, setToggle] = useState<boolean>(false)
 
@@ -16,6 +20,7 @@ function Layout() {
           <div className={classes.pageName}>
             <div></div>
           </div>
+          <div>{props.children}</div>
         </div>
       </div>
       {!toggle && (

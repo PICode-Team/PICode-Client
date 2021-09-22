@@ -1,7 +1,7 @@
 import { FavoriteBorderOutlined, SmsOutlined } from '@material-ui/icons'
 import { API_SERVER } from '../../../../constants/serverUrl'
 import { messageBoxStyle } from '../../../../styles/service/chat'
-import { IChat, IThread } from '../../../../types/chat.types'
+import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
 
 interface IMessageBox {
@@ -16,7 +16,7 @@ interface IMessageBoxProps {
   messageInfo: IMessageBox
   reverse: boolean
   setThread: React.Dispatch<React.SetStateAction<IThread | undefined>>
-  target: string
+  target: IChannel
   particiapntList: IUser[]
 }
 
@@ -75,7 +75,7 @@ function MessageBox(props: IMessageBoxProps) {
                 className={classes.interactionIcon}
                 onClick={() => {
                   setThread({
-                    chatName: target,
+                    chatName: target.chatName ?? (target.userId as string),
                     messageList: threadList,
                     parentId: chatId,
                     parentMessage: message,
@@ -98,7 +98,7 @@ function MessageBox(props: IMessageBoxProps) {
             className={classes.thread}
             onClick={() => {
               setThread({
-                chatName: target,
+                chatName: target.chatName ?? (target.userId as string),
                 messageList: threadList,
                 parentId: chatId,
                 parentMessage: message,

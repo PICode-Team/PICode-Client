@@ -1,5 +1,5 @@
 import { activitybarContentStyle } from '../../../../../styles/service/chat'
-import { IThread } from '../../../../../types/chat.types'
+import { IChannel, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
 import Boundary from '../../common/boundary'
 import ChatInput from '../../common/chatInput'
@@ -9,7 +9,7 @@ import { renderMessage } from '../content/content'
 interface IContentProps {
   thread: IThread
   userId: string
-  target: string
+  target: IChannel
   threadMessageRef: React.RefObject<HTMLInputElement>
   threadEndRef: React.RefObject<HTMLDivElement>
   setThread: React.Dispatch<React.SetStateAction<IThread | undefined>>

@@ -279,3 +279,138 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
     },
   })
 )
+
+export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    sidebar: {
+      width: '400px',
+      height: '100%',
+      backgroundColor: '#3b434d',
+      resize: 'horizontal',
+      overflow: 'auto',
+      padding: '20px',
+    },
+
+    sidebarHeader: {
+      padding: '0px 12px',
+      marginBottom: '30px',
+    },
+
+    search: {
+      width: '100%',
+      height: '40px',
+      backgroundColor: '#434D59',
+      borderRadius: '20px',
+      display: 'flex',
+      padding: '0px 12px',
+      alignItems: 'center',
+      '&>svg': {
+        color: '#ffffff',
+        marginRight: '6px',
+      },
+      '&>input': {
+        backgroundColor: 'inherit',
+        outline: 'none',
+        border: 'none',
+        color: '#ffffff',
+        marginTop: '4px',
+        '&::placeholder': {
+          color: 'rgba(183, 183, 183, 0.42)',
+          fontSize: '17px',
+        },
+      },
+    },
+
+    sidebarContent: {},
+
+    channel: {
+      margin: '0px -15px',
+      width: 'calc(100% + 30px)',
+      height: '60px',
+      display: 'flex',
+      color: '#ffffff',
+      padding: '10px 26px',
+      borderRadius: '10px',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: '#505866',
+      },
+    },
+    channelThumbnail: {
+      width: '40px',
+      height: '40px',
+      backgroundColor: '#ffffff',
+      borderRadius: '20px',
+      marginRight: '12px',
+    },
+    channelBody: {
+      flex: 1,
+    },
+    channelInfo: {},
+    channelName: {
+      marginRight: '8px',
+      fontWeight: 'bold',
+    },
+    channelParticipant: {},
+    lastContent: {},
+    channelTail: {
+      width: '70px',
+    },
+    unreadMessage: {},
+    lastTime: {
+      marginTop: '20px',
+      fontSize: '12px',
+    },
+    createChannel: {
+      margin: '0px -15px',
+      width: 'calc(100% + 30px)',
+      height: '60px',
+      display: 'flex',
+      color: '#ffffff',
+      padding: '10px 26px',
+      borderRadius: '10px',
+      justifyContent: 'center',
+      alignItems: 'center',
+      cursor: 'pointer',
+      '&>svg': {
+        color: '#ffffff',
+        width: '40px',
+        height: '40px',
+      },
+      '&:hover': {
+        backgroundColor: '#505866',
+      },
+    },
+  })
+)
+
+export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    contentHeader: {
+      height: '60px',
+      width: '100%',
+      borderBottom: '1px solid #505050',
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0px 20px',
+    },
+
+    targetThubnail: {
+      width: '40px',
+      height: '40px',
+      backgroundColor: '#ffffff',
+      borderRadius: '20px',
+      marginRight: '12px',
+    },
+    targetInfo: {
+      color: '#ffffff',
+    },
+    targetName: {
+      fontWeight: 'bold',
+    },
+    targetLast: {
+      fontSize: '12px',
+    },
+    targetParticipant: {},
+  })
+)

@@ -22,12 +22,15 @@ type IButtonColor = 'primary' | 'secondary'
 export interface IButtonProps {
   text: string
   color?: IButtonColor
-  onClick?: () => void
+  onClick?: (event: React.MouseEvent<HTMLElement> | React.MouseEvent<HTMLButtonElement>) => void
 }
 
 type IModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 
 export interface IModalProps {
-  size: IModalSize
-  children: JSX.Element
+  size?: IModalSize
+  children?: JSX.Element
+  modal: boolean
+  setModal: React.Dispatch<React.SetStateAction<boolean>>
+  onSubmit: () => void
 }
