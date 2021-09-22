@@ -4,14 +4,30 @@ import { IThemeStyle } from '../theme'
 
 export const chatStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
-    chat: {},
+    chat: {
+      backgroundColor: '#2c3239',
+      width: '100%',
+      height: 'calc(100% - 90px)',
+      display: 'flex',
+    },
+    emptyWrapper: {
+      width: 'calc(100% - 220px)',
+      height: '100%',
+      color: theme.font.high.color,
+      fontSize: theme.font.high.size,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.backgroundColor.step0,
+      textAlign: 'center',
+    },
   })
 )
 
 export const activitybarStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     activitybar: {
-      width: '400px',
+      width: '350px',
       height: '100%',
       borderLeft: '1px solid #505050',
     },
@@ -49,6 +65,33 @@ export const activitybarContentStyle = makeStyles((theme: IThemeStyle) =>
       maxHeight: 'calc(100% - 60px)',
       overflow: 'auto',
       paddingBottom: '50px',
+    },
+    contentBox: {
+      height: 'fit-content',
+      minHeight: 'calc(100% - 20px)',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      marginBottom: '10px',
+      marginTop: '10px',
+    },
+  })
+)
+
+export const contentStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    contentWrapper: {
+      height: '100%',
+      flex: 1,
+      backgroundColor: '#2C3239',
+    },
+    content: {
+      height: 'calc(100% - 165px)',
+      width: '100%',
+      flex: 1,
+      display: 'flex',
+      overflow: 'auto',
     },
     contentBox: {
       height: 'fit-content',
@@ -111,10 +154,14 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       },
     },
     thumbnail: {
-      backgroundColor: '#E8912D',
+      backgroundColor: '#ffffff',
       width: '22px',
       height: '22px',
       borderRadius: '11px',
+      backgroundImage: "url('/images/picode-7.svg')",
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
     },
     target: {
       color: theme.font.high.color,
@@ -133,6 +180,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       padding: '4px 14px',
       color: theme.font.high.color,
       maxWidth: '750px',
+      height: '24px',
     },
     time: {
       color: theme.font.high.color,
@@ -196,6 +244,14 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       color: '#ffffff',
       fontSize: '12px',
     },
+    reversedMessageBox: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+    reversedTextWrapper: {
+      display: 'flex',
+      flexDirection: 'row-reverse',
+    },
   })
 )
 
@@ -231,15 +287,9 @@ export const enteringStyle = makeStyles((theme: IThemeStyle) =>
 export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     input: {
-      background: '#3b434c',
-      color: '#ffffff',
-      width: '100%',
-      outline: 'none',
-      border: 'none',
-      height: '40px',
-      marginBottom: '12px',
-      padding: '8px',
-      fontSize: '15px',
+      height: '105px',
+      padding: '0px 20px',
+      paddigTop: '10px',
     },
     inputBox: {
       height: 'calc(100% - 24px)',
@@ -283,11 +333,9 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
 export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     sidebar: {
-      width: '400px',
+      width: '350px',
       height: '100%',
       backgroundColor: '#3b434d',
-      resize: 'horizontal',
-      overflow: 'auto',
       padding: '20px',
     },
 
@@ -342,6 +390,10 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       backgroundColor: '#ffffff',
       borderRadius: '20px',
       marginRight: '12px',
+      backgroundImage: "url('/images/picode-7.svg')",
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
     },
     channelBody: {
       flex: 1,
@@ -395,12 +447,16 @@ export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
       padding: '0px 20px',
     },
 
-    targetThubnail: {
+    targetThumbnail: {
       width: '40px',
       height: '40px',
       backgroundColor: '#ffffff',
       borderRadius: '20px',
       marginRight: '12px',
+      backgroundImage: "url('/images/picode-7.svg')",
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
     },
     targetInfo: {
       color: '#ffffff',

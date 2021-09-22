@@ -12,7 +12,7 @@ function Chat(ctx: any) {
   const { userId } = ctx
   const classes = chatStyle()
   const [messageList, setMessageList] = useState<IChat[]>([])
-  const [channelList, setChannelList] = useState<IChannel[]>([])
+  const [channelList, setChannelList] = useState<IChannel[]>([{ chatName: 'test', chatParticipant: [''], creation: '', description: '', userId: '' }])
   const [userList, setUserList] = React.useState<IUser[]>([])
   const [thread, setThread] = useState<IThread | null>(null)
   const [typingUserList, setTypingUserList] = useState<IUser[]>([])
@@ -26,11 +26,26 @@ function Chat(ctx: any) {
 
   const handleModalSubmit = () => {}
 
+  useEffect(() => {
+    setMessageList([])
+
+    if (target !== null) {
+      setMessageList([
+        { chatId: '', message: '', threadList: [], time: '2021-09-12 12:35:35', user: '' },
+        { chatId: '123', message: '123', threadList: [], time: '2021-09-12 12:35:35', user: '' },
+      ])
+    }
+  }, [target])
+
   return (
     <div className={classes.chat}>
       <Sidebar channelList={channelList} setTarget={setTarget} setModal={setModal} />
-      {target !== null && <Content target={target} messageList={messageList} userId={userId} messageRef={messageRef} endRef={endRef} typingUserList={typingUserList} />}{' '}
-      {thread !== null ? <Activitybar thread={thread} userId={userId} target={target} threadEndRef={threadEndRef} setThread={setThread} /> : <div>empty</div>}
+      {target !== null ? (
+        <Content target={target} messageList={messageList} userId={userId} messageRef={messageRef} endRef={endRef} typingUserList={typingUserList} setThread={setThread} particiapntList={[]} />
+      ) : (
+        <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
+      )}
+      {thread !== null && <Activitybar thread={thread} userId={userId} target={target} threadEndRef={threadEndRef} setThread={setThread} />}
       <Modal modal={modal} setModal={setModal} onSubmit={handleModalSubmit}></Modal>
     </div>
   )

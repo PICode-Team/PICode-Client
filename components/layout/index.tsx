@@ -5,6 +5,8 @@ import Topbar from './topbar'
 
 interface ILayoutProps {
   children: JSX.Element
+  path: string
+  session: string
 }
 
 function Layout(props: ILayoutProps) {
@@ -20,7 +22,10 @@ function Layout(props: ILayoutProps) {
           <div className={classes.pageName}>
             <div></div>
           </div>
-          <div>{props.children}</div>
+          {React.cloneElement(props.children, {
+            path: props.path,
+            session: props.session,
+          })}
         </div>
       </div>
       {!toggle && (

@@ -13,9 +13,9 @@ function Header(props: IHeaderProps) {
 
   return (
     <div className={classes.contentHeader}>
-      <div className={classes.targetThubnail}></div>
+      <div className={classes.targetThumbnail}></div>
       <div className={classes.targetInfo}>
-        <div className={classes.targetName}>{target}</div>
+        <div className={classes.targetName}>{target.chatName ?? (target.userId as string)}</div>
         <div className={classes.targetLast}>{lastTime}</div>
       </div>
       <div className={classes.targetParticipant}></div>

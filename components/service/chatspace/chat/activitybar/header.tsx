@@ -4,7 +4,7 @@ import { IThread } from '../../../../../types/chat.types'
 
 interface IHeaderProps {
   thread: IThread
-  setThread: React.Dispatch<React.SetStateAction<IThread | undefined>>
+  setThread: React.Dispatch<React.SetStateAction<IThread | null>>
 }
 
 function Header(props: IHeaderProps) {
@@ -20,7 +20,7 @@ function Header(props: IHeaderProps) {
       <span
         className={classes.activitybarClose}
         onClick={() => {
-          setThread(undefined)
+          setThread(null)
         }}
       >
         <Clear />

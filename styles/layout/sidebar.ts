@@ -108,7 +108,7 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
     },
     text: {
       whiteSpace: 'nowrap',
-      marginLeft: '24px',
+      marginLeft: '15px',
     },
     hidden: {
       visibility: 'hidden',

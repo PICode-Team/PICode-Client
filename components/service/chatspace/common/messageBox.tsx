@@ -4,19 +4,11 @@ import { messageBoxStyle } from '../../../../styles/service/chat'
 import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
 
-interface IMessageBox {
-  user: string
-  time: string
-  message: string
-  chatId: string
-  threadList: IChat[]
-}
-
 interface IMessageBoxProps {
-  messageInfo: IMessageBox
+  messageInfo: IChat
   reverse: boolean
-  setThread: React.Dispatch<React.SetStateAction<IThread | undefined>>
-  target: IChannel
+  setThread: React.Dispatch<React.SetStateAction<IThread | null>>
+  target: IChannel | null
   particiapntList: IUser[]
 }
 
@@ -50,50 +42,53 @@ function MessageBox(props: IMessageBoxProps) {
   const classes = messageBoxStyle()
 
   return (
-    <div className={classes.messageBox}>
-      <div
-        className={classes.thumbnail}
-        style={{
-          backgroundImage:
-            particiapntList.find((v) => v.userId === user)?.userThumbnail === undefined
-              ? 'none'
-              : ` url('${API_SERVER}:8000/api/temp/${particiapntList?.find((v) => v.userId === user)?.userThumbnail}')`,
-
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      ></div>
-      <div className={classes.messageInfo}>
-        <div className={classes.target}>{user}</div>
-        <div className={classes.textWrapper}>
+    <div className={`${classes.messageBox} ${reverse && classes.reversedMessageBox}`}>
+      {!reverse && (
+        <div
+          className={classes.thumbnail}
+          style={
+            {
+              // backgroundImage:
+              //   particiapntList.find((v) => v.userId === user)?.userThumbnail === undefined
+              //     ? 'none'
+              //     : ` url('${API_SERVER}:8000/api/temp/${particiapntList?.find((v) => v.userId === user)?.userThumbnail}')`,
+              // backgroundSize: 'cover',
+            }
+          }
+        />
+      )}
+      <div className={`${target !== null && classes.messageInfo}`}>
+        {!reverse && <div className={classes.target}>{user}</div>}
+        <div className={`${classes.textWrapper} ${reverse && classes.reversedTextWrapper}`}>
           <span className={classes.messageText}>{message}</span>
           <span className={classes.time}>
             <span>{getTimeText(time)}</span>
-            <div className={classes.messageInteraction}>
-              <div
-                className={classes.interactionIcon}
-                onClick={() => {
-                  setThread({
-                    chatName: target.chatName ?? (target.userId as string),
-                    messageList: threadList,
-                    parentId: chatId,
-                    parentMessage: message,
-                    parentTime: time,
-                    parentUser: user,
-                  })
-                }}
-              >
-                <SmsOutlined />
+            {target !== null && (
+              <div className={classes.messageInteraction}>
+                <div
+                  className={classes.interactionIcon}
+                  onClick={() => {
+                    setThread({
+                      chatName: target.chatName ?? (target.userId as string),
+                      messageList: threadList,
+                      parentId: chatId,
+                      parentMessage: message,
+                      parentTime: time,
+                      parentUser: user,
+                    })
+                  }}
+                >
+                  <SmsOutlined />
+                </div>
+                <div className={classes.interactionDivider} />
+                <div className={classes.interactionIcon}>
+                  <FavoriteBorderOutlined />
+                </div>
               </div>
-              <div className={classes.interactionDivider} />
-              <div className={classes.interactionIcon}>
-                <FavoriteBorderOutlined />
-              </div>
-            </div>
+            )}
           </span>
         </div>
-        {threadList.length > 0 && (
+        {target !== null && threadList.length > 0 && (
           <div
             className={classes.thread}
             onClick={() => {

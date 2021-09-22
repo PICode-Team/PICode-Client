@@ -1,3 +1,4 @@
+import React from 'react'
 import { Search, Add } from '@material-ui/icons'
 import { chatSidebarStyle } from '../../../../../styles/service/chat'
 import { IChannel } from '../../../../../types/chat.types'
@@ -12,6 +13,10 @@ function Sidebar(props: ISidebarProps) {
   const { channelList, setTarget, setModal } = props
   const classes = chatSidebarStyle()
 
+  const handleClickChannel = (targetChannel: IChannel) => (event: React.MouseEvent<HTMLDivElement>) => {
+    setTarget(targetChannel)
+  }
+
   return (
     <div className={classes.sidebar}>
       <div className={classes.sidebarHeader}>
@@ -23,24 +28,20 @@ function Sidebar(props: ISidebarProps) {
       <div className={classes.sidebarContent}>
         {channelList.map((v, i) => {
           return (
-            <div
-              className={classes.channel}
-              key={`channel-${i}`}
-              onClick={() => {
-                setTarget(v)
-              }}
-            >
+            <div className={classes.channel} key={`channel-${i}`} onClick={handleClickChannel(v)}>
               <div
                 className={classes.channelThumbnail}
-                style={{
-                  backgroundImage: '',
-                  // userList?.find((user) => user.userId === v.chatName)?.userThumbnail === undefined
-                  //   ? "url('/images/picode-7.svg')"
-                  //   : `url('${API_SERVER}:8000/api/temp/${userList?.find((user) => user.userId === v.chatName)?.userThumbnail}')`,
-                  // backgroundSize: userList?.find((user) => user.userId === v.chatName)?.userThumbnail === undefined ? 'contain' : 'cover,
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                }}
+                style={
+                  {
+                    // backgroundImage: '',
+                    // // userList?.find((user) => user.userId === v.chatName)?.userThumbnail === undefined
+                    // //   ? "url('/images/picode-7.svg')"
+                    // //   : `url('${API_SERVER}:8000/api/temp/${userList?.find((user) => user.userId === v.chatName)?.userThumbnail}')`,
+                    // // backgroundSize: userList?.find((user) => user.userId === v.chatName)?.userThumbnail === undefined ? 'contain' : 'cover,
+                    // backgroundPosition: 'center',
+                    // backgroundRepeat: 'no-repeat',
+                  }
+                }
               ></div>
               <div className={classes.channelBody}>
                 <div className={classes.channelInfo}>
