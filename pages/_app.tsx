@@ -24,19 +24,17 @@ function App({ Component, pageProps }: AppProps) {
         </ThemeProvider>
       </WsProvider>
     </React.Fragment>
-  );
+  )
 }
 
 App.getInitialProps = async ({ Component, ctx }: any): Promise<AppInitialProps> => {
   let pageProps = {};
 
   if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
+    pageProps = await Component.getInitialProps(ctx)
   }
 
   pageProps = { ...pageProps, path: ctx.pathname };
-
-  console.log(pageProps)
 
   return { pageProps };
 };
