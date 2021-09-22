@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 
 import { AttachFile, Close, FilterNone, NavigateBefore, Send, SentimentSatisfied } from '@material-ui/icons'
 
@@ -110,4 +110,4 @@ function Room(props: IRoomProps) {
   )
 }
 
-export default Room
+export default React.memo(Room)
