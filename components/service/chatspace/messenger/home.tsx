@@ -28,7 +28,7 @@ function Home(props: IHomeProps) {
                   fontWeight: 'bold',
                 }}
               >
-                Chatting
+                ChatSpace
               </span>
             </div>
             <div className={classes.online}></div>

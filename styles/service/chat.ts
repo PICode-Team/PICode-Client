@@ -20,6 +20,9 @@ export const chatStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'center',
       backgroundColor: theme.backgroundColor.step0,
       textAlign: 'center',
+      '@media screen and (max-width: 1280px)': {
+        display: 'none',
+      },
     },
   })
 )
@@ -30,6 +33,9 @@ export const activitybarStyle = makeStyles((theme: IThemeStyle) =>
       width: '350px',
       height: '100%',
       borderLeft: '1px solid #505050',
+      '@media screen and (max-width: 1280px)': {
+        display: 'none',
+      },
     },
   })
 )
@@ -85,6 +91,9 @@ export const contentStyle = makeStyles((theme: IThemeStyle) =>
       height: '100%',
       flex: 1,
       backgroundColor: '#2C3239',
+      '@media screen and (max-width: 1280px)': {
+        display: 'none',
+      },
     },
     content: {
       height: 'calc(100% - 165px)',
@@ -314,6 +323,7 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       height: '51px',
       padding: '4px 8px 0px',
+      position: 'fixed',
       '&>div': {
         display: 'flex',
         justifyContent: 'space-between',
@@ -337,6 +347,9 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       height: '100%',
       backgroundColor: '#3b434d',
       padding: '20px',
+      '@media screen and (max-width: 600px)': {
+        display: 'none',
+      },
     },
 
     sidebarHeader: {
@@ -404,7 +417,12 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       fontWeight: 'bold',
     },
     channelParticipant: {},
-    lastContent: {},
+    lastContent: {
+      overflow: 'hidden',
+      width: '160px',
+      marginRight: '6px',
+      textOverflow: 'ellipsis',
+    },
     channelTail: {
       width: '70px',
     },
@@ -468,5 +486,581 @@ export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
       fontSize: '12px',
     },
     targetParticipant: {},
+  })
+)
+
+export const responsiveChatStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    responsiveChat: {
+      width: '100%',
+      display: 'none',
+      '@media screen and (max-width: 1280px)': {
+        display: 'flex',
+      },
+    },
+    emptyWrapper: {
+      flex: 1,
+      height: '100%',
+      color: theme.font.high.color,
+      fontSize: theme.font.high.size,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.backgroundColor.step0,
+      textAlign: 'center',
+      '@media screen and (min-width: 1280px)': {
+        display: 'none',
+      },
+      '@media screen and (max-width: 600px)': {
+        display: 'none',
+      },
+    },
+  })
+)
+
+export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    home: {
+      width: '100%',
+      display: 'none',
+      '@media screen and (max-width: 600px)': {
+        display: 'flex',
+      },
+    },
+    wrapper: {
+      width: '100%',
+      height: '100%',
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '20px',
+    },
+    channel: { width: '90%' },
+    name: {
+      color: '#ffffff',
+      '&>span': {
+        marginRight: '4px',
+        fontSize: '18px',
+        fontWeight: 'bold',
+      },
+    },
+    online: {
+      display: 'flex',
+      fontSize: '11px',
+      color: '#ffffff',
+      '&>svg': {
+        width: '12px',
+        height: '12px',
+        color: 'green',
+      },
+    },
+    body: {
+      width: '100%',
+      height: 'calc(100% - 129px)',
+      overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      '&::-webkit-scrollbar': {
+        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
+      },
+    },
+    footer: {
+      display: 'flex',
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      padding: '10px',
+      paddingTop: '15px',
+      alignItems: 'center',
+    },
+    row: {
+      padding: '10px 20px',
+      height: '60px',
+      width: '100%',
+      display: 'flex',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      },
+    },
+    createChannel: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      '&>svg': {
+        color: '#ffffff',
+        width: '30px',
+        height: '30px',
+      },
+    },
+    users: {
+      width: '40px',
+      height: '40px',
+      backgroundColor: '#ffffff',
+      borderRadius: '20px',
+      marginRight: '12px',
+    },
+    titleWrapper: {
+      flex: 1,
+    },
+    title: {
+      display: 'flex',
+      color: '#ffffff',
+    },
+    titleText: {
+      fontSize: '11px',
+      fontWeight: 'bold',
+      color: '#ffffff',
+    },
+    participant: {
+      fontSize: '11px',
+      marginLeft: '4px',
+      color: '#ffffff',
+    },
+    etc: {},
+    thumbnail: {
+      color: 'rgba(255, 255, 255, 0.4)',
+      fontSize: '10px',
+      fontWeight: 'bold',
+      width: '200px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+    chatInfo: {
+      textAlign: 'right',
+    },
+    lastTime: {
+      fontSize: '10px',
+      color: 'rgba(255, 255, 255, 0.3)',
+      width: '44px',
+    },
+    count: {
+      fontSize: '10px',
+      backgroundColor: 'red',
+      color: '#ffffff',
+      fontWeight: 'bold',
+      padding: '2px 6px',
+      borderRadius: '10px',
+      width: 'fit-content',
+      float: 'right',
+    },
+  })
+)
+
+export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    content: {
+      width: '100%',
+      height: 'calc(100% - 90px)',
+      position: 'absolute',
+      backgroundColor: '#2C3239',
+      '@media screen and (min-width: 600px)': {
+        width: 'calc(100% - 414px)',
+      },
+    },
+    wrapper: {
+      width: '100%',
+      height: '100%',
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '20px',
+    },
+    channel: { width: '90%' },
+    name: {
+      color: '#ffffff',
+      '&>span': {
+        marginRight: '4px',
+        fontSize: '18px',
+        fontWeight: 'bold',
+      },
+    },
+    online: {
+      display: 'flex',
+      fontSize: '11px',
+      color: '#ffffff',
+      '&>svg': {
+        width: '12px',
+        height: '12px',
+        color: 'green',
+      },
+    },
+    body: {
+      width: '100%',
+      height: 'calc(100% - 129px)',
+      overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      '&::-webkit-scrollbar': {
+        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
+      },
+    },
+    footer: {
+      display: 'flex',
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      padding: '10px',
+      paddingTop: '15px',
+      alignItems: 'center',
+    },
+    row: {
+      padding: '10px 20px',
+      height: '60px',
+      width: '100%',
+      display: 'flex',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      },
+    },
+    createChannel: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      '&>svg': {
+        color: '#ffffff',
+        width: '30px',
+        height: '30px',
+      },
+    },
+    users: {
+      width: '40px',
+      height: '40px',
+      backgroundColor: '#ffffff',
+      borderRadius: '20px',
+      marginRight: '12px',
+    },
+    titleWrapper: {
+      flex: 1,
+    },
+    title: {
+      display: 'flex',
+      color: '#ffffff',
+    },
+    titleText: {
+      fontSize: '11px',
+      fontWeight: 'bold',
+      color: '#ffffff',
+    },
+    participant: {
+      fontSize: '11px',
+      marginLeft: '4px',
+      color: '#ffffff',
+    },
+    etc: {},
+    thumbnail: {
+      color: 'rgba(255, 255, 255, 0.4)',
+      fontSize: '10px',
+      fontWeight: 'bold',
+      width: '200px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+    chatInfo: {
+      textAlign: 'right',
+    },
+    lastTime: {
+      fontSize: '10px',
+      color: 'rgba(255, 255, 255, 0.3)',
+      width: '44px',
+    },
+    count: {
+      fontSize: '10px',
+      backgroundColor: 'red',
+      color: '#ffffff',
+      fontWeight: 'bold',
+      padding: '2px 6px',
+      borderRadius: '10px',
+      width: 'fit-content',
+      float: 'right',
+    },
+
+    back: {
+      cursor: 'pointer',
+      '&>svg': {
+        width: '28px',
+        height: '28px',
+        color: '#ffffff',
+      },
+    },
+    attachFile: {
+      cursor: 'pointer',
+      marginLeft: '6px',
+      '&>svg': {
+        transform: 'rotate(0.125turn)',
+        width: '20px',
+        height: '20px',
+        color: 'rgba(255, 255, 255, 0.4)',
+        '&:hover': {
+          color: 'rgba(255, 255, 255, 0.7)',
+        },
+      },
+    },
+    imoji: {
+      cursor: 'pointer',
+      marginLeft: '6px',
+      '&>svg': {
+        width: '22px',
+        height: '22px',
+        color: 'rgba(255, 255, 255, 0.4)',
+        '&:hover': {
+          color: 'rgba(255, 255, 255 0.7)',
+        },
+      },
+    },
+    input: {
+      width: '100%',
+      border: 'none',
+      outline: 'none',
+      padding: '8px 12px',
+      paddingTop: '2px',
+      backgroundColor: 'inherit',
+      color: '#ffffff',
+    },
+    send: {
+      cursor: 'pointer',
+      '&>svg': {
+        width: '22px',
+        height: '22px',
+        color: 'rgba(255, 255, 255, 0.4)',
+        '&:hover': {
+          color: 'rgba(255, 255, 255, 0.7)',
+        },
+      },
+    },
+
+    contentBox: {
+      height: 'fit-content',
+      minHeight: 'calc(100% - 20px)',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      margin: '10px 0px',
+    },
+  })
+)
+
+export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    thread: {
+      width: '100%',
+      height: 'calc(100% - 90px)',
+      position: 'absolute',
+      backgroundColor: '#2C3239',
+      '@media screen and (min-width: 600px)': {
+        width: 'calc(100% - 414px)',
+      },
+    },
+    wrapper: {
+      width: '100%',
+      height: '100%',
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '20px',
+    },
+    channel: { width: '90%' },
+    name: {
+      color: '#ffffff',
+      '&>span': {
+        marginRight: '4px',
+        fontSize: '18px',
+        fontWeight: 'bold',
+      },
+    },
+    online: {
+      display: 'flex',
+      fontSize: '11px',
+      color: '#ffffff',
+      '&>svg': {
+        width: '12px',
+        height: '12px',
+        color: 'green',
+      },
+    },
+    body: {
+      width: '100%',
+      height: 'calc(100% - 129px)',
+      overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      '&::-webkit-scrollbar': {
+        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
+      },
+    },
+    footer: {
+      display: 'flex',
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      padding: '10px',
+      paddingTop: '15px',
+      alignItems: 'center',
+    },
+    row: {
+      padding: '10px 20px',
+      height: '60px',
+      width: '100%',
+      display: 'flex',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      },
+    },
+    createChannel: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      '&>svg': {
+        color: '#ffffff',
+        width: '30px',
+        height: '30px',
+      },
+    },
+    users: {
+      width: '40px',
+      height: '40px',
+      backgroundColor: '#ffffff',
+      borderRadius: '20px',
+      marginRight: '12px',
+    },
+    titleWrapper: {
+      flex: 1,
+    },
+    title: {
+      display: 'flex',
+      color: '#ffffff',
+    },
+    titleText: {
+      fontSize: '11px',
+      fontWeight: 'bold',
+      color: '#ffffff',
+    },
+    participant: {
+      fontSize: '11px',
+      marginLeft: '4px',
+      color: '#ffffff',
+    },
+    etc: {},
+    thumbnail: {
+      color: 'rgba(255, 255, 255, 0.4)',
+      fontSize: '10px',
+      fontWeight: 'bold',
+      width: '200px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+    chatInfo: {
+      textAlign: 'right',
+    },
+    lastTime: {
+      fontSize: '10px',
+      color: 'rgba(255, 255, 255, 0.3)',
+      width: '44px',
+    },
+    count: {
+      fontSize: '10px',
+      backgroundColor: 'red',
+      color: '#ffffff',
+      fontWeight: 'bold',
+      padding: '2px 6px',
+      borderRadius: '10px',
+      width: 'fit-content',
+      float: 'right',
+    },
+
+    back: {
+      cursor: 'pointer',
+      '&>svg': {
+        width: '28px',
+        height: '28px',
+        color: '#ffffff',
+      },
+    },
+    attachFile: {
+      cursor: 'pointer',
+      marginLeft: '6px',
+      '&>svg': {
+        transform: 'rotate(0.125turn)',
+        width: '20px',
+        height: '20px',
+        color: 'rgba(255, 255, 255, 0.4)',
+        '&:hover': {
+          color: 'rgba(255, 255, 255, 0.7)',
+        },
+      },
+    },
+    imoji: {
+      cursor: 'pointer',
+      marginLeft: '6px',
+      '&>svg': {
+        width: '22px',
+        height: '22px',
+        color: 'rgba(255, 255, 255, 0.4)',
+        '&:hover': {
+          color: 'rgba(255, 255, 255 0.7)',
+        },
+      },
+    },
+    input: {
+      width: '100%',
+      border: 'none',
+      outline: 'none',
+      padding: '8px 12px',
+      paddingTop: '2px',
+      backgroundColor: 'inherit',
+      color: '#ffffff',
+    },
+    send: {
+      cursor: 'pointer',
+      '&>svg': {
+        width: '22px',
+        height: '22px',
+        color: 'rgba(255, 255, 255, 0.4)',
+        '&:hover': {
+          color: 'rgba(255, 255, 255, 0.7)',
+        },
+      },
+    },
+
+    content: {
+      height: 'fit-content',
+      minHeight: 'calc(100% - 20px)',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      margin: '10px 0px',
+    },
+    messageInfo: {
+      '&:hover': {
+        '&>div>span>span': {
+          display: 'none',
+        },
+        '&>div>span>div': {
+          display: 'flex',
+        },
+      },
+    },
   })
 )

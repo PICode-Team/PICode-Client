@@ -7,6 +7,7 @@ const textareaStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
       flex: 1,
+      marginTop: '16px',
     },
     textarea: {
       width: '100%',
@@ -30,13 +31,13 @@ const textareaStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function CustomTextarea(props: IItemDefautlProps & IInputProps) {
-  const { onChange, className, style } = props
+  const { onChange, className, style, label } = props
   const classes = textareaStyle()
 
   return (
     <div className={classes.wrapper}>
-      <span></span>
-      <textarea onChange={onChange} className={className} style={style} />
+      <span className={classes.label}>{label}</span>
+      <textarea onChange={onChange} className={`${classes.textarea} ${className}`} style={style} />
     </div>
   )
 }

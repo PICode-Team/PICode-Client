@@ -4,29 +4,31 @@ import { makeStyles, createStyles } from '@material-ui/core'
 
 import { IThemeStyle } from '../../../styles/theme'
 import { IModalProps } from '../../../types/item.types'
-import CustomButton from '../button/button'
+import ModalHeader from './header'
+import ModalBody from './body'
+import ModalFooter from './footer'
 
 const modalStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     modal: {
       width: '30%',
       height: '40%',
-      position: 'absolute',
-      display: 'fixed',
+      position: 'fixed',
       backgroundColor: '#2c3239',
-      zIndex: 9999,
+      zIndex: 99999,
       top: 0,
       left: 0,
       marginLeft: '35%',
       marginTop: '10%',
       padding: '30px',
       borderRadius: '12px',
+      display: 'flex',
+      flexDirection: 'column',
     },
     overlay: {
       width: '100%',
       height: '100%',
-      position: 'absolute',
-      display: 'fixed',
+      position: 'fixed',
       backgroundColor: 'black',
       top: 0,
       left: 0,
@@ -43,7 +45,7 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function Modal(props: IModalProps) {
-  const { children, modal, size, setModal, onSubmit } = props
+  const { children, modal, size, setModal, onSubmit, title } = props
   const classes = modalStyle()
 
   const handleCloseModal = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,11 +59,9 @@ function Modal(props: IModalProps) {
       {modal && (
         <React.Fragment>
           <div className={`${classes.modal} ${classes[size ?? 'md']}`}>
-            {children}
-            <div>
-              <CustomButton text="cancel" onClick={handleCloseModal} color="primary" />
-              <CustomButton text="ok" onClick={onSubmit} color="secondary" />
-            </div>
+            <ModalHeader handleCloseModal={handleCloseModal} title={title} />
+            <ModalBody>{children}</ModalBody>
+            <ModalFooter handleCloseModal={handleCloseModal} onSubmit={onSubmit} />
           </div>
           <div className={classes.overlay} onClick={handleCloseModal} />
         </React.Fragment>

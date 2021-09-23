@@ -6,14 +6,15 @@ import { IUser } from '../../../../types/user.types'
 import Activitybar from './activitybar/activitybar'
 import Content from './content/content'
 import Sidebar from './sidebar/sidebar'
-import Modal from '../../../items/modal/modal'
 import { fetchSet } from '../../../context/fetch'
+import CreateChannel from '../common/createChannel'
+import ResponsiveChat from './responsive/resposiveChat'
 
 function Chat(ctx: any) {
   const { userId } = ctx
   const classes = chatStyle()
   const [messageList, setMessageList] = useState<IChat[]>([])
-  const [channelList, setChannelList] = useState<IChannel[]>([{ chatName: 'test', chatParticipant: [''], creation: '', description: '', userId: '' }])
+  const [channelList, setChannelList] = useState<IChannel[]>([{ chatName: 'test', chatParticipant: [''], creation: '', description: '123123123123123123123213', userId: '' }])
   const [userList, setUserList] = React.useState<IUser[]>([])
   const [thread, setThread] = useState<IThread | null>(null)
   const [typingUserList, setTypingUserList] = useState<IUser[]>([])
@@ -24,8 +25,6 @@ function Chat(ctx: any) {
   const threadMessageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
   const threadEndRef = useRef<HTMLInputElement>(null)
-
-  const handleModalSubmit = () => {}
 
   const getUserList = async () => {
     await fetchSet('/userList', 'GET', true).then((res) => {
@@ -39,7 +38,7 @@ function Chat(ctx: any) {
     setMessageList([])
 
     if (target !== null) {
-      //
+      setMessageList([{ chatId: '', message: '1213', threadList: [], time: '2021-09-31 12:32:32', user: '' }])
     }
   }, [target])
 
@@ -48,16 +47,30 @@ function Chat(ctx: any) {
   }, [])
 
   return (
-    <div className={classes.chat}>
-      <Sidebar channelList={channelList} setTarget={setTarget} setModal={setModal} />
-      {target !== null ? (
-        <Content target={target} messageList={messageList} userId={userId} messageRef={messageRef} endRef={endRef} typingUserList={typingUserList} setThread={setThread} particiapntList={[]} />
-      ) : (
-        <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
-      )}
-      {thread !== null && <Activitybar thread={thread} userId={userId} threadMessageRef={threadMessageRef} threadEndRef={threadEndRef} setThread={setThread} particiapntList={[]} />}
-      <Modal modal={modal} setModal={setModal} onSubmit={handleModalSubmit}></Modal>
-    </div>
+    <React.Fragment>
+      <div className={classes.chat}>
+        <Sidebar channelList={channelList} setTarget={setTarget} setModal={setModal} />
+        {target !== null ? (
+          <Content target={target} messageList={messageList} userId={userId} messageRef={messageRef} endRef={endRef} typingUserList={typingUserList} setThread={setThread} particiapntList={userList} />
+        ) : (
+          <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
+        )}
+        {thread !== null && <Activitybar thread={thread} userId={userId} threadMessageRef={threadMessageRef} threadEndRef={threadEndRef} setThread={setThread} particiapntList={userList} />}
+        <ResponsiveChat
+          messageList={messageList}
+          newMessage={newMessage}
+          particiapntList={userList}
+          userId={userId}
+          target={target}
+          thread={thread}
+          channelList={channelList}
+          setTarget={setTarget}
+          setModal={setModal}
+          setThread={setThread}
+        />
+        <CreateChannel modal={modal} setModal={setModal} title="Create Channel" />
+      </div>
+    </React.Fragment>
   )
 }
 
