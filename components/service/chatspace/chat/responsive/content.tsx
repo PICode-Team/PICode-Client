@@ -14,12 +14,13 @@ interface IContentProps {
   userId: string
   thread: IThread | null
   particiapntList: IUser[]
+  toggle: boolean
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
 }
 
 function Content(props: IContentProps) {
-  const { target, messageList, newMessage, userId, thread, particiapntList, setTarget, setThread } = props
+  const { target, messageList, newMessage, userId, thread, particiapntList, setTarget, setThread, toggle } = props
   const classes = responsiveContentStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLInputElement>(null)
@@ -27,7 +28,7 @@ function Content(props: IContentProps) {
   const handleSendMessage = () => {}
 
   return (
-    <div className={classes.content}>
+    <div className={`${classes.content} ${toggle && classes.toggleContent}`}>
       <div className={classes.wrapper}>
         <div className={classes.header}>
           <div

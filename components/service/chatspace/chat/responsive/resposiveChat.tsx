@@ -13,6 +13,7 @@ interface IResponsiveProps {
   newMessage: boolean
   userId: string
   particiapntList: IUser[]
+  toggle: boolean
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>

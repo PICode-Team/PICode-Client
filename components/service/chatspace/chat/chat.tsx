@@ -11,7 +11,7 @@ import CreateChannel from '../common/createChannel'
 import ResponsiveChat from './responsive/resposiveChat'
 
 function Chat(ctx: any) {
-  const { userId } = ctx
+  const { userId, toggle } = ctx
   const classes = chatStyle()
   const [messageList, setMessageList] = useState<IChat[]>([])
   const [channelList, setChannelList] = useState<IChannel[]>([{ chatName: 'test', chatParticipant: [''], creation: '', description: '123123123123123123123213', userId: '' }])
@@ -64,6 +64,7 @@ function Chat(ctx: any) {
           target={target}
           thread={thread}
           channelList={channelList}
+          toggle={toggle}
           setTarget={setTarget}
           setModal={setModal}
           setThread={setThread}

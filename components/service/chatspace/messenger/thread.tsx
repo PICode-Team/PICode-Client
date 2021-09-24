@@ -10,18 +10,16 @@ import { renderMessage } from '../chat/content/content'
 import { IUser } from '../../../../types/user.types'
 
 interface IThreadProps {
-  messageList: IChat[]
   newMessage: boolean
   userId: string
   thread: IThread
   particiapntList: IUser[]
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
 }
 
 function Thread(props: IThreadProps) {
-  const { setOpen, messageList, newMessage, setTarget, userId, thread, setThread, particiapntList } = props
+  const { setOpen, newMessage, userId, thread, setThread, particiapntList } = props
   const classes = messengerStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)

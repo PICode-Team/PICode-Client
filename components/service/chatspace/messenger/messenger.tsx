@@ -35,9 +35,7 @@ function Messenger(props: IMessengerProps) {
         ) : (
           <Room userId={userId} target={target} messageList={messageList} newMessage={newMessage} thread={thread} particiapntList={[]} setTarget={setTarget} setOpen={setOpen} setThread={setThread} />
         )}
-        {thread !== null && (
-          <Thread userId={userId} messageList={thread.messageList} newMessage={false} thread={thread} particiapntList={[]} setTarget={setTarget} setOpen={setOpen} setThread={setThread} />
-        )}
+        {thread !== null && <Thread userId={userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} />}
       </React.Fragment>
     )
   }

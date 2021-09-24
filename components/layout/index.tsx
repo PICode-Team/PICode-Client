@@ -25,6 +25,7 @@ function Layout(props: ILayoutProps) {
           {React.cloneElement(props.children, {
             path: props.path,
             session: props.session,
+            toggle: toggle,
           })}
         </div>
       </div>

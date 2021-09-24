@@ -1,12 +1,22 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Modal from '../../../items/modal/modal'
 
-function CreateIssue() {
-  const [modal, setModal] = useState<boolean>(false)
+interface ICreateIssueProps {
+  title: string
+  modal: boolean
+  setModal: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function CreateIssue(props: ICreateIssueProps) {
+  const { modal, setModal, title } = props
 
   const handleSubmit = () => {}
 
-  return <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit}></Modal>
+  return (
+    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title={title}>
+      <React.Fragment></React.Fragment>
+    </Modal>
+  )
 }
 
 export default CreateIssue

@@ -661,7 +661,12 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       position: 'absolute',
       backgroundColor: '#2C3239',
       '@media screen and (min-width: 600px)': {
-        width: 'calc(100% - 414px)',
+        width: 'calc(100% - 550px)',
+      },
+    },
+    toggleContent: {
+      '@media screen and (min-width: 600px)': {
+        width: 'calc(100% - 414px) !important',
       },
     },
     wrapper: {
@@ -862,7 +867,12 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       position: 'absolute',
       backgroundColor: '#2C3239',
       '@media screen and (min-width: 600px)': {
-        width: 'calc(100% - 414px)',
+        width: 'calc(100% - 550px)',
+      },
+    },
+    toggleThread: {
+      '@media screen and (min-width: 600px)': {
+        width: 'calc(100% - 414px) !important',
       },
     },
     wrapper: {

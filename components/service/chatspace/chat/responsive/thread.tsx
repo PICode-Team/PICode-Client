@@ -14,11 +14,12 @@ interface IThreadProps {
   userId: string
   thread: IThread
   particiapntList: IUser[]
+  toggle: boolean
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
 }
 
 function Thread(props: IThreadProps) {
-  const { newMessage, userId, thread, setThread, particiapntList } = props
+  const { newMessage, toggle, userId, thread, setThread, particiapntList } = props
   const classes = responsiveThreadStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
@@ -40,7 +41,7 @@ function Thread(props: IThreadProps) {
   }
 
   return (
-    <div className={classes.thread}>
+    <div className={`${classes.thread} ${toggle && classes.toggleThread}`}>
       <div className={classes.wrapper}>
         <div className={classes.header}>
           <div
@@ -53,15 +54,7 @@ function Thread(props: IThreadProps) {
           </div>
           <div className={classes.channel}>
             <div className={classes.name}>
-              <span
-                style={{
-                  marginRight: '4px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                }}
-              >
-                Thread
-              </span>
+              <span>Thread</span>
               {thread.chatName}
             </div>
             <div className={classes.online}></div>
