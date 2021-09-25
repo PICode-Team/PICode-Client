@@ -1,5 +1,5 @@
 import React from 'react'
-import { contentStyle } from '../../../../../styles/service/chat'
+import { contentStyle } from '../../../../../styles/service/chat/chat'
 
 import { IChannel, IChat, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'

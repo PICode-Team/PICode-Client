@@ -1,5 +1,5 @@
 import { Add } from '@material-ui/icons'
-import { responsiveHomeStyle } from '../../../../../styles/service/chat'
+import { responsiveHomeStyle } from '../../../../../styles/service/chat/chat'
 import { IChannel } from '../../../../../types/chat.types'
 import Row from './row'
 

@@ -1,14 +1,15 @@
 import { makeStyles, createStyles } from '@material-ui/core'
+import React from 'react'
 
 import { IThemeStyle } from '../../../styles/theme'
 import { IItemDefautlProps, IInputProps } from '../../../types/item.types'
 
-const textInputStyle = makeStyles((theme: IThemeStyle) =>
+const fileInputStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
       display: 'flex',
-      alignItems: 'center',
-      marginTop: '16px',
+      justifyContent: 'space-around',
+      gap: '25px',
     },
     input: {
       width: '100%',
@@ -35,19 +36,11 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
   })
 )
 
-function CustomTextInput(props: IItemDefautlProps & IInputProps) {
-  const { onChange, className, style, label, isPassword, placeholder, value, required } = props
-  const classes = textInputStyle()
+function CustomFileInput(props: IItemDefautlProps & IInputProps) {
+  const { onChange, className, style, label, placeholder, value, required } = props
+  const classes = fileInputStyle()
 
-  return (
-    <div className={classes.wrapper}>
-      <span className={classes.label}>
-        {required && <span className={classes.required}>*</span>}
-        {label}
-      </span>
-      <input type={isPassword ? 'password' : 'text'} onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
-    </div>
-  )
+  return <React.Fragment></React.Fragment>
 }
 
-export default CustomTextInput
+export default CustomFileInput

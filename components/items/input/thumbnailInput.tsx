@@ -3,12 +3,12 @@ import { makeStyles, createStyles } from '@material-ui/core'
 import { IThemeStyle } from '../../../styles/theme'
 import { IItemDefautlProps, IInputProps } from '../../../types/item.types'
 
-const textInputStyle = makeStyles((theme: IThemeStyle) =>
+const fileInputStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
       display: 'flex',
-      alignItems: 'center',
-      marginTop: '16px',
+      justifyContent: 'space-around',
+      gap: '25px',
     },
     input: {
       width: '100%',
@@ -32,22 +32,33 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
     required: {
       color: '#C33030',
     },
+    imageUpload: {
+      height: '100px',
+      width: '100%',
+      marginTop: '8px',
+      marginBottom: '14px',
+      border: `1px solid ${theme.font.small.color}`,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: theme.font.high.color,
+    },
   })
 )
 
-function CustomTextInput(props: IItemDefautlProps & IInputProps) {
-  const { onChange, className, style, label, isPassword, placeholder, value, required } = props
-  const classes = textInputStyle()
+function CustomThumbnailInput(props: IItemDefautlProps & IInputProps) {
+  const { onChange, className, style, label, placeholder, value, required } = props
+  const classes = fileInputStyle()
 
   return (
     <div className={classes.wrapper}>
       <span className={classes.label}>
         {required && <span className={classes.required}>*</span>}
-        {label}
+        {label} Thumbnail
       </span>
-      <input type={isPassword ? 'password' : 'text'} onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
+      <input type="file" onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
     </div>
   )
 }
 
-export default CustomTextInput
+export default CustomThumbnailInput

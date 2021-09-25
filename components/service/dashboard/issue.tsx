@@ -1,0 +1,48 @@
+import React, { useState } from 'react'
+import { issueStyle } from '../../../styles/service/dashboard/dashboard'
+import { IIssue } from '../../../types/issue.types'
+
+interface IIssueViewProps {}
+
+function IssueView(props: IIssueViewProps) {
+  const {} = props
+  const classes = issueStyle()
+  const [kanbanList, setKanbanList] = useState<string[]>([])
+  const [issueList, setIssueList] = useState<IIssue[]>([])
+
+  const handleLinkIssue = () => {}
+
+  return (
+    <div className={classes.issue}>
+      <div className={classes.title}>Issue</div>
+      <div className={classes.content}>
+        {issueList.length > 0 ? (
+          issueList.map((v, i) => {
+            return (
+              <div key={`dashboard-issue-${i}`} className={classes.card} onClick={handleLinkIssue}>
+                <div className={classes.top}>
+                  <div className={classes.thumbnail}></div>
+                  <div className={classes.issueName}>
+                    <div className={classes.issueTitle}>{v.title}</div>
+                    <div className={classes.issueId}>#{v.issueId} Issue</div>
+                  </div>
+                  <div className={classes.issueContentWrapper}>
+                    <div className={classes.issueContent}>{v.content ?? 'this issue has no content'}</div>
+                  </div>
+                </div>
+
+                <div className={classes.bottom}>
+                  <div className={classes.labelWrapper}>{v.label !== '' && v.label !== undefined && <div className={classes.label}>{v.label}</div>}</div>
+                </div>
+              </div>
+            )
+          })
+        ) : (
+          <div className={classes.empty}>this server has no issue</div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default IssueView

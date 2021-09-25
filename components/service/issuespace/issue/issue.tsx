@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { issueStyle } from '../../../../styles/service/issue'
 import Col from './col'
 import { IIssue } from '../../../../types/issue.types'
+import CreateIssue from '../create/issue'
 
 interface IIssueProps {}
 
@@ -13,6 +14,7 @@ function Issue(props: IIssueProps) {
   const router = useRouter()
   const [col, setCol] = useState<string[]>([])
   const [issueList, setIssueList] = useState<IIssue[]>([])
+  const [modal, setModal] = useState<boolean>(false)
 
   return (
     <div className={classes.wrapper}>
@@ -22,6 +24,7 @@ function Issue(props: IIssueProps) {
           <Col key={v} title={v} issueList={issueList} />
         ))}
       </div>
+      <CreateIssue modal={modal} setModal={setModal} />
     </div>
   )
 }

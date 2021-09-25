@@ -1,4 +1,4 @@
-import { activitybarContentStyle } from '../../../../../styles/service/chat'
+import { activitybarContentStyle } from '../../../../../styles/service/chat/chat'
 import { IChannel, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
 import Boundary from '../../common/boundary'

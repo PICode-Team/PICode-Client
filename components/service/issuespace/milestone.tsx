@@ -1,13 +1,17 @@
+import { useState } from 'react'
+
 import { DeleteForever, Edit } from '@material-ui/icons'
+
 import { boardStyle } from '../../../styles/service/issue'
 import { IMilestone } from '../../../types/issue.types'
+import CreateMilestone from './create/milestone'
 
 interface IMilestoneProps {
   kanbanIssue: string
   milestoneList: IMilestone[] | null
 }
 
-const getPercentage = (startData: string, endDate: string) => {
+export const getPercentage = (startData: string, endDate: string) => {
   const date = new Date()
   const whole = Number(endDate.slice(8, 10)) - Number(startData.slice(8, 10))
   const today = Number(date.getDate()) - Number(startData.slice(8, 10))
@@ -23,6 +27,7 @@ const getPercentage = (startData: string, endDate: string) => {
 function Milestone(props: IMilestoneProps) {
   const { kanbanIssue, milestoneList } = props
   const classes = boardStyle()
+  const [modal, setModal] = useState<boolean>(false)
 
   const handleEditMile = () => {
     // (e) => {
@@ -96,6 +101,7 @@ function Milestone(props: IMilestoneProps) {
           </div>
         </>
       )}
+      <CreateMilestone modal={modal} setModal={setModal} />
     </div>
   )
 }

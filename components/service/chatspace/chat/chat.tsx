@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { chatStyle } from '../../../../styles/service/chat'
+import { chatStyle } from '../../../../styles/service/chat/chat'
 import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
 import Activitybar from './activitybar/activitybar'

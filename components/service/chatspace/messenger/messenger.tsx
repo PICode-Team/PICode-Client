@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { ChatBubbleOutline } from '@material-ui/icons'
 
-import { messengerStyle } from '../../../../styles/service/messenger'
+import { messengerStyle } from '../../../../styles/service/chat/messenger'
 import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import Home from './home'
 import Room from './room'

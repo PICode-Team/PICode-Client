@@ -7,10 +7,11 @@ export interface IItemDefautlProps {
 }
 
 export interface IInputProps {
-  value: string | boolean
+  value: string | string[] | boolean
   label: string
   placeholder?: string
   isPassword?: boolean
+  required?: boolean
   optionList?: {
     name: string
     value: string

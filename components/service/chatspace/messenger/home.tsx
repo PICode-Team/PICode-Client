@@ -1,6 +1,6 @@
 import { Add, Close, FilterNone } from '@material-ui/icons'
 
-import { messengerStyle } from '../../../../styles/service/messenger'
+import { messengerStyle } from '../../../../styles/service/chat/messenger'
 import { IChannel } from '../../../../types/chat.types'
 import Row from './row'
 

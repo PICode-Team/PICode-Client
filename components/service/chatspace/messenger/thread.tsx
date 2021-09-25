@@ -2,7 +2,7 @@ import { useRef } from 'react'
 
 import { AttachFile, Close, FilterNone, NavigateBefore, Send, SentimentSatisfied } from '@material-ui/icons'
 
-import { messengerStyle } from '../../../../styles/service/messenger'
+import { messengerStyle } from '../../../../styles/service/chat/messenger'
 import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import MessageBox from '../common/messageBox'
 import Boundary from '../common/boundary'

@@ -2,7 +2,7 @@ import { useRef } from 'react'
 
 import { AttachFile, NavigateBefore, Send, SentimentSatisfied } from '@material-ui/icons'
 
-import { responsiveThreadStyle } from '../../../../../styles/service/chat'
+import { responsiveThreadStyle } from '../../../../../styles/service/chat/chat'
 import { IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
 import Boundary from '../../common/boundary'
