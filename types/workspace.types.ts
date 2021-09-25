@@ -1,3 +1,12 @@
+export interface IWorkspaceSpec {
+  projectName: string
+  projectDescription: string
+  language: string
+  projectCreator: string
+  projectParticipants: string[]
+  projectThumbnail?: string
+}
+
 export interface IWorkspace {
   projectName: string
   projectDescription: string
