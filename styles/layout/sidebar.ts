@@ -128,6 +128,8 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
     },
     collapseButton: {
       color: theme.font.high.color,
+      height: '24px !important',
+      width: '24px !important',
     },
     collapseWrapper: {
       transition: 'all ease 0.3s 0s',

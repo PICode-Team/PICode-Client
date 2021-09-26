@@ -8,17 +8,17 @@ interface IRowProps {
 
 function Row(props: IRowProps) {
   const { target, setTarget, classes } = props
+
+  const handleClickRow = () => {
+    setTarget(target)
+  }
+
   return (
-    <div
-      className={classes.row}
-      onClick={() => {
-        setTarget(target)
-      }}
-    >
+    <div className={classes.row} onClick={handleClickRow}>
       <div className={classes.users}></div>
       <div className={classes.titleWrapper}>
         <div className={classes.title}>
-          <div className={classes.titleText}>{target}</div>
+          <div className={classes.titleText}>{target.chatName ?? (target.userId as string)}</div>
           <div className={classes.participant}>{target.chatName !== undefined && target.chatParticipant.length}</div>
           <div className={classes.etc}></div>
         </div>

@@ -17,6 +17,8 @@ export interface IInputProps {
     value: string
   }[]
   onChange?: () => void
+  onKeyPress?: () => void
+  onClick?: () => void
 }
 
 type IButtonColor = 'primary' | 'secondary'

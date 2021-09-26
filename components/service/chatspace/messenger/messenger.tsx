@@ -17,11 +17,10 @@ function Messenger(props: IMessengerProps) {
   const classes = messengerStyle()
   const [open, setOpen] = useState<boolean>(false)
   const [target, setTarget] = useState<IChannel | null>(null)
-  const [channelList, setChannelList] = useState<IChannel[]>([])
+  const [channelList, setChannelList] = useState<IChannel[]>([{ chatName: 'test', chatParticipant: [''], creation: '', description: '123123123123123123123213', userId: '' }])
   const [messageList, setMessageList] = useState<IChat[]>([])
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [thread, setThread] = useState<IThread | null>(null)
-  const [modal, setModal] = useState<boolean>(false)
 
   const handleOpenMessenger = () => {
     setOpen(true)
@@ -31,7 +30,7 @@ function Messenger(props: IMessengerProps) {
     return (
       <React.Fragment>
         {target === null ? (
-          <Home channelList={channelList} setOpen={setOpen} setTarget={setTarget} setModal={setModal}></Home>
+          <Home channelList={channelList} setOpen={setOpen} setTarget={setTarget} />
         ) : (
           <Room userId={userId} target={target} messageList={messageList} newMessage={newMessage} thread={thread} particiapntList={[]} setTarget={setTarget} setOpen={setOpen} setThread={setThread} />
         )}

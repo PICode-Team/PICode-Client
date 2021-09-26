@@ -10,7 +10,7 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
     wrapper: {
       display: 'flex',
       alignItems: 'center',
-      marginTop: '16px',
+      marginTop: '8px',
     },
     input: {
       width: '100%',

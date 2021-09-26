@@ -14,7 +14,7 @@ function Chat(ctx: any) {
   const { userId, toggle } = ctx
   const classes = chatStyle()
   const [messageList, setMessageList] = useState<IChat[]>([])
-  const [channelList, setChannelList] = useState<IChannel[]>([{ chatName: 'test', chatParticipant: [''], creation: '', description: '123123123123123123123213', userId: '' }])
+  const [channelList, setChannelList] = useState<IChannel[]>([])
   const [userList, setUserList] = React.useState<IUser[]>([])
   const [thread, setThread] = useState<IThread | null>(null)
   const [typingUserList, setTypingUserList] = useState<IUser[]>([])
@@ -27,18 +27,20 @@ function Chat(ctx: any) {
   const threadEndRef = useRef<HTMLInputElement>(null)
 
   const getUserList = async () => {
-    await fetchSet('/userList', 'GET', true).then((res) => {
-      if (res.code === 200) {
-        setUserList(res.user)
-      }
-    })
+    fetchSet('/userList', 'GET', false)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.code === 200) {
+          setUserList(res.user)
+        }
+      })
   }
 
   useEffect(() => {
     setMessageList([])
 
     if (target !== null) {
-      setMessageList([{ chatId: '', message: '1213', threadList: [], time: '2021-09-31 12:32:32', user: '' }])
+      // setMessageList([])
     }
   }, [target])
 

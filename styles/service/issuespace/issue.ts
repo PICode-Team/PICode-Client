@@ -203,7 +203,7 @@ export const manageStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     manage: {
       width: '100%',
-      height: '100%',
+      height: 'calc(100% - 90px)',
     },
     title: {
       fontSize: theme.font.high.size,
@@ -213,7 +213,7 @@ export const manageStyle = makeStyles((theme: IThemeStyle) =>
     },
     content: {
       width: '100%',
-      height: 'calc(100% - 91px)',
+      height: 'calc(100% - 58px)',
       padding: '24px',
       paddingTop: 0,
       display: 'flex',

@@ -31,22 +31,24 @@ const Row = (props: { data: { url?: string; icon: JSX.Element; title: string; ch
     })
   }
 
+  const handleArcodian = () => {
+    if (haveChildren) {
+      setRowOpen(!rowOpen)
+    }
+  }
+
   return (
     <React.Fragment>
       <a
         className={clsx(`${classes.row} ${props.toggle && classes.toggle}`, !props.data.children && checkActive(props.data, route) ? classes.active : classes.unactive)}
         href={props.data.url}
-        onClick={() => {
-          if (haveChildren) {
-            setRowOpen(!rowOpen)
-          }
-        }}
+        onClick={handleArcodian}
       >
         {props.data.icon}
         {!props.toggle && (
           <div className={classes.content}>
             <span className={`${classes.text} ${props.toggle && classes.hidden}`}>{props.data.title}</span>
-            {haveChildren && <ArrowDropDownOutlined style={{ height: '24px', width: '24px' }} className={classes.collapseButton} />}
+            {haveChildren && <ArrowDropDownOutlined className={classes.collapseButton} />}
           </div>
         )}
       </a>

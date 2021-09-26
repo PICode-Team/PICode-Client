@@ -7,7 +7,7 @@ const textareaStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
       flex: 1,
-      marginTop: '16px',
+      marginTop: '8px',
     },
     textarea: {
       width: '100%',

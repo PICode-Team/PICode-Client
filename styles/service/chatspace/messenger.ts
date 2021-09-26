@@ -64,6 +64,12 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
     name: {
       color: '#ffffff',
     },
+    text: {
+      marginRight: '4px',
+      fontSize: '18px',
+      fontWeight: 'bold',
+    },
+
     online: {
       display: 'flex',
       fontSize: '11px',
@@ -271,6 +277,24 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
       },
     },
+    createChannel: {
+      padding: '10px 20px',
+      height: '60px',
+      width: '100%',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      '&:hover': {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      },
+    },
+    add: {
+      color: '#ffffff',
+      width: '30px !important',
+      height: '30px !important',
+    },
+
     users: {
       width: '40px',
       height: '40px',

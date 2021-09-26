@@ -54,36 +54,33 @@ function Room(props: IRoomProps) {
   //   setMessageList([]);
   // }, []);
 
+  const handleClickBack = () => {
+    setTarget(null)
+  }
+
+  const handleLinkChatspace = () => {
+    window.location.href = '/chatspace'
+  }
+
+  const handleClickCancel = () => {
+    setOpen(false)
+  }
+
   return (
     <div className={classes.messenger}>
       <div className={classes.wrapper}>
         <div className={classes.header}>
-          <div
-            className={classes.back}
-            onClick={() => {
-              setTarget(null)
-            }}
-          >
+          <div className={classes.back} onClick={handleClickBack}>
             <NavigateBefore />
           </div>
           <div className={classes.opponent}>
-            <div className={classes.name}>{target}</div>
+            <div className={classes.name}>{target.chatName ?? (target.userId as string)}</div>
             <div className={classes.online}></div>
           </div>
-          <div
-            className={classes.expand}
-            onClick={() => {
-              window.location.href = '/chat'
-            }}
-          >
+          <div className={classes.expand} onClick={handleLinkChatspace}>
             <FilterNone />
           </div>
-          <div
-            className={classes.cancel}
-            onClick={() => {
-              setOpen(false)
-            }}
-          >
+          <div className={classes.cancel} onClick={handleClickCancel}>
             <Close />
           </div>
         </div>

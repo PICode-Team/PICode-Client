@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { layoutStyle } from '../../styles/layout/layout'
 import { IPageProps } from '../../types/page.types'
+import Messenger from '../service/chatspace/messenger/messenger'
 import Sidebar from './sidebar'
 import Topbar from './topbar'
 
@@ -45,6 +46,7 @@ function Layout(props: IPageProps) {
           }}
         />
       )}
+      <Messenger userId="123" />
     </React.Fragment>
   )
 }

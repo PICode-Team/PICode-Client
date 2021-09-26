@@ -12,14 +12,14 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     modal: {
       width: '30%',
-      height: '40%',
+      height: '42%',
       position: 'fixed',
       backgroundColor: '#2c3239',
       zIndex: 99999,
       top: 0,
       left: 0,
       marginLeft: '35%',
-      marginTop: '10%',
+      marginTop: '15%',
       padding: '30px',
       borderRadius: '12px',
       display: 'flex',

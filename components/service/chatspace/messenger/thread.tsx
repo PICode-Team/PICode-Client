@@ -40,47 +40,36 @@ function Thread(props: IThreadProps) {
     }
   }
 
+  const handleClickBack = () => {
+    setThread(null)
+  }
+
+  const handleLinkChatspace = () => {
+    window.location.href = '/chatspace'
+  }
+
+  const handleClickCancel = () => {
+    setOpen(false)
+  }
+
   return (
     <div className={classes.messenger} style={{ boxShadow: 'none' }}>
       <div className={classes.wrapper}>
         <div className={classes.header}>
-          <div
-            className={classes.back}
-            onClick={() => {
-              setThread(null)
-            }}
-          >
+          <div className={classes.back} onClick={handleClickBack}>
             <NavigateBefore />
           </div>
           <div className={classes.opponent}>
             <div className={classes.name}>
-              <span
-                style={{
-                  marginRight: '4px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                }}
-              >
-                Thread
-              </span>
+              <span className={classes.text}>Thread</span>
               {thread.chatName}
             </div>
             <div className={classes.online}></div>
           </div>
-          <div
-            className={classes.expand}
-            onClick={() => {
-              window.location.href = '/chat'
-            }}
-          >
+          <div className={classes.expand} onClick={handleLinkChatspace}>
             <FilterNone />
           </div>
-          <div
-            className={classes.cancel}
-            onClick={() => {
-              setOpen(false)
-            }}
-          >
+          <div className={classes.cancel} onClick={handleClickCancel}>
             <Close />
           </div>
         </div>

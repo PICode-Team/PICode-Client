@@ -8,7 +8,7 @@ const selectStyle = makeStyles((theme: IThemeStyle) =>
     wrapper: {
       display: 'flex',
       alignItems: 'center',
-      marginTop: '16px',
+      marginTop: '8px',
     },
     select: {
       flex: 1,
