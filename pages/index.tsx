@@ -1,11 +1,19 @@
 import React from 'react'
+
 import Layout from '../components/layout'
-import Issue from '../components/service/issuespace/issue/issue'
+import Dashboard from '../components/service/dashboard/dashboard'
+import Login from '../components/user/login'
 
 export default function Home(pageProps: any) {
   return (
-    <Layout {...pageProps}>
-      <Issue />
-    </Layout>
+    <React.Fragment>
+      {pageProps.session.userId ? (
+        <Layout {...pageProps}>
+          <Dashboard {...pageProps} />
+        </Layout>
+      ) : (
+        <Login />
+      )}
+    </React.Fragment>
   )
 }
