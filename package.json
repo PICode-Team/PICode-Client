@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "set NODE_ENV=dev && ts-node --project tsconfig.server.json server/index.ts",
+    "dev": "export NODE_ENV=dev && ts-node --project tsconfig.server.json server/index.ts",
     "build:next": "next build",
     "build:server": "tsc --project tsconfig.server.json",
     "build": "npm run build:next && npm run build:server",
-    "start": "set NODE_ENV=production && node dist/index.js"
+    "start": "export NODE_ENV=production && node dist/index.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",

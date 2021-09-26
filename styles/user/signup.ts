@@ -4,48 +4,6 @@ import { IThemeStyle } from '../theme'
 
 export const signupStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
-    login: {
-      backgroundColor: theme.backgroundColor.step0,
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    loginForm: {
-      backgroundColor: theme.loginBackground,
-      padding: '100px 60px',
-      width: '460px',
-      height: '800px',
-      justifyContent: 'center',
-      textAlign: 'center',
-      verticalAlign: 'middle',
-      position: 'relative',
-      color: theme.font.high.color,
-    },
-    loginImage: {
-      width: '30%',
-      height: '100%',
-      display: 'flex',
-      color: theme.font.low.color,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    titleText: {
-      marginTop: '5px',
-      height: '32px',
-      width: '100%',
-      textAlign: 'center',
-      fontWeight: 'bold',
-      fontSize: '28px',
-      lineHeight: '32px',
-      color: theme.font.high.color,
-    },
-    subject: {
-      fontSize: theme.font.high.size,
-      width: '100%',
-      textAlign: 'center',
-    },
     inputBox: {
       textAlign: 'center',
       width: '100%',
@@ -59,11 +17,7 @@ export const signupStyle = makeStyles((theme: IThemeStyle) =>
         opacity: 0.7,
       },
     },
-    themeChangeButton: {
-      position: 'absolute',
-      right: '20px',
-      top: '20px',
-    },
+
     stepper: {
       background: theme.loginBackground,
       padding: '24px 0 0 0',
@@ -138,6 +92,22 @@ export const signupStyle = makeStyles((theme: IThemeStyle) =>
       cursor: 'pointer',
       lineHeight: '150px',
       position: 'relative',
+    },
+    userImageCancel: {
+      position: 'absolute',
+      right: 15,
+      top: 15,
+      cursor: 'pointer',
+    },
+    userImage: {
+      '&>img': {
+        width: '50px',
+        height: '50px',
+      },
+      '&>p': {
+        width: '100%',
+        marginTop: '6px',
+      },
     },
   })
 )

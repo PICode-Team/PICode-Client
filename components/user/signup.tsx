@@ -1,30 +1,39 @@
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
-import { IconButton, Step, StepLabel, Stepper } from '@material-ui/core'
-import { Brightness4, Brightness7, Close } from '@material-ui/icons'
-import { useDispatch, useSelector } from 'react-redux'
+import { Step, StepLabel, Stepper } from '@material-ui/core'
+import { Close } from '@material-ui/icons'
 import { useDropzone } from 'react-dropzone'
 import clsx from 'clsx'
 
-import { toDark, toWhite } from '../../modules/theme'
 import { signupStyle } from '../../styles/user/signup'
-import { emailRegex, pwRegex } from '../context/regex'
 import CustomTextField from '../items/input/textfield'
+import Layout from './layout'
+import { fetchSet } from '../context/fetch'
 
 interface IValidate {
   email: boolean
   pw: boolean
 }
 
+interface ISignUpInfo {
+  id: string
+  password: string
+  confirmPassword: string
+  name: string
+}
+
+const initialInfoState: ISignUpInfo = {
+  id: '',
+  password: '',
+  confirmPassword: '',
+  name: '',
+}
+
 function SignUp() {
   const classes = signupStyle()
-  const theme = useSelector((state: any) => state.theme).theme
-  const [userId, setUserId] = useState<string>('')
-  const [userName, setUserName] = useState<string>('')
-  const [passwd, setPasswd] = useState<string>('')
-  const [confirmPw, setConfirmPw] = useState<string>('')
   const [userImage, setUserImage] = useState<any>()
   const [imageUUID, setImageUUID] = useState<string>('')
+  const [info, setInfo] = useState<ISignUpInfo>(initialInfoState)
   const [activeStep, setActiveStep] = useState<number>(0)
   const [validate, setValidate] = useState<IValidate>({
     email: true,
@@ -34,7 +43,6 @@ function SignUp() {
     setUserImage(acceptedFiles[0])
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-  const dispatch = useDispatch()
 
   const step = ['Account Info', 'User Info', 'Optional']
 
@@ -71,32 +79,30 @@ function SignUp() {
     },
   ]
 
+  const handleUserImageCancel = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    event.preventDefault()
+    setUserImage(undefined)
+    setImageUUID('')
+  }
+
+  const handleChangeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInfo({ ...info, [event.target.id]: event.target.value })
+  }
+
   const stepDiv = [
     <div className={classes.inputBox} key={0}>
-      <CustomTextField label="ID" onChange={(e: any) => handleEmail(e)} />
-      <CustomTextField label="Password" type="password" onChange={(e: any) => setPasswd(e.target.value)} error={!validate.pw} errorText={"Isn't required password"} />
-      <CustomTextField label="Confirm Password" type="password" onChange={(e: any) => setConfirmPw(e.target.value)} error={passwd !== confirmPw} errorText={'Password is wrong'} />
+      <CustomTextField id="id" label="ID" onChange={handleChangeValue} />
+      <CustomTextField id="password" label="Password" type="password" onChange={handleChangeValue} error={!validate.pw} errorText={"Isn't required password"} />
+      <CustomTextField id="confirmPassword" label="Confirm Password" type="password" onChange={handleChangeValue} error={info.password !== info.confirmPassword} errorText={'Password is wrong'} />
     </div>,
     <div className={classes.inputBox} key={1}>
-      <CustomTextField label="Name" onChange={(e: any) => setUserName(e.target.value)} />
+      <CustomTextField id="name" label="Name" onChange={handleChangeValue} />
     </div>,
     <div className={classes.inputBox} key={1}>
       <div {...getRootProps()} className={classes.uploadFile}>
         {userImage && (
-          <div
-            style={{
-              position: 'absolute',
-              right: 15,
-              top: 15,
-              cursor: 'pointer',
-            }}
-            onClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
-              setUserImage(undefined)
-              setImageUUID('')
-            }}
-          >
+          <div className={classes.userImageCancel} onClick={handleUserImageCancel}>
             <Close />
           </div>
         )}
@@ -106,9 +112,9 @@ function SignUp() {
         ) : (
           <>
             {userImage !== undefined ? (
-              <div>
-                <img src={URL.createObjectURL(userImage)} width={'50px'} height={'50px'} />
-                <p style={{ width: '100%', marginTop: '6px' }}>{userImage!.name}</p>
+              <div className={classes.userImage}>
+                <img src={URL.createObjectURL(userImage)} />
+                <p>{userImage!.name}</p>
               </div>
             ) : (
               <div className={classes.fileContent}>Drag 'n' drop some files here, or click to select files</div>
@@ -119,54 +125,39 @@ function SignUp() {
     </div>,
   ]
 
-  const handleEmail = (e: any) => {
-    setUserId(e.target.value)
-    let result = emailRegex.test(userId)
-    setValidate({ ...validate, email: result })
-  }
-
-  const hadnlePw = (e: any) => {
-    setPasswd(e.target.value)
-    let result = pwRegex.test(passwd)
-    setValidate({ ...validate, pw: result })
-  }
-
   const submitSignUp = async () => {
-    let payload = {
-      userId: userId,
-      userName: userName,
-      passwd: passwd,
+    const payload = {
+      userId: info.id,
+      userName: info.name,
+      passwd: info.password,
       userThumbnail: imageUUID !== '' ? imageUUID : undefined,
     }
-    let data = await fetch(`http://localhost:8000/api/user`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    }).then((res) => res.json())
+
+    fetchSet('/user', 'POST', true, JSON.stringify(payload))
+
     window.location.href = '/'
   }
 
+  const handleClickPrevButton = () => {
+    if (activeStep === 0) return
+    setActiveStep(activeStep - 1)
+  }
+
+  const handleClickSubmitButton = () => {
+    if (activeStep === 2) {
+      if (info.id === '') return
+      if (info.name === '') return
+      if (info.password === '' || info.password !== info.confirmPassword) return
+      if (info.confirmPassword === '') return
+      submitSignUp()
+      return
+    }
+    setActiveStep(activeStep + 1)
+  }
+
   return (
-    <div className={classes.login}>
-      <div className={classes.themeChangeButton}>
-        {theme === 'dark' ? (
-          <IconButton onClick={() => dispatch(toWhite())} style={{ color: '#fff' }}>
-            <Brightness7 />
-          </IconButton>
-        ) : (
-          <IconButton onClick={() => dispatch(toDark())} style={{ color: 'black' }}>
-            <Brightness4 />
-          </IconButton>
-        )}
-      </div>
-      <div className={classes.loginForm}>
-        <div style={{ textAlign: 'center' }}>
-          <img src={'http://localhost:8000/images/picode-7.svg'} width={'110px'} draggable={false} />
-          <div className={classes.titleText}>SIGNUP</div>
-        </div>
+    <Layout isLogin={false}>
+      <React.Fragment>
         <Stepper activeStep={activeStep} alternativeLabel className={classes.stepper}>
           {step.map((label, idx) => (
             <Step key={label} className={clsx(activeStep >= idx ? classes.activeCir : classes.disableCir)}>
@@ -176,37 +167,18 @@ function SignUp() {
         </Stepper>
         {stepDiv[activeStep]}
         <div className={classes.buttonGroup}>
-          <div
-            className={clsx(classes.button, stpeInfo[activeStep].prev.display ? classes.activeButton : classes.disableButton)}
-            onClick={() => {
-              if (activeStep === 0) return
-              setActiveStep(activeStep - 1)
-            }}
-          >
+          <div className={clsx(classes.button, stpeInfo[activeStep].prev.display ? classes.activeButton : classes.disableButton)} onClick={handleClickPrevButton}>
             {stpeInfo[activeStep].prev.label}
           </div>
-          <div
-            className={clsx(classes.button, stpeInfo[activeStep].next.display ? classes.activeButton : classes.disableButton)}
-            onClick={() => {
-              if (activeStep === 2) {
-                if (userId === '') return
-                if (userName === '') return
-                if (passwd === '' || confirmPw !== passwd) return
-                if (confirmPw === '') return
-                submitSignUp()
-                return
-              }
-              setActiveStep(activeStep + 1)
-            }}
-          >
+          <div className={clsx(classes.button, stpeInfo[activeStep].next.display ? classes.activeButton : classes.disableButton)} onClick={handleClickSubmitButton}>
             {stpeInfo[activeStep].next.label}
           </div>
         </div>
         <div className={classes.buttonBox}>
-          <a href="/login">If you have account&nbsp;&nbsp;→</a>
+          <a href="/">If you have account&nbsp;&nbsp;→</a>
         </div>
-      </div>
-    </div>
+      </React.Fragment>
+    </Layout>
   )
 }
 

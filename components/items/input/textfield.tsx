@@ -37,6 +37,7 @@ const textFiledStyle = makeStyles((theme: IThemeStyle) =>
 interface ITextFieldProps {
   label: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  id?: string
   type?: string
   error?: boolean
   errorText?: string
@@ -46,10 +47,11 @@ interface ITextFieldProps {
 }
 
 function CustomTextField(props: ITextFieldProps) {
-  const { label, onChange, type, error, errorText, onKeyPress, width, height } = props
+  const { label, onChange, type, error, errorText, onKeyPress, width, height, id } = props
   const classes = textFiledStyle()
   return (
     <TextField
+      id={id}
       label={label}
       className={classes.textfield}
       type={type}

@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
+
 import { layoutStyle } from '../../styles/layout/layout'
+import { IPageProps } from '../../types/page.types'
 import Sidebar from './sidebar'
 import Topbar from './topbar'
 
-interface ILayoutProps {
-  children: JSX.Element
-  path: string
-  session: string
-}
-
-function Layout(props: ILayoutProps) {
+function Layout(props: IPageProps) {
+  const { children, path, cookie } = props
   const classes = layoutStyle()
   const [toggle, setToggle] = useState<boolean>(false)
 
@@ -22,9 +19,9 @@ function Layout(props: ILayoutProps) {
           <div className={classes.pageName}>
             <div></div>
           </div>
-          {React.cloneElement(props.children, {
-            path: props.path,
-            session: props.session,
+          {React.cloneElement(children, {
+            path: path,
+            cookie: cookie,
             toggle: toggle,
           })}
         </div>
