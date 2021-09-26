@@ -31,7 +31,7 @@ function Login() {
     const response = await (await fetchSet('/user/sign', 'POST', true, JSON.stringify(payload))).json()
     window.localStorage.setItem('cookie', response)
 
-    // window.location.reload()
+    window.location.reload()
   }
 
   const handleChangeValue = (event: React.ChangeEvent<HTMLInputElement>) => {

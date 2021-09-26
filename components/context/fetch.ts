@@ -18,5 +18,5 @@ export async function fetchSet(url: string, method: IMethodType, headers: boolea
     body: body,
   }
 
-  return await fetch(`http://192.168.85.128:80/api${url}`, fetchOption)
+  return await fetch(`/api${url}`, fetchOption)
 }
