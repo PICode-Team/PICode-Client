@@ -16,7 +16,8 @@ export interface IInputProps {
     name: string
     value: string
   }[]
-  onChange?: () => void
+  id?: string
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onKeyPress?: () => void
   onClick?: () => void
 }

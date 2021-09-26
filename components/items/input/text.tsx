@@ -36,7 +36,7 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function CustomTextInput(props: IItemDefautlProps & IInputProps) {
-  const { onChange, className, style, label, isPassword, placeholder, value, required } = props
+  const { onChange, className, style, label, isPassword, placeholder, value, required, id } = props
   const classes = textInputStyle()
 
   return (
@@ -45,7 +45,7 @@ function CustomTextInput(props: IItemDefautlProps & IInputProps) {
         {required && <span className={classes.required}>*</span>}
         {label}
       </span>
-      <input type={isPassword ? 'password' : 'text'} onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
+      <input id={id} type={isPassword ? 'password' : 'text'} onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
     </div>
   )
 }

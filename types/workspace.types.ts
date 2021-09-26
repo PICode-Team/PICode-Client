@@ -1,27 +1,27 @@
 export interface IWorkspaceSpec {
-  projectName: string
-  projectDescription: string
+  name: string
+  description: string
   language: string
-  projectCreator: string
-  projectParticipants: string[]
-  projectThumbnail?: string
+  creator: string
+  participants: string[]
+  thumbnail?: string
 }
 
 export interface IWorkspace {
-  projectName: string
-  projectDescription: string
-  projectThumbnail?: string
-  projectParticipants?: string[]
+  name: string
+  description: string
+  thumbnail?: string
+  participants?: string[]
 }
 
 export interface IDockerInfo {
-  containerName: string
+  containerName?: string
   image: string
-  tag: string
-  bridgeName: string
-  bridgeAlias: string
-  portInfo: IPortInfo
-  linkContainer: string
+  tag?: string
+  bridgeId?: string
+  bridgeAlias?: string
+  portInfo?: IPortInfo
+  linkContainer?: string
 }
 
 export interface ISource {

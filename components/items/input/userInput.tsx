@@ -95,10 +95,16 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
   })
 )
 
-function CustomUserInput() {
+interface IUserInputProps {
+  value: string[]
+  setValue: React.Dispatch<React.SetStateAction<string[]>>
+  label: string
+}
+
+function CustomUserInput(props: IUserInputProps) {
+  const { value, label, setValue } = props
   const classes = userInputStyle()
   const [participantList, setParticipantList] = useState<IUser[]>([])
-  const [itemList, setItemList] = useState<string[]>([])
   const [visible, setVisible] = useState<boolean>(false)
 
   const getParticipantList = async () => {
@@ -119,7 +125,7 @@ function CustomUserInput() {
     event.preventDefault()
     event.stopPropagation()
 
-    setItemList(itemList.filter((item) => item !== userId))
+    setValue(value.filter((item) => item !== userId))
   }
 
   useEffect(() => {
@@ -127,20 +133,20 @@ function CustomUserInput() {
   }, [])
 
   useEffect(() => {
-    if (itemList.length === participantList.length) {
+    if (value.length === participantList.length) {
       setVisible(false)
     }
-  }, [itemList])
+  }, [value])
 
   return (
     <React.Fragment>
       <div className={classes.participant}>
-        <span className={classes.label}>Project Participant</span>
+        <span className={classes.label}>{label}</span>
         <div className={classes.input} onClick={handleClickInput}>
           {participantList.length > 0 ? (
             <React.Fragment>
-              {itemList.map((v, i) => (
-                <div className={classes.item} key={`project-participant-${i}`}>
+              {value.map((v, i) => (
+                <div className={classes.item} key={`workspace-participant-${i}`}>
                   {participantList.map((item) => {
                     if (item.userId === v) return item.userName
                   })}
@@ -151,7 +157,7 @@ function CustomUserInput() {
               ))}
             </React.Fragment>
           ) : (
-            `Input project Participant`
+            `Input Workspace Participant`
           )}
         </div>
       </div>
@@ -160,7 +166,7 @@ function CustomUserInput() {
           {participantList
             .filter((item) => {
               let check = true
-              itemList.forEach((v) => {
+              value.forEach((v) => {
                 if (v === item.userId) check = false
               })
               return check
@@ -170,7 +176,7 @@ function CustomUserInput() {
                 className={classes.user}
                 key={`participant-${i}`}
                 onClick={() => {
-                  setItemList([...itemList, v.userId])
+                  setValue([...value, v.userId])
                 }}
               >
                 <div className={classes.userInfo}>

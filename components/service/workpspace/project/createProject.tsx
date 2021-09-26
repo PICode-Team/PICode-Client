@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import { createWorkspaceStyle } from '../../../../styles/service/workspace/create'
-import { ICreateType, IDockerInfo, ISource, IWorkspace } from '../../../../types/workspace.types'
+import { ICreateInfo, ICreateType, IDockerInfo, ISource, IWorkspace } from '../../../../types/workspace.types'
+import { fetchSet } from '../../../context/fetch'
 import CustomButton from '../../../items/button/button'
 import CreateType from './createType'
 import DockerInfo from './dockerInfo'
@@ -9,17 +10,17 @@ import Stepper from './stepper'
 import WorkspaceInfo from './workspaceInfo'
 
 const initialWorkspace: IWorkspace = {
-  projectName: '',
-  projectDescription: '',
-  projectParticipants: undefined,
-  projectThumbnail: undefined,
+  name: '',
+  description: '',
+  participants: undefined,
+  thumbnail: undefined,
 }
 
 const initialDocker: IDockerInfo = {
   containerName: '',
   image: '',
   tag: '',
-  bridgeName: '',
+  bridgeId: '',
   bridgeAlias: '',
   linkContainer: '',
   portInfo: {},
@@ -34,32 +35,42 @@ function CreateProject() {
   const [step, setStep] = useState<number>(1)
 
   const handlePreviousButton = () => {
-    // if (step === 2) {
-    //   setType('')
-    //   setDefualtInput({
-    //     projectDescription: '',
-    //     projectName: '',
-    //     projectParticipants: undefined,
-    //     projectThumbnail: undefined,
-    //   })
-    //   setDockerInfo({
-    //     containerName: '',
-    //     image: '',
-    //     tag: '',
-    //     bridgeName: '',
-    //     bridgeAlias: '',
-    //     portInfo: {},
-    //   })
-    // }
-    // setStep(step - 1)
+    if (step === 2) {
+      setType('nothing')
+      setProjectInfo(initialWorkspace)
+      setDockerInfo(initialDocker)
+      setSource(null)
+    }
+    setStep(step - 1)
   }
 
   const handleNextButton = () => {
-    // if (step === 2) {
-    //   setStep(3)
-    // } else {
-    //   submitData()
-    // }
+    if (step === 2) {
+      setStep(3)
+    } else {
+      submitData()
+    }
+  }
+
+  const submitData = async () => {
+    const payload: ICreateInfo = {
+      projectInfo: { ...projectInfo, participants: projectInfo.participants && projectInfo.participants.length > 0 ? projectInfo.participants : undefined },
+      dockerInfo: {
+        containerName: dockerInfo.containerName !== '' ? dockerInfo.containerName : undefined,
+        image: dockerInfo.image,
+        tag: dockerInfo.tag !== '' ? dockerInfo.tag : undefined,
+        bridgeId: dockerInfo.bridgeId !== '' ? dockerInfo.bridgeId : undefined,
+        bridgeAlias: dockerInfo.bridgeAlias !== '' ? dockerInfo.bridgeAlias : undefined,
+        portInfo: dockerInfo.portInfo,
+        linkContainer: dockerInfo.linkContainer !== '' ? dockerInfo.linkContainer : undefined,
+      },
+      source: source !== null ? source : undefined,
+    }
+    const data = await fetchSet('/workspace', 'POST', true, JSON.stringify(payload)).then((res) => res.json())
+
+    if (data.code === 200) {
+      window.location.href = '/'
+    }
   }
 
   useEffect(() => {
@@ -92,7 +103,7 @@ function CreateProject() {
         <div className={classes.inputWrapper}>
           {step === 1 && <CreateType setStep={setStep} setType={setType} />}
           {step === 2 && <WorkspaceInfo projectInfo={projectInfo} setProjectInfo={setProjectInfo} type={type} source={source} setSource={setSource} edit={false} />}
-          {step === 2 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={false} />}
+          {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={false} />}
           {step > 1 && (
             <div className={classes.content}>
               <div className={classes.inputContent}>

@@ -34,7 +34,7 @@ const textareaStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function CustomTextarea(props: IItemDefautlProps & IInputProps) {
-  const { onChange, className, style, label, required } = props
+  const { onChange, className, style, label, required, id } = props
   const classes = textareaStyle()
 
   return (
@@ -43,7 +43,7 @@ function CustomTextarea(props: IItemDefautlProps & IInputProps) {
         {required && <span className={classes.required}>*</span>}
         {label}
       </span>
-      <textarea onChange={onChange} className={`${classes.textarea} ${className}`} style={style} />
+      <textarea id={id} onChange={onChange} className={`${classes.textarea} ${className}`} style={style} />
     </div>
   )
 }

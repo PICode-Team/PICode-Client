@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { CloudUpload, InsertPhoto } from '@material-ui/icons'
 import { cloneDeep } from 'lodash'
@@ -10,6 +10,7 @@ import CustomTextarea from '../../../items/input/textarea'
 import CustomUserInput from '../../../items/input/userInput'
 import CustomFileInput from '../../../items/input/fileInput'
 import CustomThumbnailInput from '../../../items/input/thumbnailInput'
+import { fetchSet } from '../../../context/fetch'
 
 interface IWorkspaceInfoProps {
   projectInfo: IWorkspace
@@ -24,9 +25,14 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   const { projectInfo, setProjectInfo, type, source, setSource, edit } = props
   const classes = createWorkspaceStyle()
   const [upload, setUpload] = useState<boolean>(false)
-  const [imageName, setImageName] = React.useState<string>('')
-  const [fileeName, setFileName] = React.useState<string>('')
+  const [imageName, setImageName] = useState<string>('')
+  const [fileeName, setFileName] = useState<string>('')
+  const [userList, setUserList] = useState<string[]>([])
   const fileButton = useRef<any>(null)
+
+  useEffect(() => {
+    setProjectInfo({ ...projectInfo, projectParticipants: userList })
+  }, [userList])
 
   const dragOver = (e: any) => {
     e.preventDefault()
@@ -49,10 +55,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
       setImageName(files[0].name)
       let formData = new FormData()
       formData.append('uploadFile', files[0])
-      let result = await fetch(`http://localhost:8000/api/data`, {
-        method: 'POST',
-        body: formData,
-      }).then((res) => res.json())
+      const result = await fetchSet(`/data`, 'POST', true, formData).then((res) => res.json())
       if (result.code === 200) {
         setProjectInfo({
           ...projectInfo,
@@ -69,10 +72,8 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
       setFileName(files[0].name)
       let formData = new FormData()
       formData.append('uploadFile', files[0])
-      let result = await fetch(`http://localhost:8000/api/data`, {
-        method: 'POST',
-        body: formData,
-      }).then((res) => res.json())
+      const result = await fetchSet('/userList', 'POST', true, formData).then((res) => res.json())
+
       if (result.code === 200) {
         let tmpSource = source
         ;(tmpSource as any).upload.uploadFileId = result.uploadFileId
@@ -81,14 +82,18 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
     }
   }
 
+  const onChangeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setProjectInfo({ ...projectInfo, [event.target.id]: event.target.value })
+  }
+
   return (
     <React.Fragment>
       <div className={classes.subTitle}>Create Code</div>
-      <CustomTextInput value={projectInfo.projectName} label="Workspace Name" placeholder="Input Workspace Name" />
+      <CustomTextInput id="projectName" value={projectInfo.projectName} label="Workspace Name" placeholder="Input Workspace Name" onChange={onChangeInfo} />
       <div className={classes.divider}>
         <div />
       </div>
-      <CustomTextarea value={projectInfo.projectDescription} label="Workspace Description" placeholder="Input Workspace Description" />
+      <CustomTextarea id="projectDescription" value={projectInfo.projectDescription} label="Workspace Description" placeholder="Input Workspace Description" onChange={onChangeInfo} />
       <div className={classes.divider}>
         <div />
       </div>
@@ -180,10 +185,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
                 if (tmpImage !== null) {
                   let formData = new FormData()
                   formData.append('uploadFile', tmpImage[0])
-                  let result = await fetch(`http://localhost:8000/api/data`, {
-                    method: 'POST',
-                    body: formData,
-                  }).then((res) => res.json())
+                  const result = await fetchSet('/userList', 'POST', true, formData).then((res) => res.json())
                   if (result.code === 200) {
                     let tmpSource = source
                     ;(tmpSource as any).upload.uploadFileId = result.uploadFileId
@@ -198,7 +200,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
       <div className={classes.divider}>
         <div />
       </div>
-      <CustomUserInput value={projectInfo.projectParticipants ?? []} label="Project Participant" placeholder="Input Project Participant" />
+      <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />
       <div className={classes.divider}>
         <div />
       </div>

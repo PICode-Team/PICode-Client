@@ -45,7 +45,7 @@ function Chat(ctx: any) {
   }, [target])
 
   useEffect(() => {
-    // getUserList()
+    getUserList()
   }, [])
 
   return (

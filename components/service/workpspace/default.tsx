@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 import { defaultStyle } from '../../../styles/service/workspace/default'
 import { IWorkspaceSpec } from '../../../types/workspace.types'
 import CustomButton from '../../items/button/button'
+import { fetchSet } from '../../context/fetch'
 
 function DefaultCodeView() {
   const classes = defaultStyle()
@@ -22,7 +23,7 @@ function DefaultCodeView() {
   const handleClickEdit = (projectName: string) => (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    window.location.href = `/project/edit?projectName=${projectName}`
+    window.location.href = `/workspace/edit?projectName=${projectName}`
   }
 
   const handleClickDelete = (projectName: string) => async (event: React.MouseEvent) => {
@@ -39,14 +40,7 @@ function DefaultCodeView() {
       cancelButtonText: 'No',
     })
     if (result.isConfirmed) {
-      const resultData = await fetch(`/api/project?projectName=${projectName}`, {
-        method: 'DELETE',
-        mode: 'cors',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => res.json())
+      const resultData = await fetchSet(`/workspace?projectName=${projectName}`, 'DELETE', true).then((res) => res.json())
 
       if (resultData.code / 100 === 2) {
         Swal.fire({
@@ -86,12 +80,12 @@ function DefaultCodeView() {
             className={classes.item}
           >
             <div className={classes.top}>
-              <div className={classes.projectName}>{v.projectName}</div>
+              <div className={classes.projectName}>{v.name}</div>
               <div className={classes.iconWrapper}>
-                <div className={classes.icon} onClick={handleClickEdit(v.projectName)}>
+                <div className={classes.icon} onClick={handleClickEdit(v.name)}>
                   <Settings />
                 </div>
-                <div className={classes.icon} onClick={handleClickDelete(v.projectName)}>
+                <div className={classes.icon} onClick={handleClickDelete(v.name)}>
                   <DeleteForever />
                 </div>
               </div>
@@ -102,7 +96,7 @@ function DefaultCodeView() {
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Creator</div>
-              <div className={classes.infoValue}>{v.projectCreator}</div>
+              <div className={classes.infoValue}>{v.creator}</div>
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Create time</div>
@@ -110,11 +104,11 @@ function DefaultCodeView() {
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Description</div>
-              <div className={classes.infoValue}>{v.projectDescription}</div>
+              <div className={classes.infoValue}>{v.description}</div>
             </div>
             <div className={classes.buttonGroup}>
-              <CustomButton text="To Code" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkCode(v.projectName)} />
-              <CustomButton text="To Issue" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkIssue(v.projectName)} />
+              <CustomButton text="To Code" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkCode(v.name)} />
+              <CustomButton text="To Issue" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkIssue(v.name)} />
             </div>
           </div>
         ))}

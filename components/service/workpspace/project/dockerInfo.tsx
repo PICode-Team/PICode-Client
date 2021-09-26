@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Radio, RadioProps } from '@material-ui/core'
 import { withStyles } from '@material-ui/styles'
@@ -8,11 +8,13 @@ import { IDockerInfo } from '../../../../types/workspace.types'
 import CustomTextInput from '../../../items/input/text'
 import CustomPortInput from '../../../items/input/portInput'
 import CustomSelect from '../../../items/input/select'
+import { fetchSet } from '../../../context/fetch'
 
 interface IDockerInfoProps {
   dockerInfo: IDockerInfo
   setDockerInfo: React.Dispatch<React.SetStateAction<IDockerInfo>>
   edit: boolean
+  projectName?: string
 }
 
 interface IEditDocker {
@@ -36,7 +38,7 @@ const initialState: IEditDocker = {
 }
 
 function DockerInfo(props: IDockerInfoProps) {
-  const { dockerInfo, setDockerInfo, edit } = props
+  const { dockerInfo, setDockerInfo, edit, projectName } = props
   const classes = createWorkspaceStyle()
   const [add, setAdd] = useState<boolean>(false)
   const [networkList, setNetworkList] = useState<any[]>([])
@@ -51,13 +53,38 @@ function DockerInfo(props: IDockerInfoProps) {
     }
   }
 
+  const getNetworkList = async () => {
+    const response = await (await fetchSet('/docker/network', 'GET', true)).json()
+    setNetworkList(response.networkList)
+  }
+
+  const getContainerList = async (projectName: string) => {
+    const response = await (await fetchSet(`docker?projectName=${projectName}`, 'GET', true)).json()
+    setContainerList(response)
+  }
+
+  useEffect(() => {
+    if (edit === true && projectName !== undefined) {
+      getNetworkList()
+      getContainerList(projectName)
+    }
+  }, [])
+
+  const onChangeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDockerInfo({ ...dockerInfo, [event.target.id]: event.target.value })
+  }
+
+  const onChangeEditedInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditDocker({ ...editDocker, [event.target.id]: event.target.value })
+  }
+
   return (
     <React.Fragment>
       <div className={classes.subTitle}>{edit ? 'Edit' : 'Create'} Container</div>
       <div className={classes.sectionTitle}>Basic Info</div>
-      <CustomTextInput value={dockerInfo.containerName} label="Container Name" placeholder="Input Container Name" />
-      <CustomTextInput value={dockerInfo.image} label="Image" placeholder="Input Image" required={true} />
-      <CustomTextInput value={dockerInfo.tag} label="Tag" placeholder="Input Tag" required={true} />
+      <CustomTextInput id="containerName" value={dockerInfo.containerName ?? ''} label="Container Name" placeholder="Input Container Name" onChange={onChangeInfo} />
+      <CustomTextInput id="image" value={dockerInfo.image} label="Image" placeholder="Input Image" required={true} onChange={onChangeInfo} />
+      <CustomTextInput id="tag" value={dockerInfo.tag ?? ''} label="Tag" placeholder="Input Tag" required={true} onChange={onChangeInfo} />
       <div className={classes.divider}>
         <div></div>
       </div>
@@ -75,12 +102,12 @@ function DockerInfo(props: IDockerInfoProps) {
           </div>
           {add === true ? (
             <React.Fragment>
-              <CustomTextInput value={dockerInfo.bridgeName} label="Network Name" placeholder="Input Network Name" />
-              <CustomTextInput value={dockerInfo.bridgeAlias} label="Network Alias" placeholder="Input Bridge Alias" />
-              <CustomSelect value={editDocker.addedContainer} label="Containers To Be Connected" />
+              <CustomTextInput id="bridgeName" value={dockerInfo.bridgeName ?? ''} label="Network Name" placeholder="Input Network Name" onChange={onChangeInfo} />
+              <CustomTextInput id="bridgeAlias" value={dockerInfo.bridgeAlias ?? ''} label="Network Alias" placeholder="Input Bridge Alias" onChange={onChangeInfo} />
+              <CustomSelect id="addedContainer" value={editDocker.addedContainer} label="Containers To Be Connected" onChange={onChangeEditedInfo} />
             </React.Fragment>
           ) : (
-            <CustomSelect value={editDocker.deletedNetwork} label="Deleted Network" />
+            <CustomSelect id="deletedNetwork" value={editDocker.deletedNetwork} label="Deleted Network" onChange={onChangeEditedInfo} />
           )}
         </React.Fragment>
       ) : (
@@ -88,10 +115,10 @@ function DockerInfo(props: IDockerInfoProps) {
           <div className={classes.sectionTitle}>
             <span>Network Info</span>
           </div>
-          <CustomTextInput value={dockerInfo.bridgeName} label="Network Name" placeholder="Input Network Name" />
-          <CustomTextInput value={dockerInfo.bridgeAlias} label="Network Alias" placeholder="Input Bridge Alias" />
+          <CustomTextInput id="bridgeName" value={dockerInfo.bridgeName ?? ''} label="Network Name" placeholder="Input Network Name" onChange={onChangeInfo} />
+          <CustomTextInput id="bridgeAlias" value={dockerInfo.bridgeAlias ?? ''} label="Network Alias" placeholder="Input Bridge Alias" onChange={onChangeInfo} />
           <CustomPortInput dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} />
-          <CustomTextInput value={dockerInfo.linkContainer} label="Containers To Be Connected" placeholder="Input Link Container" />
+          <CustomTextInput id="linkContainer" value={dockerInfo.linkContainer ?? ''} label="Containers To Be Connected" placeholder="Input Link Container" onChange={onChangeInfo} />
         </React.Fragment>
       )}
     </React.Fragment>

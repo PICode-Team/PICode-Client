@@ -8,7 +8,7 @@ import { IPageProps } from '../types/page.types'
 export default function Home(pageProps: IPageProps) {
   return (
     <React.Fragment>
-      {pageProps.cookie ? (
+      {true ? (
         <Layout {...pageProps}>
           <Dashboard {...pageProps} />
         </Layout>

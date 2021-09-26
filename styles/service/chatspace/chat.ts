@@ -354,7 +354,7 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
 
     sidebarHeader: {
       padding: '0px 12px',
-      marginBottom: '30px',
+      marginBottom: '20px',
     },
 
     search: {

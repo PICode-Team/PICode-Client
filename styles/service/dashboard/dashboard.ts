@@ -6,7 +6,7 @@ export const dashboardStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     dashboard: {
       width: '100%',
-      height: '100%',
+      height: 'calc(100% - 90px)',
     },
     row: {
       width: '100%',
@@ -106,7 +106,7 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
 export const noteStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     note: {
-      width: '32%',
+      width: '44%',
       height: '100%',
     },
     title: {
@@ -154,7 +154,7 @@ export const milestoneStyle = makeStyles((theme: IThemeStyle) =>
       width: '100%',
       height: 'calc(100% - 54px)',
       background: theme.backgroundColor.step1,
-      padding: '15px',
+      padding: '24px 15px',
       display: 'block',
       overflowY: 'auto',
       justifyContent: 'center',
@@ -208,8 +208,229 @@ export const milestoneStyle = makeStyles((theme: IThemeStyle) =>
 
 export const recentWorkStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
-    recentWork: {},
-    title: {},
-    content: {},
+    recentWork: {
+      width: '100%',
+      height: '60%',
+      minHeight: '400px',
+      padding: '20px',
+    },
+    title: {
+      fontSize: '24px',
+      color: theme.font.high.color,
+      paddingBottom: '20px',
+    },
+    content: {
+      width: '100%',
+      height: 'calc(100% - 54px)',
+      background: theme.backgroundColor.step1,
+      padding: '24px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+    },
+    menuDialog: {
+      position: 'absolute',
+      width: '200px',
+      right: '175px',
+      top: '30px',
+      height: '250px',
+      background: theme.backgroundColor.step2,
+      color: theme.font.high.color,
+      zIndex: 3,
+      overflow: 'hidden',
+      overflowY: 'scroll',
+      borderRadius: '2px',
+    },
+    leftButton: {
+      position: 'absolute !important' as any,
+      top: '45%',
+      zIndex: 2,
+      left: '10px',
+      color: `${theme.font.high.color}!important `,
+    },
+    rightButton: {
+      position: 'absolute !important' as any,
+      right: '10px',
+      top: '45%',
+      zIndex: 2,
+      color: `${theme.font.high.color} !important`,
+    },
+    carouselContent: {
+      background: theme.backgroundColor.step2,
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: '12px',
+      position: 'relative',
+    },
+    carouse: {
+      height: '200px',
+      display: 'inline-block',
+      padding: '20px',
+    },
+    carouselButton: {
+      color: `${theme.font.high.color} !important`,
+    },
+    alignCenter: {
+      textAlign: 'center',
+    },
+    add: {
+      color: '#ffffff',
+    },
+    createWorkspaceText: {
+      display: 'block',
+      textAlign: 'center',
+      color: '#fff',
+    },
+    tableContent: {
+      display: 'inline-block',
+      color: theme.font.high.color,
+    },
+    carouseView: {
+      padding: '0px 20px',
+      height: '100%',
+    },
+    blockCarouseButton: {
+      color: `${theme.font.high.color} !important`,
+      display: 'block',
+      textAlign: 'center',
+    },
+
+    projectName: {
+      position: 'absolute',
+      fontSize: '24px',
+      fontWeight: 'bold',
+      color: theme.font.high.color,
+      width: '100%',
+      textAlign: 'center',
+      top: '10%',
+    },
+    full: {
+      width: '100%',
+      height: '100%',
+    },
+    edit: {
+      position: 'absolute',
+      right: '50px',
+      cursor: 'pointer',
+      top: '-25px',
+      zIndex: 999,
+    },
+
+    icon: {
+      width: '24px',
+      height: '24px',
+    },
+
+    delete: {
+      position: 'absolute',
+      right: '20px',
+      cursor: 'pointer',
+      top: '-25px',
+      zIndex: 999,
+    },
+    imageContent: {
+      position: 'absolute',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      background: '#fff',
+      width: '120px',
+      height: '120px',
+      borderRadius: '60px',
+      left: 'calc(50% - 60px)',
+      top: '20%',
+    },
+    textContent: {
+      background: theme.backgroundColor.step3,
+      height: '65%',
+      width: '100%',
+      borderRadius: '0 0 12px 12px',
+      paddingTop: '40px',
+      color: theme.font.high.color,
+    },
+    image: {
+      maxWidth: '80px',
+      maxHeight: '80px',
+    },
+
+    space: {
+      width: '100%',
+      height: '35%',
+    },
+
+    cardContent: {
+      paddingTop: '65px',
+      background: theme.backgroundColor.step3,
+      height: '65%',
+      width: '100%',
+      borderRadius: '0 0 12px 12px',
+      color: theme.font.high.color,
+    },
+
+    wrapper: {
+      width: '100%',
+      padding: '0 25%',
+      height: 'calc(100% - 56px)',
+    },
+    line: {
+      width: '100%',
+      height: '25%',
+      display: 'flex',
+      textAlign: 'left',
+    },
+    key: {
+      width: '60%',
+      fontSize: '16px',
+    },
+    value: {
+      width: '40%',
+      fontSize: '14px',
+    },
+
+    footer: {
+      width: '100%',
+      padding: '0 100px',
+      paddingBottom: '16px',
+      height: '56px',
+    },
+    buttonGroup: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginBottom: '20px',
+    },
+    button: {
+      width: '45%',
+      height: '40px',
+      lineHeight: '40px',
+      borderRadius: 4, //30
+      fontSize: '18px',
+      transition: '0.3s',
+      cursor: 'pointer',
+      color: theme.font.high.color,
+      background: '#609FF3',
+      '&:hover': {
+        transition: '0.3s',
+        background: '#217BF4',
+      },
+    },
+    view: {
+      alignContent: 'center',
+      width: '100%',
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    menuDialogRow: {
+      width: '100%',
+      padding: '8px',
+      cursor: 'pointer',
+      '&:hover': {
+        background: theme.backgroundColor.step3,
+        transition: 'all 0.3s',
+      },
+    },
+    name: {},
   })
 )

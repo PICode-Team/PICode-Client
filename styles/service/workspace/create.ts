@@ -6,7 +6,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     create: {
       width: '100%',
-      height: '100%',
+      height: 'calc(100% - 90px)',
       padding: '32px',
     },
     header: {

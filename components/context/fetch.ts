@@ -6,7 +6,7 @@ interface IFetchData {
   headers: { [key: string]: string }
 }
 
-export async function fetchSet(url: string, method: IMethodType, headers: boolean, body?: string) {
+export async function fetchSet(url: string, method: IMethodType, headers: boolean, body?: string | any) {
   const fetchOption: IFetchData = {
     method: method,
     headers:
@@ -18,5 +18,5 @@ export async function fetchSet(url: string, method: IMethodType, headers: boolea
     body: body,
   }
 
-  return await fetch(`/api${url}`, fetchOption).then((res) => res.json())
+  return await fetch(`http://192.168.85.128:80/api${url}`, fetchOption)
 }

@@ -14,7 +14,7 @@ function MilestoneView(props: IMilestoneViewProps) {
   const classes = milestoneStyle()
   return (
     <div className={classes.milestone}>
-      <div className={classes.title}></div>
+      <div className={classes.title}>Milestone</div>
       <div className={classes.content}>
         {milestone.length > 0 ? (
           milestone.map((v: any, idx: number) => {
