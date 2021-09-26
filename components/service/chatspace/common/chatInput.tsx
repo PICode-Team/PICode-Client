@@ -13,7 +13,7 @@ import {
   Code,
 } from '@material-ui/icons'
 
-import { chatInputStyle } from '../../../../styles/service/chat/chat'
+import { chatInputStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
 import Entering from './entering'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { cardStyle } from '../../../../styles/service/issue'
+import { cardStyle } from '../../../../styles/service/issuespace/issue'
 import { IIssue } from '../../../../types/issue.types'
 
 interface ICardProps {

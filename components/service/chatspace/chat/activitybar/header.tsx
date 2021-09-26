@@ -1,5 +1,5 @@
 import { Clear } from '@material-ui/icons'
-import { activitybarHeaderStyle } from '../../../../../styles/service/chat/chat'
+import { activitybarHeaderStyle } from '../../../../../styles/service/chatspace/chat'
 import { IThread } from '../../../../../types/chat.types'
 
 interface IHeaderProps {

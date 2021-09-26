@@ -2,7 +2,7 @@ import React from 'react'
 import { Search } from '@material-ui/icons'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
-import { manageStyle } from '../../../styles/service/issue'
+import { manageStyle } from '../../../styles/service/issuespace/issue'
 import CustomButton from '../../items/button/button'
 
 export default function ManageSpace(ctx: any) {

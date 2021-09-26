@@ -2,7 +2,7 @@ import { useRef } from 'react'
 
 import { NavigateBefore, AttachFile, SentimentSatisfied, Send } from '@material-ui/icons'
 
-import { responsiveContentStyle } from '../../../../../styles/service/chat/chat'
+import { responsiveContentStyle } from '../../../../../styles/service/chatspace/chat'
 import { IChannel, IChat, IThread } from '../../../../../types/chat.types'
 import { renderMessage } from '../../chat/content/content'
 import { IUser } from '../../../../../types/user.types'

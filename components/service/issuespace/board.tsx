@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { DeleteForever, Edit } from '@material-ui/icons'
 
-import { boardStyle } from '../../../styles/service/issue'
+import { boardStyle } from '../../../styles/service/issuespace/issue'
 import { IKanban } from '../../../types/issue.types'
 import CreateKanban from './create/kanban'
 

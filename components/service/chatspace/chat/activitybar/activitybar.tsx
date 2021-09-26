@@ -1,4 +1,4 @@
-import { activitybarStyle } from '../../../../../styles/service/chat/chat'
+import { activitybarStyle } from '../../../../../styles/service/chatspace/chat'
 import { IChannel, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
 import Content from './content'

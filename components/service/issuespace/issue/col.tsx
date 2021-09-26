@@ -1,6 +1,6 @@
 import { Add } from '@material-ui/icons'
 
-import { colStyle } from '../../../../styles/service/issue'
+import { colStyle } from '../../../../styles/service/issuespace/issue'
 import { IIssue } from '../../../../types/issue.types'
 import { uuidv4 } from '../../../context/uuidv4'
 import Card from './card'

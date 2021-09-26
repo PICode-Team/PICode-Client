@@ -1,6 +1,6 @@
 import React from 'react'
 import { Search, Add } from '@material-ui/icons'
-import { chatSidebarStyle } from '../../../../../styles/service/chat/chat'
+import { chatSidebarStyle } from '../../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../../types/chat.types'
 
 interface ISidebarProps {

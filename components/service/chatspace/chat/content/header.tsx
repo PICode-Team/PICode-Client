@@ -1,4 +1,4 @@
-import { chatHeaderStyle } from '../../../../../styles/service/chat/chat'
+import { chatHeaderStyle } from '../../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
 

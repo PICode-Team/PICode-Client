@@ -1,4 +1,4 @@
-import { boundaryStyle } from '../../../../styles/service/chat/chat'
+import { boundaryStyle } from '../../../../styles/service/chatspace/chat'
 
 function Boundary({ text }: { text: string }) {
   const classes = boundaryStyle()

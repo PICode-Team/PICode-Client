@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 
-import { issueStyle } from '../../../../styles/service/issue'
+import { issueStyle } from '../../../../styles/service/issuespace/issue'
 import Col from './col'
 import { IIssue } from '../../../../types/issue.types'
 import CreateIssue from '../create/issue'
