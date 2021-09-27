@@ -1,22 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Search } from '@material-ui/icons'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { manageStyle } from '../../../styles/service/issuespace/issue'
 import CustomButton from '../../items/button/button'
+import CreateMilestone from './create/milestone'
+import CreateKanban from './create/kanban'
+import { IKanban, IMilestone } from '../../../types/issue.types'
+import Board from './board'
+import Milestone from './milestone'
 
 export default function ManageSpace(ctx: any) {
   const classes = manageStyle()
   const router = useRouter()
   const manageMenu = ['Board', 'Milestone']
-  const [menu, setMenu] = React.useState<string>('Board')
-  const [create, setCreate] = React.useState<boolean>(false)
-  const [kanban, setKanban] = React.useState<any[]>()
-  const [milestone, setMilestone] = React.useState<any>()
-  const [open, setOpen] = React.useState(false)
+  const [menu, setMenu] = useState<string>('Board')
+  const [modal, setModal] = useState<boolean>(false)
+  const [kanbanList, setKanbanList] = useState<IKanban[]>([])
+  const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
+  const [mileList, setMileList] = useState<IMilestone[]>([])
+  const [modalMile, setModalMile] = useState<IMilestone | null>(null)
 
   const handleCreateButton = (event: React.MouseEvent<HTMLElement>) => {
-    setOpen(true)
+    setModal(true)
   }
 
   return (
@@ -46,13 +52,15 @@ export default function ManageSpace(ctx: any) {
             })}
           </div>
           <div className={classes.manageContent}>
-            {
-              //   makeContent()
-            }
+            {menu === 'Board' ? (
+              <Board kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />
+            ) : (
+              <Milestone milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />
+            )}
           </div>
         </div>
       </div>
-      {/* {menu === 'Board' ? <MakeKanban userId={ctx.session.userId} open={open} setOpen={setOpen} ws={ctx.ws.current} /> : <MakeMile open={open} setOpen={setOpen} ws={ctx.ws.current} />} */}
+      {menu === 'Board' ? <CreateKanban modal={modal} setModal={setModal} modalKanban={modalKanban} /> : <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} />}
     </div>
   )
 }

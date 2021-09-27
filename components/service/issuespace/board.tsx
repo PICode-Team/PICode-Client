@@ -1,58 +1,54 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import { DeleteForever, Edit } from '@material-ui/icons'
+import { useRouter } from 'next/router'
 
 import { boardStyle } from '../../../styles/service/issuespace/issue'
 import { IKanban } from '../../../types/issue.types'
 import CreateKanban from './create/kanban'
+import { useWs } from '../../context/websocket'
 
 interface IBoardProps {
   kanbanList: IKanban[] | null
+  setModal: React.Dispatch<React.SetStateAction<boolean>>
+  setModalKanban: React.Dispatch<React.SetStateAction<IKanban | null>>
 }
 
 function Board(props: IBoardProps) {
-  const { kanbanList } = props
+  const { kanbanList, setModal, setModalKanban } = props
+  const ws: any = useWs()
   const classes = boardStyle()
+  const router = useRouter()
   const [kanbanIssue, setKanbanIssue] = useState<string>('')
-  const [modal, setModal] = useState<boolean>(false)
 
-  const handleLinkIssuePage = () => {
-    // (e) => {
-    //   e.stopPropagation();
-    //   e.preventDefault();
-    //   window.location.href =
-    //     router.route +
-    //     "/issue" +
-    //     router.asPath.split(router.route)[1] +
-    //     `&kanban=${v.title}`;
-    // }
+  const handleLinkIssuePage = (title: string) => (event: React.MouseEvent) => {
+    event.stopPropagation()
+    event.preventDefault()
+    window.location.href = router.route + '/issue' + router.asPath.split(router.route)[1] + `&kanban=${title}`
   }
 
-  const handleEditBoard = () => {
-    // (e) => {
-    //   e.stopPropagation();
-    //   setModalData({
-    //     title: v.title,
-    //     uuid: v.uuid,
-    //   });
-    //   setModal(true);
-    // }
+  const handleEditBoard = (kanban: IKanban) => (event: React.MouseEvent) => {
+    event.stopPropagation()
+    setModalKanban({
+      title: kanban.title,
+      description: kanban.description ?? '',
+      uuid: kanban.uuid,
+    })
+    setModal(true)
   }
 
-  const handleDeleteBoard = () => {
-    // (e) => {
-    //   e.stopPropagation()
-    //   ctx.ws.current.send(
-    //     JSON.stringify({
-    //       category: 'kanban',
-    //       type: 'deleteKanban',
-    //       data: {
-    //         uuid: v.uuid,
-    //       },
-    //     })
-    //   )
-    //   window.location.reload()
-    // }
+  const handleDeleteBoard = (uuid: string) => (event: React.MouseEvent) => {
+    event.stopPropagation()
+    ws.send(
+      JSON.stringify({
+        category: 'kanban',
+        type: 'deleteKanban',
+        data: {
+          uuid: uuid,
+        },
+      })
+    )
+    window.location.reload()
   }
 
   return (
@@ -63,48 +59,21 @@ function Board(props: IBoardProps) {
             {kanbanList !== null &&
               kanbanList.map((v, i) => {
                 return (
-                  <div key={v.uuid} onClick={handleLinkIssuePage} className={classes.item}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '10px',
-                      }}
-                    >
-                      <div style={{ fontSize: '16px' }}>{v.title}</div>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div className={classes.icon} onClick={handleEditBoard}>
-                          <Edit
-                            style={{
-                              width: '20px',
-                              height: '20px',
-                              marginRight: '4px',
-                            }}
-                          />
+                  <div key={v.uuid} onClick={handleLinkIssuePage(v.title)} className={classes.item}>
+                    <div className={classes.iconLayout}>
+                      <div className={classes.title}>{v.title}</div>
+                      <div className={classes.iconWrapper}>
+                        <div className={classes.icon} onClick={handleEditBoard(v)}>
+                          <Edit className={classes.edit} />
                         </div>
-                        <div className={classes.icon} onClick={handleDeleteBoard}>
-                          <DeleteForever style={{ width: '20px', height: '20px' }} />
+                        <div className={classes.icon} onClick={handleDeleteBoard(v.uuid)}>
+                          <DeleteForever className={classes.delete} />
                         </div>
                       </div>
                     </div>
-                    <div style={{ marginBottom: '8px' }}>
-                      <div
-                        style={{
-                          width: '100%',
-                          height: '10px',
-                          backgroundColor: '#6d7681',
-                          borderRadius: '6px',
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: '0%',
-                            height: '10px',
-                            backgroundColor: '#4078b8',
-                            borderRadius: '6px',
-                          }}
-                        ></div>
+                    <div className={classes.contentLayout}>
+                      <div className={classes.percentage}>
+                        <div className={classes.gauge}></div>
                       </div>
                     </div>
                     <div>{v.description ?? 'this kanbanboard is no have description.'}</div>
@@ -114,7 +83,6 @@ function Board(props: IBoardProps) {
           </div>
         </>
       )}
-      <CreateKanban modal={modal} setModal={setModal} />
     </div>
   )
 }

@@ -127,14 +127,14 @@ function CustomPortInput(props: IPortInputProps) {
           <Add />
         </button>
       </div>
-      {Object.keys(dockerInfo.portInfo).length > 0 && (
+      {dockerInfo.portInfo !== undefined && Object.keys(dockerInfo.portInfo).length > 0 && (
         <div className={classes.input}>
           <span></span>
           {Object.keys(dockerInfo.portInfo).map((v, i) => (
             <div className={classes.portWrapper} key={`port-info-${i}`}>
               <div className={classes.left}>{v}</div>
               <div className={classes.portColon}>:</div>
-              <div className={classes.right}>{dockerInfo.portInfo[v]}</div>
+              <div className={classes.right}>{dockerInfo.portInfo![v]}</div>
             </div>
           ))}
         </div>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { IMilestone } from '../../../../types/issue.types'
 import CustomDate from '../../../items/input/date'
 import CustomTextInput from '../../../items/input/text'
 import CustomTextarea from '../../../items/input/textarea'
@@ -7,6 +8,7 @@ import Modal from '../../../items/modal/modal'
 interface ICreateMilestoneProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
+  modalMile: IMilestone | null
 }
 
 interface ICreateMileState {
@@ -24,8 +26,14 @@ const initialState: ICreateMileState = {
 }
 
 function CreateMilestone(props: ICreateMilestoneProps) {
-  const { modal, setModal } = props
+  const { modal, setModal, modalMile } = props
   const [payload, setPayload] = useState<ICreateMileState>(initialState)
+
+  useEffect(() => {
+    if (modalMile !== null) {
+      setPayload(modalMile)
+    }
+  }, [modalMile])
 
   const handleSubmit = () => {}
 

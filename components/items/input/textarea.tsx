@@ -43,7 +43,7 @@ function CustomTextarea(props: IItemDefautlProps & IInputProps) {
         {required && <span className={classes.required}>*</span>}
         {label}
       </span>
-      <textarea id={id} onChange={onChange} className={`${classes.textarea} ${className}`} style={style} />
+      <textarea id={id} onChange={onChange as any} className={`${classes.textarea} ${className}`} style={style} />
     </div>
   )
 }

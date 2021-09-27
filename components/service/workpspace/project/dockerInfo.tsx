@@ -102,7 +102,7 @@ function DockerInfo(props: IDockerInfoProps) {
           </div>
           {add === true ? (
             <React.Fragment>
-              <CustomTextInput id="bridgeName" value={dockerInfo.bridgeName ?? ''} label="Network Name" placeholder="Input Network Name" onChange={onChangeInfo} />
+              <CustomTextInput id="bridgeName" value={dockerInfo.bridgeId ?? ''} label="Network Name" placeholder="Input Network Name" onChange={onChangeInfo} />
               <CustomTextInput id="bridgeAlias" value={dockerInfo.bridgeAlias ?? ''} label="Network Alias" placeholder="Input Bridge Alias" onChange={onChangeInfo} />
               <CustomSelect id="addedContainer" value={editDocker.addedContainer} label="Containers To Be Connected" onChange={onChangeEditedInfo} />
             </React.Fragment>
@@ -115,7 +115,7 @@ function DockerInfo(props: IDockerInfoProps) {
           <div className={classes.sectionTitle}>
             <span>Network Info</span>
           </div>
-          <CustomTextInput id="bridgeName" value={dockerInfo.bridgeName ?? ''} label="Network Name" placeholder="Input Network Name" onChange={onChangeInfo} />
+          <CustomTextInput id="bridgeName" value={dockerInfo.bridgeId ?? ''} label="Network Name" placeholder="Input Network Name" onChange={onChangeInfo} />
           <CustomTextInput id="bridgeAlias" value={dockerInfo.bridgeAlias ?? ''} label="Network Alias" placeholder="Input Bridge Alias" onChange={onChangeInfo} />
           <CustomPortInput dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} />
           <CustomTextInput id="linkContainer" value={dockerInfo.linkContainer ?? ''} label="Containers To Be Connected" placeholder="Input Link Container" onChange={onChangeInfo} />

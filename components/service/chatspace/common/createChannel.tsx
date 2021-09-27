@@ -23,6 +23,7 @@ function CreateChannel(props: ICreateChannelProps) {
   const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [isDM, setIsDM] = useState<boolean>(false)
+  const [userList, setUserList] = useState<string[]>([])
 
   const handleModalSubmit = () => {}
 
@@ -36,7 +37,7 @@ function CreateChannel(props: ICreateChannelProps) {
         <CustomTextInput value={name} label="name" placeholder="name" />
         <CustomTextarea value={description} label="description" placeholder="description" />
         <CustomCheckbox value={isDM} label="is direct message?" onClick={handleSetChannelType} />
-        {!isDM && <CustomUserInput />}
+        {!isDM && <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />}
       </React.Fragment>
     </Modal>
   )

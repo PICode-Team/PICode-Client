@@ -4,6 +4,7 @@ import { Step, StepLabel, Stepper } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
 import { useDropzone } from 'react-dropzone'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { signupStyle } from '../../styles/user/signup'
 import CustomTextField from '../items/input/textfield'
@@ -117,7 +118,7 @@ function SignUp() {
                 <p>{userImage!.name}</p>
               </div>
             ) : (
-              <div className={classes.fileContent}>Drag 'n' drop some files here, or click to select files</div>
+              <div className={classes.fileContent}>{`Drag 'n' drop some files here, or click to select files`}</div>
             )}
           </>
         )}
@@ -175,7 +176,9 @@ function SignUp() {
           </div>
         </div>
         <div className={classes.buttonBox}>
-          <a href="/">If you have account&nbsp;&nbsp;→</a>
+          <Link href="/">
+            <a>If you have account&nbsp;&nbsp;→</a>
+          </Link>
         </div>
       </React.Fragment>
     </Layout>

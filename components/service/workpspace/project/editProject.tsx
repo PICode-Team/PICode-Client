@@ -9,17 +9,17 @@ import Stepper from './stepper'
 import WorkspaceInfo from './workspaceInfo'
 
 const initialWorkspace: IWorkspace = {
-  projectName: '',
-  projectDescription: '',
-  projectParticipants: undefined,
-  projectThumbnail: undefined,
+  name: '',
+  description: '',
+  participants: undefined,
+  thumbnail: undefined,
 }
 
 const initialDocker: IDockerInfo = {
   containerName: '',
   image: '',
   tag: '',
-  bridgeName: '',
+  bridgeId: '',
   bridgeAlias: '',
   linkContainer: '',
   portInfo: {},
@@ -34,33 +34,23 @@ function EditProject() {
   const [step, setStep] = useState<number>(2)
 
   const handlePreviousButton = () => {
-    // if (step === 2) {
-    //   setType('')
-    //   setDefualtInput({
-    //     projectDescription: '',
-    //     projectName: '',
-    //     projectParticipants: undefined,
-    //     projectThumbnail: undefined,
-    //   })
-    //   setDockerInfo({
-    //     containerName: '',
-    //     image: '',
-    //     tag: '',
-    //     bridgeName: '',
-    //     bridgeAlias: '',
-    //     portInfo: {},
-    //   })
-    // }
-    // setStep(step - 1)
+    if (step === 2) {
+      setType('nothing')
+      setProjectInfo(initialWorkspace)
+      setDockerInfo(initialDocker)
+    }
+    setStep(step - 1)
   }
 
   const handleNextButton = () => {
-    // if (step === 2) {
-    //   setStep(3)
-    // } else {
-    //   submitData()
-    // }
+    if (step === 2) {
+      setStep(3)
+    } else {
+      submitData()
+    }
   }
+
+  const submitData = () => {}
 
   useEffect(() => {
     if (type === 'gitUrl') {

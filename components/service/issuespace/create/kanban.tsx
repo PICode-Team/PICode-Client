@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { IKanban } from '../../../../types/issue.types'
 
 import CustomTextInput from '../../../items/input/text'
 import Modal from '../../../items/modal/modal'
@@ -6,6 +7,7 @@ import Modal from '../../../items/modal/modal'
 interface ICreateKanbanProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
+  modalKanban: IKanban | null
 }
 
 interface ICreateKanbanState {
@@ -17,7 +19,7 @@ const initialState: ICreateKanbanState = {
 }
 
 function CreateKanban(props: ICreateKanbanProps) {
-  const { modal, setModal } = props
+  const { modal, setModal, modalKanban } = props
   const [payload, setPayload] = useState<ICreateKanbanState>(initialState)
 
   const handleSubmit = () => {}

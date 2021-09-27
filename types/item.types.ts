@@ -20,6 +20,7 @@ export interface IInputProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onKeyPress?: () => void
   onClick?: () => void
+  onTextAreaChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 type IButtonColor = 'primary' | 'secondary'

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import Link from 'next/link'
+
 import { loginStyle } from '../../styles/user/login'
 import { fetchSet } from '../context/fetch'
 import CustomTextField from '../items/input/textfield'
@@ -57,8 +59,10 @@ function Login() {
           Login
         </div>
         <div className={classes.signUpbutton}>
-          If you don't have a account,
-          <a href="/signup">Sign up</a>
+          {`If you don't have a account,`}
+          <Link href="/signup">
+            <a>Sign up</a>
+          </Link>
         </div>
       </React.Fragment>
     </Layout>

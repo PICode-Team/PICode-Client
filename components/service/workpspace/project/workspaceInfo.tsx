@@ -31,7 +31,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   const fileButton = useRef<any>(null)
 
   useEffect(() => {
-    setProjectInfo({ ...projectInfo, projectParticipants: userList })
+    setProjectInfo({ ...projectInfo, participants: userList })
   }, [userList])
 
   const dragOver = (e: any) => {
@@ -59,7 +59,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
       if (result.code === 200) {
         setProjectInfo({
           ...projectInfo,
-          projectThumbnail: result.uploadFileId,
+          thumbnail: result.uploadFileId,
         })
       }
     }
@@ -83,17 +83,19 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   }
 
   const onChangeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.id, event.target.value)
+
     setProjectInfo({ ...projectInfo, [event.target.id]: event.target.value })
   }
 
   return (
     <React.Fragment>
       <div className={classes.subTitle}>Create Code</div>
-      <CustomTextInput id="projectName" value={projectInfo.projectName} label="Workspace Name" placeholder="Input Workspace Name" onChange={onChangeInfo} />
+      <CustomTextInput id="projectName" value={projectInfo.name} label="Workspace Name" placeholder="Input Workspace Name" onChange={onChangeInfo} />
       <div className={classes.divider}>
         <div />
       </div>
-      <CustomTextarea id="projectDescription" value={projectInfo.projectDescription} label="Workspace Description" placeholder="Input Workspace Description" onChange={onChangeInfo} />
+      <CustomTextarea id="projectDescription" value={projectInfo.description} label="Workspace Description" placeholder="Input Workspace Description" onChange={onChangeInfo} />
       <div className={classes.divider}>
         <div />
       </div>
