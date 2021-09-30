@@ -42,8 +42,8 @@ function CustomTextInput(props: IItemDefautlProps & IInputProps) {
   return (
     <div className={classes.wrapper}>
       <span className={classes.label}>
-        {required && <span className={classes.required}>*</span>}
         {label}
+        {required && <span className={classes.required}>*</span>}
       </span>
       <input id={id} type={isPassword ? 'password' : 'text'} onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
     </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { IKanban } from '../../../../types/issue.types'
+import { useWs } from '../../../context/websocket'
 
 import CustomTextInput from '../../../items/input/text'
 import Modal from '../../../items/modal/modal'
@@ -21,13 +22,28 @@ const initialState: ICreateKanbanState = {
 function CreateKanban(props: ICreateKanbanProps) {
   const { modal, setModal, modalKanban } = props
   const [payload, setPayload] = useState<ICreateKanbanState>(initialState)
+  const ws: any = useWs()
 
-  const handleSubmit = () => {}
+  const handlePayload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPayload({ ...payload, [event.target.id]: event.target.value })
+  }
+
+  const handleSubmit = () => {
+    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+      ws.send(
+        JSON.stringify({
+          category: 'issue',
+          type: 'createKanban',
+          data: payload,
+        })
+      )
+    }
+  }
 
   return (
-    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title="CreateKanban">
+    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title={modalKanban === null ? 'Create Kanban' : 'Edit Kanban'}>
       <React.Fragment>
-        <CustomTextInput value={payload.title} label="title" placeholder="title" />
+        <CustomTextInput id="title" value={payload.title} label="title" placeholder="title" onChange={handlePayload} />
       </React.Fragment>
     </Modal>
   )

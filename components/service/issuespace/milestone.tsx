@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { DeleteForever, Edit } from '@material-ui/icons'
 
 import { boardStyle } from '../../../styles/service/issuespace/issue'
 import { IMilestone } from '../../../types/issue.types'
-import CreateMilestone from './create/milestone'
 
 interface IMilestoneProps {
   milestoneList: IMilestone[] | null

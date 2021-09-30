@@ -40,9 +40,10 @@ function DefaultCodeView() {
       cancelButtonText: 'No',
     })
     if (result.isConfirmed) {
-      const resultData = await fetchSet(`/workspace?projectName=${projectName}`, 'DELETE', true).then((res) => res.json())
+      const response = await fetchSet(`/workspace?projectName=${projectName}`, 'DELETE', true)
+      const { code } = await response.json()
 
-      if (resultData.code / 100 === 2) {
+      if (code / 100 === 2) {
         Swal.fire({
           title: 'SUCCESS',
           text: `DELETE ${projectName}`,
@@ -57,7 +58,7 @@ function DefaultCodeView() {
           html: `
                   ERROR in DELETE ${projectName}
                   <br />
-                  <span>${resultData.code}</span>
+                  <span>${code}</span>
                 `,
           icon: 'error',
           heightAuto: false,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { layoutStyle } from '../../styles/layout/layout'
 import { IPageProps } from '../../types/page.types'
@@ -10,6 +10,14 @@ function Layout(props: IPageProps) {
   const { children, path, cookie } = props
   const classes = layoutStyle()
   const [toggle, setToggle] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (cookie === undefined) {
+        window.location.href = '/'
+      }
+    }
+  }, [])
 
   return (
     <React.Fragment>

@@ -97,6 +97,7 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
     content: {
       display: 'flex',
       justifyContent: 'space-between',
+      alignItems: 'center',
       '@media screen and (max-width: 1920px)': {},
       '@media screen and (max-width: 1280px)': {},
       '@media screen and (max-width: 960px)': {

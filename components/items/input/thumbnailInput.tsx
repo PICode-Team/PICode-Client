@@ -53,8 +53,8 @@ function CustomThumbnailInput(props: IItemDefautlProps & IInputProps) {
   return (
     <div className={classes.wrapper}>
       <span className={classes.label}>
-        {required && <span className={classes.required}>*</span>}
         {label} Thumbnail
+        {required && <span className={classes.required}>*</span>}
       </span>
       <input type="file" onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
     </div>

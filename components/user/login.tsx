@@ -30,9 +30,12 @@ function Login() {
       passwd: info.password,
     }
 
-    const response = await (await fetchSet('/user/sign', 'POST', true, JSON.stringify(payload))).json()
-    window.localStorage.setItem('cookie', response)
+    const response = await fetchSet('/user/sign', 'POST', true, JSON.stringify(payload))
+    const { code } = await response.json()
 
+    if (code !== 200) return
+
+    window.localStorage.setItem('userId', info.id)
     window.location.reload()
   }
 

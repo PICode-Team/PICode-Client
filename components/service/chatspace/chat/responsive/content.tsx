@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { NavigateBefore, AttachFile, SentimentSatisfied, Send } from '@material-ui/icons'
 
@@ -6,6 +6,7 @@ import { responsiveContentStyle } from '../../../../../styles/service/chatspace/
 import { IChannel, IChat, IThread } from '../../../../../types/chat.types'
 import { renderMessage } from '../../chat/content/content'
 import { IUser } from '../../../../../types/user.types'
+import { useWs } from '../../../../context/websocket'
 
 interface IContentProps {
   target: IChannel
@@ -24,19 +25,61 @@ function Content(props: IContentProps) {
   const classes = responsiveContentStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLInputElement>(null)
+  const ws: any = useWs()
 
-  const handleSendMessage = () => {}
+  const sendMessage = (target: string, message: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+      ws.send(
+        JSON.stringify({
+          category: 'chat',
+          type: 'sendMessage',
+          data: {
+            target,
+            message,
+          },
+        })
+      )
+    }
+  }
+
+  const pressEnterHandler = (event: KeyboardEvent) => {
+    if (event.key !== 'Enter') return
+    if (messageRef === null) return
+    if (messageRef.current!.value === '') return
+
+    const { activeElement } = document
+    if (activeElement !== messageRef.current) return
+
+    sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.value)
+    messageRef.current!.value = ''
+    endRef.current!.scrollIntoView()
+  }
+
+  const handleSendMessage = () => {
+    if (messageRef === null) return
+    if (messageRef.current!.value === '') return
+
+    sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.value)
+    messageRef.current!.value = ''
+    endRef.current!.scrollIntoView()
+  }
+
+  const handleClickBack = () => {
+    setTarget(null)
+  }
+
+  useEffect(() => {
+    document.addEventListener('keypress', pressEnterHandler)
+    return () => {
+      document.removeEventListener('keypress', pressEnterHandler)
+    }
+  }, [])
 
   return (
     <div className={`${classes.content} ${toggle && classes.toggleContent}`}>
       <div className={classes.wrapper}>
         <div className={classes.header}>
-          <div
-            className={classes.back}
-            onClick={() => {
-              setTarget(null)
-            }}
-          >
+          <div className={classes.back} onClick={handleClickBack}>
             <NavigateBefore />
           </div>
           <div className={classes.channel}>
@@ -47,7 +90,7 @@ function Content(props: IContentProps) {
         <div className={classes.body}>
           <div className={classes.contentBox}>
             {renderMessage(messageList, userId, false, setThread, target, particiapntList)}
-            <div ref={endRef}></div>
+            <div ref={endRef} />
           </div>
         </div>
         <div className={classes.footer}>

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { AttachFile, NavigateBefore, Send, SentimentSatisfied } from '@material-ui/icons'
 
@@ -8,6 +8,7 @@ import { IUser } from '../../../../../types/user.types'
 import Boundary from '../../common/boundary'
 import MessageBox from '../../common/messageBox'
 import { renderMessage } from '../content/content'
+import { useWs } from '../../../../context/websocket'
 
 interface IThreadProps {
   newMessage: boolean
@@ -23,6 +24,7 @@ function Thread(props: IThreadProps) {
   const classes = responsiveThreadStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
+  const ws: any = useWs()
 
   const messageInfo = {
     user: thread.parentUser,
@@ -32,24 +34,60 @@ function Thread(props: IThreadProps) {
     chatId: '',
   }
 
-  const handleSendMessage = () => {
-    if (messageRef.current && messageRef.current.value !== '') {
-      // sendMessage(target, messageRef.current.value)
-      messageRef.current.value = ''
-      endRef.current!.scrollIntoView()
+  const sendMessage = (target: string, message: string, parentChatId: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+      ws.send(
+        JSON.stringify({
+          category: 'chat',
+          type: 'sendMessage',
+          data: {
+            target,
+            message,
+            parentChatId,
+          },
+        })
+      )
     }
   }
+
+  const handleSendMessage = () => {
+    if (messageRef === null) return
+    if (messageRef.current!.value === '') return
+
+    sendMessage(thread.chatName, messageRef.current!.value, thread.parentId)
+    messageRef.current!.value = ''
+    endRef.current!.scrollIntoView()
+  }
+
+  const handleClickBack = () => {
+    setThread(null)
+  }
+
+  const pressEnterHandler = (event: KeyboardEvent) => {
+    if (event.key !== 'Enter') return
+    if (messageRef === null) return
+    if (messageRef.current!.value === '') return
+
+    const focusElemet = document.activeElement
+    if (focusElemet !== messageRef.current) return
+
+    sendMessage(thread.chatName, messageRef.current!.value, thread.parentId)
+    messageRef.current!.value = ''
+    endRef.current!.scrollIntoView()
+  }
+
+  useEffect(() => {
+    document.addEventListener('keypress', pressEnterHandler)
+    return () => {
+      document.removeEventListener('keypress', pressEnterHandler)
+    }
+  }, [])
 
   return (
     <div className={`${classes.thread} ${toggle && classes.toggleThread}`}>
       <div className={classes.wrapper}>
         <div className={classes.header}>
-          <div
-            className={classes.back}
-            onClick={() => {
-              setThread(null)
-            }}
-          >
+          <div className={classes.back} onClick={handleClickBack}>
             <NavigateBefore />
           </div>
           <div className={classes.channel}>

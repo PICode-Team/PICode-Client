@@ -43,7 +43,7 @@ function Content(props: IContentProps) {
         {renderMessage(thread.messageList, userId, true, setThread, null, particiapntList)}
         <div ref={threadEndRef} />
       </div>
-      <ChatInput messageRef={threadMessageRef} endRef={threadEndRef} typingUserList={[]} target={threadTarget} />
+      <ChatInput messageRef={threadMessageRef} endRef={threadEndRef} typingUserList={[]} target={threadTarget} parentChatId={thread.parentId} />
     </div>
   )
 }

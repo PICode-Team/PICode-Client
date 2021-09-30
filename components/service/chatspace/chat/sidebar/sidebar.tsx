@@ -38,8 +38,6 @@ function Sidebar(props: ISidebarProps) {
                     // //   ? "url('/images/picode-7.svg')"
                     // //   : `url('${API_SERVER}:8000/api/temp/${userList?.find((user) => user.userId === v.chatName)?.userThumbnail}')`,
                     // // backgroundSize: userList?.find((user) => user.userId === v.chatName)?.userThumbnail === undefined ? 'contain' : 'cover,
-                    // backgroundPosition: 'center',
-                    // backgroundRepeat: 'no-repeat',
                   }
                 }
               ></div>

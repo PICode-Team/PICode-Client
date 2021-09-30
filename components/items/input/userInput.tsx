@@ -108,13 +108,12 @@ function CustomUserInput(props: IUserInputProps) {
   const [visible, setVisible] = useState<boolean>(false)
 
   const getParticipantList = async () => {
-    fetchSet('/userList', 'GET', false)
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.code === 200) {
-          setParticipantList(res.user)
-        }
-      })
+    const response = await fetchSet('/userList', 'GET', false)
+    const { uesrList, code } = await response.json()
+
+    if (code === 200) {
+      setParticipantList(uesrList)
+    }
   }
 
   const handleClickInput = () => {

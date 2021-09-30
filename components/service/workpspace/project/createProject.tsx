@@ -29,7 +29,7 @@ const initialDocker: IDockerInfo = {
 function CreateProject() {
   const classes = createWorkspaceStyle()
   const [type, setType] = useState<ICreateType>('nothing')
-  const [projectInfo, setProjectInfo] = useState<IWorkspace>(initialWorkspace)
+  const [workspaceInfo, setWorkspaceInfo] = useState<IWorkspace>(initialWorkspace)
   const [dockerInfo, setDockerInfo] = useState<IDockerInfo>(initialDocker)
   const [source, setSource] = useState<ISource | null>(null)
   const [step, setStep] = useState<number>(1)
@@ -37,7 +37,7 @@ function CreateProject() {
   const handlePreviousButton = () => {
     if (step === 2) {
       setType('nothing')
-      setProjectInfo(initialWorkspace)
+      setWorkspaceInfo(initialWorkspace)
       setDockerInfo(initialDocker)
       setSource(null)
     }
@@ -54,7 +54,7 @@ function CreateProject() {
 
   const submitData = async () => {
     const payload: ICreateInfo = {
-      projectInfo: { ...projectInfo, participants: projectInfo.participants && projectInfo.participants.length > 0 ? projectInfo.participants : undefined },
+      workspaceInfo: { ...workspaceInfo, participants: workspaceInfo.participants && workspaceInfo.participants.length > 0 ? workspaceInfo.participants : undefined },
       dockerInfo: {
         containerName: dockerInfo.containerName !== '' ? dockerInfo.containerName : undefined,
         image: dockerInfo.image,
@@ -66,9 +66,11 @@ function CreateProject() {
       },
       source: source !== null ? source : undefined,
     }
-    const data = await fetchSet('/workspace', 'POST', true, JSON.stringify(payload)).then((res) => res.json())
 
-    if (data.code === 200) {
+    const response = await fetchSet('/workspace', 'POST', true, JSON.stringify(payload))
+    const { code } = await response.json()
+
+    if (code === 200) {
       window.location.href = '/'
     }
   }
@@ -102,7 +104,7 @@ function CreateProject() {
 
         <div className={classes.inputWrapper}>
           {step === 1 && <CreateType setStep={setStep} setType={setType} />}
-          {step === 2 && <WorkspaceInfo projectInfo={projectInfo} setProjectInfo={setProjectInfo} type={type} source={source} setSource={setSource} edit={false} />}
+          {step === 2 && <WorkspaceInfo workspaceInfo={workspaceInfo} setWorkspaceInfo={setWorkspaceInfo} type={type} source={source} setSource={setSource} edit={false} />}
           {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={false} />}
           {step > 1 && (
             <div className={classes.content}>

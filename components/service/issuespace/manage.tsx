@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Search } from '@material-ui/icons'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
@@ -9,8 +9,11 @@ import CreateKanban from './create/kanban'
 import { IKanban, IMilestone } from '../../../types/issue.types'
 import Board from './board'
 import Milestone from './milestone'
+import { useWs } from '../../context/websocket'
 
-export default function ManageSpace(ctx: any) {
+interface IManageSpaceProps {}
+
+export default function ManageSpace(props: IManageSpaceProps) {
   const classes = manageStyle()
   const router = useRouter()
   const manageMenu = ['Board', 'Milestone']
@@ -20,10 +23,69 @@ export default function ManageSpace(ctx: any) {
   const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
   const [mileList, setMileList] = useState<IMilestone[]>([])
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
+  const ws: any = useWs()
 
   const handleCreateButton = (event: React.MouseEvent<HTMLElement>) => {
     setModal(true)
   }
+
+  const getKanbanList = () => {
+    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+      ws.send(
+        JSON.stringify({
+          category: 'kanban',
+          type: 'getKanban',
+        })
+      )
+    }
+  }
+
+  const getMileList = () => {
+    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+      ws.send(
+        JSON.stringify({
+          category: 'milestone',
+          type: 'getMilestone',
+        })
+      )
+    }
+  }
+
+  const issueWebSocketHandler = (msg: any) => {
+    const message = JSON.parse(msg.data)
+
+    if (message.category === 'kanban') {
+      switch (message.type) {
+        case 'getKanban':
+          setKanbanList(message.data.kanbans)
+          break
+
+        case 'createKanban':
+          setKanbanList([...kanbanList, message.data])
+        default:
+      }
+    } else if (message.category === 'milestone') {
+      switch (message.type) {
+        case 'getMilestone':
+          setMileList(message.data)
+          break
+
+        case 'createMilestone':
+          setMileList([...mileList, message.data])
+        default:
+      }
+    }
+  }
+
+  useEffect(() => {
+    ws.addEventListener('message', issueWebSocketHandler)
+    getKanbanList()
+    getMileList()
+
+    return () => {
+      ws.removeEventListener('message', issueWebSocketHandler)
+    }
+  }, [])
 
   return (
     <div className={classes.manage}>

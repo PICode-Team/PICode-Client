@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { AttachFile, Close, FilterNone, NavigateBefore, Send, SentimentSatisfied } from '@material-ui/icons'
 
@@ -6,6 +6,7 @@ import { messengerStyle } from '../../../../styles/service/chatspace/messenger'
 import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import { renderMessage } from '../chat/content/content'
 import { IUser } from '../../../../types/user.types'
+import { useWs } from '../../../context/websocket'
 
 interface IRoomProps {
   target: IChannel
@@ -24,42 +25,58 @@ function Room(props: IRoomProps) {
   const classes = messengerStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLInputElement>(null)
+  const ws: any = useWs()
 
-  const enterEvent = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      if (messageRef.current && target !== null && messageRef.current.value !== '') {
-        // sendMessage(target, messageRef.current.value)
-        messageRef.current.value = ''
-        endRef.current!.scrollIntoView()
-      }
+  const sendMessage = (target: string, message: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+      ws.send(
+        JSON.stringify({
+          category: 'chat',
+          type: 'sendMessage',
+          data: {
+            target,
+            message,
+          },
+        })
+      )
     }
+  }
+
+  const pressEnterHandler = (event: KeyboardEvent) => {
+    if (event.key !== 'Enter') return
+    if (messageRef === null) return
+    if (messageRef.current!.value === '') return
+
+    const { activeElement } = document
+    if (activeElement !== messageRef.current) return
+
+    sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.value)
+    messageRef.current!.value = ''
+    endRef.current!.scrollIntoView()
   }
 
   const handleSendMessage = () => {
-    if (messageRef.current && messageRef.current.value !== '') {
-      // sendMessage(target, messageRef.current.value);
-      // messageRef.current.value = "";
-      // endRef.current!.scrollIntoView();
-    }
+    if (messageRef === null) return
+    if (messageRef.current!.value === '') return
+
+    sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.value)
+    messageRef.current!.value = ''
+    endRef.current!.scrollIntoView()
   }
 
-  // useEffect(() => {
-  //   document.addEventListener("keypress", enterEvent);
-  //   return () => {
-  //     document.removeEventListener("keypress", enterEvent);
-  //   };
-  // }, [target]);
-
-  // useEffect(() => {
-  //   setMessageList([]);
-  // }, []);
+  useEffect(() => {
+    document.addEventListener('keypress', pressEnterHandler)
+    return () => {
+      document.removeEventListener('keypress', pressEnterHandler)
+    }
+  }, [target])
 
   const handleClickBack = () => {
     setTarget(null)
   }
 
   const handleLinkChatspace = () => {
-    window.location.href = '/chatspace'
+    window.location.href = `/chatspace?chatName=${target?.chatName ?? (target.userId as string)}`
   }
 
   const handleClickCancel = () => {

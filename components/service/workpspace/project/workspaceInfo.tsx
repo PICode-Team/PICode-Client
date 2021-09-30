@@ -13,8 +13,8 @@ import CustomThumbnailInput from '../../../items/input/thumbnailInput'
 import { fetchSet } from '../../../context/fetch'
 
 interface IWorkspaceInfoProps {
-  projectInfo: IWorkspace
-  setProjectInfo: React.Dispatch<React.SetStateAction<IWorkspace>>
+  workspaceInfo: IWorkspace
+  setWorkspaceInfo: React.Dispatch<React.SetStateAction<IWorkspace>>
   source: ISource | null
   type: ICreateType
   setSource: React.Dispatch<React.SetStateAction<ISource | null>>
@@ -22,7 +22,7 @@ interface IWorkspaceInfoProps {
 }
 
 function WorkspaceInfo(props: IWorkspaceInfoProps) {
-  const { projectInfo, setProjectInfo, type, source, setSource, edit } = props
+  const { workspaceInfo, setWorkspaceInfo, type, source, setSource, edit } = props
   const classes = createWorkspaceStyle()
   const [upload, setUpload] = useState<boolean>(false)
   const [imageName, setImageName] = useState<string>('')
@@ -31,7 +31,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   const fileButton = useRef<any>(null)
 
   useEffect(() => {
-    setProjectInfo({ ...projectInfo, participants: userList })
+    setWorkspaceInfo({ ...workspaceInfo, participants: userList })
   }, [userList])
 
   const dragOver = (e: any) => {
@@ -48,18 +48,20 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
     setUpload(false)
   }
 
-  const ThumbnailDrop = async (e: any) => {
+  const thumbnailDrop = async (e: any) => {
     e.preventDefault()
     const files = e.dataTransfer.files
     if (files !== undefined) {
       setImageName(files[0].name)
       let formData = new FormData()
       formData.append('uploadFile', files[0])
-      const result = await fetchSet(`/data`, 'POST', true, formData).then((res) => res.json())
-      if (result.code === 200) {
-        setProjectInfo({
-          ...projectInfo,
-          thumbnail: result.uploadFileId,
+      const response = await fetchSet(`/data`, 'POST', true, formData)
+      const { uploadFileId, code } = await response.json()
+
+      if (code === 200) {
+        setWorkspaceInfo({
+          ...workspaceInfo,
+          thumbnail: uploadFileId,
         })
       }
     }
@@ -70,39 +72,85 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
     const files = e.dataTransfer.files
     if (files !== undefined) {
       setFileName(files[0].name)
-      let formData = new FormData()
+      const formData = new FormData()
       formData.append('uploadFile', files[0])
-      const result = await fetchSet('/userList', 'POST', true, formData).then((res) => res.json())
+      const response = await fetchSet('/userList', 'POST', true, formData)
+      const { uploadFileId, code } = await response.json()
 
-      if (result.code === 200) {
-        let tmpSource = source
-        ;(tmpSource as any).upload.uploadFileId = result.uploadFileId
-        setSource(tmpSource)
+      if (code === 200) {
+        if (source === null) {
+          setSource({
+            type: type,
+            upload: {
+              uploadFileId: uploadFileId,
+            },
+          })
+        } else {
+          setSource({
+            ...source,
+            upload: {
+              ...source.upload,
+              uploadFileId: uploadFileId,
+            },
+          })
+        }
       }
     }
   }
 
-  const onChangeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.id, event.target.value)
+  const handleFileButtonClick = () => {
+    fileButton.current.click()
+  }
 
-    setProjectInfo({ ...projectInfo, [event.target.id]: event.target.value })
+  const onChangeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setWorkspaceInfo({ ...workspaceInfo, [event.target.id]: event.target.value })
+  }
+
+  const handleUploadFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const tmpImage = event.target.files
+
+    if (tmpImage !== null) {
+      const formData = new FormData()
+      formData.append('uploadFile', tmpImage[0])
+      const response = await fetchSet('/data', 'POST', false, formData)
+      const { uploadFileId, code } = await response.json()
+
+      if (code === 200) {
+        if (source === null) {
+          setSource({
+            type: type,
+            upload: {
+              uploadFileId: uploadFileId,
+            },
+          })
+        } else {
+          setSource({
+            ...source,
+            upload: {
+              ...source.upload,
+              uploadFileId: uploadFileId,
+            },
+          })
+        }
+      }
+    }
   }
 
   return (
     <React.Fragment>
       <div className={classes.subTitle}>Create Code</div>
-      <CustomTextInput id="projectName" value={projectInfo.name} label="Workspace Name" placeholder="Input Workspace Name" onChange={onChangeInfo} />
+      <CustomTextInput id="name" value={workspaceInfo.name} label="Workspace Name" placeholder="Input Workspace Name" onChange={onChangeInfo} />
       <div className={classes.divider}>
         <div />
       </div>
-      <CustomTextarea id="projectDescription" value={projectInfo.description} label="Workspace Description" placeholder="Input Workspace Description" onChange={onChangeInfo} />
+      <CustomTextarea id="description" value={workspaceInfo.description} label="Workspace Description" placeholder="Input Workspace Description" onChange={onChangeInfo} />
       <div className={classes.divider}>
         <div />
       </div>
       <div className={classes.doubleContent}>
         <div className={classes.textarea}>
           <span>Project Thumbnail</span>
-          <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={ThumbnailDrop} onClick={() => fileButton.current.click()}>
+          <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={thumbnailDrop} onClick={handleFileButtonClick}>
             {upload ? (
               <div style={{ textAlign: 'center', pointerEvents: 'none' }}>
                 <InsertPhoto style={{ width: '40px', height: '40px' }} />
@@ -129,6 +177,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
             )}
           </div>
         </div>
+        <input ref={fileButton} style={{ display: 'none' }} type="file" id="getFile" onChange={handleUploadFileChange} />
         {type === 'upload' && (
           <React.Fragment>
             <div className={classes.textarea}>
@@ -156,7 +205,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
                   style={{ verticalAlign: 'middle' }}
                 />
               </div>
-              <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop} onClick={() => fileButton.current.click()}>
+              <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop} onClick={handleFileButtonClick}>
                 {upload ? (
                   <div style={{ textAlign: 'center', pointerEvents: 'none' }}>
                     <InsertPhoto style={{ width: '40px', height: '40px' }} />
@@ -177,25 +226,6 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
                 )}
               </div>
             </div>
-            <input
-              ref={fileButton}
-              style={{ display: 'none' }}
-              type="file"
-              id="getFile"
-              onChange={async (e) => {
-                let tmpImage = e.target.files
-                if (tmpImage !== null) {
-                  let formData = new FormData()
-                  formData.append('uploadFile', tmpImage[0])
-                  const result = await fetchSet('/userList', 'POST', true, formData).then((res) => res.json())
-                  if (result.code === 200) {
-                    let tmpSource = source
-                    ;(tmpSource as any).upload.uploadFileId = result.uploadFileId
-                    setSource(tmpSource)
-                  }
-                }
-              }}
-            />
           </React.Fragment>
         )}
       </div>
@@ -203,12 +233,14 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
         <div />
       </div>
       <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />
-      <div className={classes.divider}>
-        <div />
-      </div>
-      {type === 'gitUrl' && <CustomTextInput value={source?.gitUrl ?? ''} label="Repository URL" placeholder="Input Repository URL" />}
-
-      <div className={classes.doubleContent}></div>
+      {type === 'gitUrl' && (
+        <React.Fragment>
+          <div className={classes.divider}>
+            <div />
+          </div>
+          <CustomTextInput value={source?.gitUrl ?? ''} label="Repository URL" placeholder="Input Repository URL" />
+        </React.Fragment>
+      )}
     </React.Fragment>
   )
 }

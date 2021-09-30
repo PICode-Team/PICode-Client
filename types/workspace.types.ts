@@ -5,6 +5,8 @@ export interface IWorkspaceSpec {
   creator: string
   participants: string[]
   thumbnail?: string
+  creation: string
+  workspaceId: string
 }
 
 export interface IWorkspace {
@@ -40,7 +42,7 @@ type IPortInfo = {
 }
 
 export interface ICreateInfo {
-  projectInfo: IWorkspace
+  workspaceInfo: IWorkspace
   dockerInfo: IDockerInfo
   source?: ISource
 }

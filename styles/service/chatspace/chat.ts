@@ -337,6 +337,34 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
         },
       },
     },
+    formatBold: {},
+    formatItalic: {},
+    formatStrikethrough: {
+      marginRight: '1px',
+    },
+    code: {
+      marginRight: '4px',
+    },
+    link: {
+      marginRight: '1px',
+    },
+    formatListNumbered: {
+      marginRight: '4px',
+    },
+    formatListBulleted: {},
+    textFormat: {
+      marginRight: '1px',
+    },
+    alternateEmail: {
+      marginRight: '4px',
+    },
+    sentimentSatisfied: {
+      marginRight: '4px',
+    },
+    attachFile: {
+      marginRight: '4px',
+    },
+    send: {},
   })
 )
 

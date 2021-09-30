@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { responsiveChatStyle } from '../../../../../styles/service/chatspace/chat'
 import { IChannel, IChat, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
@@ -11,7 +12,6 @@ interface IResponsiveProps {
   channelList: IChannel[]
   messageList: IChat[]
   newMessage: boolean
-  userId: string
   particiapntList: IUser[]
   toggle: boolean
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
@@ -22,11 +22,22 @@ interface IResponsiveProps {
 function ResponsiveChat(props: IResponsiveProps) {
   const { target, thread } = props
   const classes = responsiveChatStyle()
+  const [userId, setUserId] = useState<string>('')
+
+  useEffect(() => {
+    if (typeof window === undefined) return
+
+    const value = window.localStorage.getItem('userId')
+    if (value === null) return
+
+    setUserId(value)
+  }, [])
+
   return (
     <div className={classes.responsiveChat}>
       <Home {...props} />
-      {target !== null ? <Content {...props} target={target as IChannel} /> : <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>}
-      {target !== null && thread !== null && <Thread {...props} thread={thread as IThread} />}
+      {target !== null ? <Content {...props} target={target as IChannel} userId={userId} /> : <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>}
+      {target !== null && thread !== null && <Thread {...props} thread={thread as IThread} userId={userId} />}
     </div>
   )
 }

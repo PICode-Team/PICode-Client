@@ -11,8 +11,6 @@ import ModalFooter from './footer'
 const modalStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     modal: {
-      width: '30%',
-      height: '42%',
       position: 'fixed',
       backgroundColor: '#2c3239',
       zIndex: 99999,
@@ -37,8 +35,14 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
     },
     xs: {},
     sm: {},
-    md: {},
-    lg: {},
+    md: {
+      width: '30%',
+      height: '42%',
+    },
+    lg: {
+      height: '47%',
+      width: '35%',
+    },
     xl: {},
     xxl: {},
   })

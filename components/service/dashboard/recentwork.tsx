@@ -65,14 +65,17 @@ function RecentWork(props: IRecentWorkProps) {
     return tmpContent
   }
 
-  const getData = async () => {
-    const data = await fetchSet('/workspace', 'GET', true).then((res) => res.json())
+  const getWorkspaceData = async () => {
+    const response = await fetchSet('/workspace', 'GET', true)
+    const { workspaceList, code } = await response.json()
 
-    setWorkspaceData(data.workspaceList ?? [])
+    if (code === 200) {
+      setWorkspaceData(workspaceList)
+    }
   }
 
   useEffect(() => {
-    getData()
+    getWorkspaceData()
   }, [])
 
   const handleLinkEditPage = (workspaceId: string) => (event: React.MouseEvent) => {
@@ -94,9 +97,10 @@ function RecentWork(props: IRecentWorkProps) {
       cancelButtonText: 'No',
     })
     if (result.isConfirmed) {
-      const resultData = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true).then((res) => res.json())
+      const response = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true)
+      const { code } = await response.json()
 
-      if (resultData.code / 100 === 2) {
+      if (code / 100 === 2) {
         Swal.fire({
           title: 'SUCCESS',
           text: `DELETE ${workspaceId}`,
@@ -111,7 +115,7 @@ function RecentWork(props: IRecentWorkProps) {
           html: `
                 ERROR in DELETE ${workspaceId}
                 <br />
-                <span>${resultData.code}</span>
+                <span>${code}</span>
                 `,
           icon: 'error',
           heightAuto: false,
@@ -156,10 +160,10 @@ function RecentWork(props: IRecentWorkProps) {
             <div className={classes.full}>
               <div className={classes.projectName}>
                 <span>{i.name}</span>
-                <span onClick={handleLinkEditPage(i.name)} className={classes.edit}>
+                <span onClick={handleLinkEditPage(i.workspaceId)} className={classes.edit}>
                   <Settings className={classes.icon} />
                 </span>
-                <span onClick={handleClickDelete(i.name)} className={classes.delete}>
+                <span onClick={handleClickDelete(i.workspaceId)} className={classes.delete}>
                   <DeleteForever className={classes.icon} />
                 </span>
               </div>
@@ -180,7 +184,7 @@ function RecentWork(props: IRecentWorkProps) {
                   </div>
                   <div className={classes.line}>
                     <div className={classes.key}>Create time</div>
-                    <div className={classes.value}>2021-08-28</div>
+                    <div className={classes.value}>{i.creation}</div>
                   </div>
                   <div className={classes.line}>
                     <div className={classes.key}>Project Description</div>
@@ -189,10 +193,10 @@ function RecentWork(props: IRecentWorkProps) {
                 </div>
                 <div className={classes.footer}>
                   <div className={classes.buttonGroup}>
-                    <div className={classes.button} onClick={handleLinkCodePage(i.name)}>
+                    <div className={classes.button} onClick={handleLinkCodePage(i.workspaceId)}>
                       To Code
                     </div>
-                    <div className={classes.button} onClick={handleLinkIssuePage(i.name)}>
+                    <div className={classes.button} onClick={handleLinkIssuePage(i.workspaceId)}>
                       To Issue
                     </div>
                   </div>

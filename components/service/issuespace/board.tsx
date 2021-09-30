@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 
 import { boardStyle } from '../../../styles/service/issuespace/issue'
 import { IKanban } from '../../../types/issue.types'
-import CreateKanban from './create/kanban'
 import { useWs } from '../../context/websocket'
 
 interface IBoardProps {

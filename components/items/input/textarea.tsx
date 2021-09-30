@@ -40,8 +40,8 @@ function CustomTextarea(props: IItemDefautlProps & IInputProps) {
   return (
     <div className={classes.wrapper}>
       <span className={classes.label}>
-        {required && <span className={classes.required}>*</span>}
         {label}
+        {required && <span className={classes.required}>*</span>}
       </span>
       <textarea id={id} onChange={onChange as any} className={`${classes.textarea} ${className}`} style={style} />
     </div>

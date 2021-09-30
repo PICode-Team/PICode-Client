@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { contentStyle } from '../../../../../styles/service/chatspace/chat'
 
 import { IChannel, IChat, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
+import { useWs } from '../../../../context/websocket'
 import Boundary from '../../common/boundary'
 import ChatInput from '../../common/chatInput'
 import MessageBox from '../../common/messageBox'
@@ -26,7 +27,7 @@ export const renderMessage = (
     }
 
     renderElementList.push(
-      <MessageBox messageInfo={messageList[i]} key={`messagebox-${i}`} reverse={messageList[i].user === 'userId'} target={target} particiapntList={particiapntList} setThread={setThread} />
+      <MessageBox messageInfo={messageList[i]} key={`messagebox-${i}`} reverse={messageList[i].user === userId} target={target} particiapntList={particiapntList} setThread={setThread} />
     )
   }
 
@@ -36,17 +37,27 @@ export const renderMessage = (
 interface IContentProps {
   target: IChannel
   messageList: IChat[]
-  userId: string
-  messageRef: React.RefObject<HTMLInputElement>
-  endRef: React.RefObject<HTMLDivElement>
   typingUserList: IUser[]
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   particiapntList: IUser[]
 }
 
 function Content(props: IContentProps) {
-  const { target, messageList, userId, endRef, messageRef, typingUserList, particiapntList, setThread } = props
+  const { target, messageList, typingUserList, particiapntList, setThread } = props
   const classes = contentStyle()
+  const messageRef = useRef<HTMLInputElement>(null)
+  const endRef = useRef<HTMLDivElement>(null)
+  const [userId, setUserId] = useState<string>('')
+
+  useEffect(() => {
+    if (typeof window === undefined) return
+
+    const value = window.localStorage.getItem('userId')
+    if (value === null) return
+
+    setUserId(value)
+  }, [])
+
   return (
     <div className={classes.contentWrapper}>
       <Header target={target} lastTime="sample text" />

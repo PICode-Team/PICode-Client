@@ -8,13 +8,13 @@ interface IRowProps {
 
 function Row(props: IRowProps) {
   const { target, setTarget, classes } = props
+
+  const handleClickRow = () => {
+    setTarget(target)
+  }
+
   return (
-    <div
-      className={classes.row}
-      onClick={() => {
-        setTarget(target)
-      }}
-    >
+    <div className={classes.row} onClick={handleClickRow}>
       <div className={classes.users}></div>
       <div className={classes.titleWrapper}>
         <div className={classes.title}>
