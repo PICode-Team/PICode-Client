@@ -1,4 +1,3 @@
-import { Link } from '@material-ui/core'
 import {
   AlternateEmail,
   AttachFile,
@@ -11,11 +10,14 @@ import {
   SentimentSatisfiedOutlined,
   TextFormatOutlined,
   Code,
+  Link,
 } from '@material-ui/icons'
+import { useEffect } from 'react'
 
-import { chatInputStyle } from '../../../../styles/service/chat'
+import { chatInputStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
+import { useWs } from '../../../context/websocket'
 import Entering from './entering'
 
 interface IChatInputProps {
@@ -23,11 +25,60 @@ interface IChatInputProps {
   endRef: React.RefObject<HTMLDivElement>
   typingUserList: IUser[]
   target: IChannel
+  parentChatId?: string
 }
 
 function ChatInput(props: IChatInputProps) {
-  const { messageRef, endRef, typingUserList, target } = props
+  const { messageRef, endRef, typingUserList, target, parentChatId } = props
   const classes = chatInputStyle()
+  const ws: any = useWs()
+
+  const sendMessage = (target: string, message: string) => {
+    console.log(parentChatId)
+
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'chat',
+          type: 'sendMessage',
+          data: {
+            target,
+            message,
+            parentChatId,
+          },
+        })
+      )
+    }
+  }
+
+  const pressEnterHandler = (event: KeyboardEvent) => {
+    if (event.key !== 'Enter') return
+    if (messageRef === null) return
+    if (messageRef.current!.value === '') return
+
+    const { activeElement } = document
+    if (activeElement !== messageRef.current) return
+
+    sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.value)
+    messageRef.current!.value = ''
+    endRef.current!.scrollIntoView()
+  }
+
+  const handleSendMessage = () => {
+    if (messageRef === null) return
+    if (messageRef.current!.value === '') return
+
+    sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.value)
+    messageRef.current!.value = ''
+    endRef.current!.scrollIntoView()
+  }
+
+  useEffect(() => {
+    document.addEventListener('keypress', pressEnterHandler)
+    return () => {
+      document.removeEventListener('keypress', pressEnterHandler)
+    }
+  }, [])
 
   return (
     <div className={classes.input}>
@@ -36,50 +87,42 @@ function ChatInput(props: IChatInputProps) {
         <div className={classes.interaction}>
           <div>
             <div>
-              <FormatBold />
+              <FormatBold className={classes.formatBold} />
             </div>
             <div>
-              <FormatItalic />
+              <FormatItalic className={classes.formatItalic} />
             </div>
             <div>
-              <FormatStrikethrough style={{ marginRight: '1px' }} />
+              <FormatStrikethrough className={classes.formatStrikethrough} />
             </div>
             <div>
-              <Code style={{ marginRight: '4px' }} />
+              <Code className={classes.code} />
             </div>
             <div>
-              <Link style={{ marginRight: '1px' }} />
+              <Link className={classes.link} />
             </div>
             <div>
-              <FormatListNumbered style={{ marginRight: '4px' }} />
+              <FormatListNumbered className={classes.formatListNumbered} />
             </div>
             <div>
-              <FormatListBulleted />
+              <FormatListBulleted className={classes.formatListBulleted} />
             </div>
           </div>
           <div>
             <div>
-              <TextFormatOutlined style={{ marginRight: '1px' }} />
+              <TextFormatOutlined className={classes.textFormat} />
             </div>
             <div>
-              <AlternateEmail style={{ marginRight: '4px' }} />
+              <AlternateEmail className={classes.alternateEmail} />
             </div>
             <div>
-              <SentimentSatisfiedOutlined style={{ marginRight: '4px' }} />
+              <SentimentSatisfiedOutlined className={classes.sentimentSatisfied} />
             </div>
             <div>
-              <AttachFile style={{ marginRight: '4px' }} />
+              <AttachFile className={classes.attachFile} />
             </div>
-            <div
-              onClick={() => {
-                if (messageRef.current && messageRef.current.value !== '') {
-                  // sendMessage(target, messageRef.current.value)
-                  messageRef.current.value = ''
-                  endRef.current!.scrollIntoView()
-                }
-              }}
-            >
-              <Send />
+            <div onClick={handleSendMessage}>
+              <Send className={classes.send} />
             </div>
           </div>
         </div>

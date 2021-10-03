@@ -1,24 +1,24 @@
-import React, { createContext, ReactNode, useContext } from "react";
+import React, { createContext, ReactNode, useContext } from 'react'
 
 const WsContext = createContext(undefined)
 
 export function useWs() {
-    return useContext(WsContext);
+  return useContext(WsContext)
 }
 
 export function WsProvider({ children }: any) {
-    let value: any;
-    if (typeof window !== "undefined") {
-        let ws = new WebSocket(`ws://localhost:${process.env.NEXT_PUBLIC_WS_PORT}/?userId=test`);
-        ws.onopen = () => {
-            if (ws!.readyState === WebSocket.OPEN) {
-                ws!.send(JSON.stringify({ category: "connect" }));
-            }
-        }
-        value = ws;
-    }
+  let value: any
 
-    return <WsContext.Provider value={value}>
-        {children}
-    </WsContext.Provider>
+  if (typeof window !== 'undefined') {
+    const ws = new WebSocket(`ws://192.168.85.128:80`)
+
+    ws.onopen = () => {
+      if (ws!.readyState === WebSocket.OPEN) {
+        ws!.send(JSON.stringify({ category: 'connect' }))
+      }
+    }
+    value = ws
+  }
+
+  return <WsContext.Provider value={value}>{children}</WsContext.Provider>
 }

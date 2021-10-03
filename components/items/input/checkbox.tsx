@@ -6,12 +6,16 @@ import { IItemDefautlProps, IInputProps } from '../../../types/item.types'
 const checkboxStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
-      display: 'inline-block',
+      color: '#ffffff',
+      fontSize: '12px',
+      display: 'flex',
+      justifyContent: 'flex-end',
+      marginTop: '8px',
     },
     checkbox: {
       marginRight: '4px',
       border: 'none',
-
+      verticalAlign: 'middle',
       '&:checked': {},
 
       '&:disabled': {},
@@ -24,13 +28,13 @@ const checkboxStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function CustomCheckbox(props: IItemDefautlProps & IInputProps) {
-  const { onChange, className, style } = props
+  const { className, style, value, onClick, label } = props
   const classes = checkboxStyle()
 
   return (
     <div className={classes.wrapper}>
-      <input type="checkbox" onChange={onChange} className={className} style={style} />
-      <label htmlFor=""></label>
+      {label}
+      <input type="checkbox" defaultChecked={value as boolean} onClick={onClick} />
     </div>
   )
 }

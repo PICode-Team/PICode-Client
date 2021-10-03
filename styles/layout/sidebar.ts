@@ -97,6 +97,7 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
     content: {
       display: 'flex',
       justifyContent: 'space-between',
+      alignItems: 'center',
       '@media screen and (max-width: 1920px)': {},
       '@media screen and (max-width: 1280px)': {},
       '@media screen and (max-width: 960px)': {
@@ -108,7 +109,7 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
     },
     text: {
       whiteSpace: 'nowrap',
-      marginLeft: '24px',
+      marginLeft: '15px',
     },
     hidden: {
       visibility: 'hidden',
@@ -128,6 +129,8 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
     },
     collapseButton: {
       color: theme.font.high.color,
+      height: '24px !important',
+      width: '24px !important',
     },
     collapseWrapper: {
       transition: 'all ease 0.3s 0s',

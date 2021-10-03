@@ -1,5 +1,5 @@
 import { FiberManualRecord } from '@material-ui/icons'
-import { enteringStyle } from '../../../../styles/service/chat'
+import { enteringStyle } from '../../../../styles/service/chatspace/chat'
 import { IUser } from '../../../../types/user.types'
 
 interface IEnteringProps {

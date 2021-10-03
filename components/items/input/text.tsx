@@ -8,7 +8,7 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
     wrapper: {
       display: 'flex',
       alignItems: 'center',
-      marginTop: '16px',
+      marginTop: '8px',
     },
     input: {
       width: '100%',
@@ -29,17 +29,23 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
       marginTop: '2px',
       width: '106px',
     },
+    required: {
+      color: '#C33030',
+    },
   })
 )
 
 function CustomTextInput(props: IItemDefautlProps & IInputProps) {
-  const { onChange, className, style, label, isPassword, placeholder, value } = props
+  const { onChange, className, style, label, isPassword, placeholder, value, required, id } = props
   const classes = textInputStyle()
 
   return (
     <div className={classes.wrapper}>
-      <span className={classes.label}>{label}</span>
-      <input type={isPassword ? 'password' : 'text'} onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
+      <span className={classes.label}>
+        {label}
+        {required && <span className={classes.required}>*</span>}
+      </span>
+      <input id={id} type={isPassword ? 'password' : 'text'} onChange={onChange} className={`${classes.input} ${className}`} style={style} placeholder={placeholder} value={value as string} />
     </div>
   )
 }

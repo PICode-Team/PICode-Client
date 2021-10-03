@@ -1,11 +1,20 @@
 import React from 'react'
-import Layout from '../components/layout'
-import Chat from '../components/service/chatspace/chat/chat'
 
-export default function Home(pageProps: any) {
+import Layout from '../components/layout'
+import Dashboard from '../components/service/dashboard/dashboard'
+import Login from '../components/user/login'
+import { IPageProps } from '../types/page.types'
+
+export default function Home(pageProps: IPageProps) {
   return (
-    <Layout {...pageProps}>
-      <Chat />
-    </Layout>
+    <React.Fragment>
+      {pageProps.cookie !== undefined ? (
+        <Layout {...pageProps}>
+          <Dashboard {...pageProps} />
+        </Layout>
+      ) : (
+        <Login />
+      )}
+    </React.Fragment>
   )
 }

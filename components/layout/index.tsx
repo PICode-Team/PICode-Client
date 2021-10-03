@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+
 import { layoutStyle } from '../../styles/layout/layout'
+import { IPageProps } from '../../types/page.types'
+import Messenger from '../service/chatspace/messenger/messenger'
 import Sidebar from './sidebar'
 import Topbar from './topbar'
 
-interface ILayoutProps {
-  children: JSX.Element
-}
-
-function Layout(props: ILayoutProps) {
+function Layout(props: IPageProps) {
+  const { children, path, cookie } = props
   const classes = layoutStyle()
   const [toggle, setToggle] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (cookie === undefined) {
+        window.location.href = '/'
+      }
+    }
+  }, [])
 
   return (
     <React.Fragment>
@@ -19,7 +27,11 @@ function Layout(props: ILayoutProps) {
           <Topbar toggle={toggle} setToggle={setToggle} />
           <div className={classes.pageName}>
           </div>
-          {props.children}
+          {React.cloneElement(children, {
+            path: path,
+            cookie: cookie,
+            toggle: toggle,
+          })}
         </div>
       </div>
       {!toggle && (
@@ -41,6 +53,7 @@ function Layout(props: ILayoutProps) {
           }}
         />
       )}
+      <Messenger userId="123" />
     </React.Fragment>
   )
 }
