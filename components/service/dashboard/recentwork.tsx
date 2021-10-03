@@ -20,8 +20,6 @@ function RecentWork(props: IRecentWorkProps) {
   const [workspaceData, setWorkspaceData] = useState<IWorkspaceSpec[]>([])
   const [state, setState] = useState<boolean>(true)
   const [sliderNum, setSliderNum] = useState<number | number[]>(3)
-  const [content, setContent] = useState<any>()
-  const [openProject, setOpenProject] = useState<boolean>(false)
   const [itemNum, setItemNum] = useState<number>(0)
 
   const handleChange = () => {
@@ -81,7 +79,7 @@ function RecentWork(props: IRecentWorkProps) {
   const handleLinkEditPage = (workspaceId: string) => (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    window.location.href = `/workspace/edit?workspaceName=${workspaceId}`
+    window.location.href = `/workspace/edit?workspaceId=${workspaceId}`
   }
 
   const handleClickDelete = (workspaceId: string) => async (event: React.MouseEvent) => {
@@ -134,13 +132,13 @@ function RecentWork(props: IRecentWorkProps) {
 
   const drawCarouselView = () => {
     let tmpContent = [
-      <div key={`addProject-${uuidv4()}`} className={classes.carouseView}>
+      <div key={`add-workspace-${uuidv4()}`} className={classes.carouseView}>
         <div className={classes.carouselContent}>
           <div className={classes.alignCenter}>
             <IconButton className={classes.carouselButton} onClick={handleLinkCreateWorkspace}>
               <Add />
             </IconButton>
-            <span className={classes.blockCarouseButton}>Create Project</span>
+            <span className={classes.blockCarouseButton}>Create Workspace</span>
           </div>
         </div>
       </div>,
@@ -155,7 +153,7 @@ function RecentWork(props: IRecentWorkProps) {
       }
 
       tmpContent.push(
-        <div key={`project-carouse-${uuidv4()}`} style={{ padding: '0px 20px', height: '100%' }}>
+        <div key={`workspace-carouse-${uuidv4()}`} style={{ padding: '0px 20px', height: '100%' }}>
           <div className={classes.carouselContent}>
             <div className={classes.full}>
               <div className={classes.projectName}>
@@ -187,7 +185,7 @@ function RecentWork(props: IRecentWorkProps) {
                     <div className={classes.value}>{i.creation}</div>
                   </div>
                   <div className={classes.line}>
-                    <div className={classes.key}>Project Description</div>
+                    <div className={classes.key}>Description</div>
                     <div className={classes.value}>{i.description}</div>
                   </div>
                 </div>
@@ -230,20 +228,6 @@ function RecentWork(props: IRecentWorkProps) {
         <div className={classes.view} id="view">
           {state && (
             <>
-              {openProject && (
-                <div className={classes.menuDialog}>
-                  <div key={0} onClick={() => setItemNum(0)} className={classes.menuDialogRow}>
-                    Create Project
-                  </div>
-                  {workspaceData.map((v: IWorkspaceSpec, idx: number) => {
-                    return (
-                      <div key={idx + 1} onClick={() => setItemNum(idx + 1)} className={classes.menuDialogRow}>
-                        {v.name}
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
               <IconButton
                 className={classes.leftButton}
                 onClick={() => {

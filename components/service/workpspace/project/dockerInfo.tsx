@@ -14,7 +14,7 @@ interface IDockerInfoProps {
   dockerInfo: IDockerInfo
   setDockerInfo: React.Dispatch<React.SetStateAction<IDockerInfo>>
   edit: boolean
-  projectName?: string
+  workspaceId?: string
 }
 
 interface IEditDocker {
@@ -38,7 +38,7 @@ const initialState: IEditDocker = {
 }
 
 function DockerInfo(props: IDockerInfoProps) {
-  const { dockerInfo, setDockerInfo, edit, projectName } = props
+  const { dockerInfo, setDockerInfo, edit, workspaceId } = props
   const classes = createWorkspaceStyle()
   const [add, setAdd] = useState<boolean>(false)
   const [networkList, setNetworkList] = useState<any[]>([])
@@ -53,8 +53,8 @@ function DockerInfo(props: IDockerInfoProps) {
     }
   }
 
-  const getNetworkList = async () => {
-    const response = await fetchSet('/docker/network', 'GET', true)
+  const getNetworkList = async (networkId: string) => {
+    const response = await fetchSet(`/docker/network?networkId=${networkId}`, 'GET', true)
     const { networkList, code } = await response.json()
 
     if (code === 200) {
@@ -62,8 +62,8 @@ function DockerInfo(props: IDockerInfoProps) {
     }
   }
 
-  const getContainerList = async (projectName: string) => {
-    const response = await fetchSet(`docker?projectName=${projectName}`, 'GET', true)
+  const getContainerList = async (workspaceId: string) => {
+    const response = await fetchSet(`/docker?workspaceId=${workspaceId}`, 'GET', true)
     const { containers, code } = await response.json()
 
     if (code === 200) {
@@ -72,11 +72,16 @@ function DockerInfo(props: IDockerInfoProps) {
   }
 
   useEffect(() => {
-    if (edit === true && projectName !== undefined) {
-      getNetworkList()
-      getContainerList(projectName)
+    if (edit === true && workspaceId !== undefined) {
+      getContainerList(workspaceId)
     }
   }, [])
+
+  useEffect(() => {
+    if (containerList.length > 0) {
+      getNetworkList('')
+    }
+  }, [containerList])
 
   const onChangeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDockerInfo({ ...dockerInfo, [event.target.id]: event.target.value })
@@ -99,7 +104,7 @@ function DockerInfo(props: IDockerInfoProps) {
 
       {edit ? (
         <React.Fragment>
-          <div className={classes.sectionTitle}>
+          <div className={classes.sectionTitle} style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Network Info</span>
             <div className={classes.radioWrapper}>
               <CustomRadio id="add" checked={add} onChange={handleRadio} />

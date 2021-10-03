@@ -13,7 +13,7 @@ function IssueView(props: IIssueViewProps) {
   const ws: any = useWs()
 
   const getKanban = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'kanban',
@@ -24,7 +24,7 @@ function IssueView(props: IIssueViewProps) {
   }
 
   const getIssue = (kanbanUUID: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'issue',
@@ -66,7 +66,7 @@ function IssueView(props: IIssueViewProps) {
     return () => {
       ws.removeEventListener('message', issueWebSocketHandler)
     }
-  }, [])
+  }, [ws?.readyState])
 
   useEffect(() => {
     kanbanList.map((v) => getIssue(v))

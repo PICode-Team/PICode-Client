@@ -193,7 +193,6 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       color: theme.font.high.color,
     },
     radioWrapper: {
-      flex: 1,
       display: 'flex',
       alignItems: 'center',
       height: '30px',

@@ -9,6 +9,9 @@ import CustomTextarea from '../../../items/input/textarea'
 import CustomUserInput from '../../../items/input/userInput'
 import CustomCheckbox from '../../../items/input/checkbox'
 import { useWs } from '../../../context/websocket'
+import CustomMonoUserInput from '../../../items/input/monoUserInput'
+import { IUser } from '../../../../types/user.types'
+import { fetchSet } from '../../../context/fetch'
 
 const createChannelStyle = makeStyles((theme: IThemeStyle) => createStyles({}))
 
@@ -35,21 +38,24 @@ function CreateChannel(props: ICreateChannelProps) {
   const [payload, setPayload] = useState<ICreateChannelState>(initialState)
   const [isDM, setIsDM] = useState<boolean>(false)
   const [userList, setUserList] = useState<string[]>([])
+  const [name, setName] = useState<string>('')
   const ws: any = useWs()
 
   const handleSubmit = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
           type: 'createChannel',
           data: {
             ...payload,
-            name: isDM ? `#${payload.name}` : payload.name,
+            target: isDM ? name : `#${payload.name}`,
             participants: isDM ? payload.participants : undefined,
           },
         })
       )
+
+      setModal(false)
     }
   }
 
@@ -71,10 +77,10 @@ function CreateChannel(props: ICreateChannelProps) {
   return (
     <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title="Create Channel">
       <React.Fragment>
-        <CustomTextInput onChange={handlePayload} id="name" value={payload.name} label="name" placeholder="name" />
+        {isDM ? <CustomMonoUserInput setValue={setName} value={name} label="name" /> : <CustomTextInput onChange={handlePayload} id="name" value={payload.name} label="name" placeholder="name" />}
         <CustomTextarea onChange={handlePayload} id="description" value={payload.description} label="description" placeholder="description" />
-        <CustomCheckbox value={isDM} label="is direct message?" onClick={handleSetChannelType} />
         {!isDM && <CustomUserInput value={payload.participants} setValue={setUserList} label="Project Participant" />}
+        <CustomCheckbox value={isDM} label="is direct message?" onClick={handleSetChannelType} />
       </React.Fragment>
     </Modal>
   )

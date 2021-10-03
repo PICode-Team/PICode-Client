@@ -13,7 +13,7 @@ function NoteView(props: INoteViewProps) {
   const ws: any = useWs()
 
   const getDocument = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'document',
@@ -43,13 +43,15 @@ function NoteView(props: INoteViewProps) {
   useEffect(() => {
     const value = window.localStorage.getItem('userId')
     setUserId(value ?? '')
+  }, [])
 
+  useEffect(() => {
     ws.addEventListener('message', noteWebSocketHandler)
     getDocument()
     return () => {
       ws.removeEventListener('message', noteWebSocketHandler)
     }
-  }, [])
+  }, [ws?.readyState])
 
   return (
     <div className={classes.note}>

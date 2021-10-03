@@ -35,14 +35,14 @@ const selectStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function CustomSelect(props: IItemDefautlProps & IInputProps) {
-  const {} = props
+  const { label } = props
   const classes = selectStyle()
 
   return (
-    <div>
-      <span></span>
-      <select name="" id="">
-        <option value=""></option>
+    <div className={classes.wrapper}>
+      <span className={classes.label}>{label}</span>
+      <select name="" id="" className={classes.select}>
+        <option value="" className={classes.option}></option>
       </select>
     </div>
   )

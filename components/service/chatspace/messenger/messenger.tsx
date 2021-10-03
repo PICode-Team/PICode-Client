@@ -7,6 +7,7 @@ import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import Home from './home'
 import Room from './room'
 import Thread from './thread'
+import { useRouter } from 'next/router'
 
 interface IMessengerProps {
   userId: string
@@ -21,9 +22,14 @@ function Messenger(props: IMessengerProps) {
   const [messageList, setMessageList] = useState<IChat[]>([])
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [thread, setThread] = useState<IThread | null>(null)
+  const router = useRouter()
 
   const handleOpenMessenger = () => {
     setOpen(true)
+  }
+
+  if (router.pathname === '/chatspace') {
+    return <React.Fragment></React.Fragment>
   }
 
   if (open) {

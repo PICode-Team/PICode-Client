@@ -323,7 +323,6 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       height: '51px',
       padding: '4px 8px 0px',
-      position: 'fixed',
       '&>div': {
         display: 'flex',
         justifyContent: 'space-between',

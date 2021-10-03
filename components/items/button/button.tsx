@@ -13,35 +13,38 @@ const buttonStyle = makeStyles((theme: IThemeStyle) =>
       fontSize: '15px',
       borderRadius: '2px',
       border: 'none',
-      background: theme.backgroundColor.step2,
+      backgroundColor: theme.backgroundColor.step2,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       cursor: 'pointer',
     },
     primary: {
-      background: '#566372',
+      backgroundColor: '#566372',
       '&:hover': {
-        background: '#647487',
+        backgroundColor: '#647487',
         transition: 'all 0.3s',
       },
     },
     secondary: {
-      background: '#4078b8',
+      backgroundColor: '#4078b8',
       '&:hover': {
-        background: '#488cd9',
+        backgroundColor: '#488cd9',
         transition: 'all 0.3s',
       },
+    },
+    disabled: {
+      backgroundColor: '#627285 !important',
     },
   })
 )
 
 function CustomButton(props: IItemDefautlProps & IButtonProps) {
-  const { onClick, className, style, color, text } = props
+  const { onClick, className, style, color, text, disable } = props
   const classes = buttonStyle()
 
   return (
-    <button onClick={onClick} className={`${classes.button} ${classes[color ?? 'primary']} ${className}`} style={style}>
+    <button onClick={onClick} className={`${classes.button} ${classes[color ?? 'primary']} ${className} ${disable === true && classes.disabled}`} style={style}>
       {text}
     </button>
   )

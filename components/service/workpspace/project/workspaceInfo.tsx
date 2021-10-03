@@ -138,7 +138,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
 
   return (
     <React.Fragment>
-      <div className={classes.subTitle}>Create Code</div>
+      <div className={classes.subTitle}>{edit === true ? 'Edit' : 'Create'} Code</div>
       <CustomTextInput id="name" value={workspaceInfo.name} label="Workspace Name" placeholder="Input Workspace Name" onChange={onChangeInfo} />
       <div className={classes.divider}>
         <div />

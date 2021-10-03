@@ -40,23 +40,24 @@ function MessageBox(props: IMessageBoxProps) {
   const { messageInfo, reverse, target, particiapntList, setThread } = props
   const { user, message, time, chatId, threadList } = messageInfo
   const classes = messageBoxStyle()
+  const thumbnailUrl = particiapntList.find((v) => v.userId === user)?.userThumbnail
+
+  const handleSetThread = () => {
+    if (target !== null) {
+      setThread({
+        chatName: target.chatName,
+        messageList: threadList,
+        parentId: chatId,
+        parentMessage: message,
+        parentTime: time,
+        parentUser: user,
+      })
+    }
+  }
 
   return (
     <div className={`${classes.messageBox} ${reverse && classes.reversedMessageBox}`}>
-      {!reverse && (
-        <div
-          className={classes.thumbnail}
-          style={
-            {
-              // backgroundImage:
-              //   particiapntList.find((v) => v.userId === user)?.userThumbnail === undefined
-              //     ? 'none'
-              //     : ` url('${API_SERVER}:8000/api/temp/${particiapntList?.find((v) => v.userId === user)?.userThumbnail}')`,
-              // backgroundSize: 'cover',
-            }
-          }
-        />
-      )}
+      {!reverse && <div className={classes.thumbnail} style={thumbnailUrl !== undefined ? { backgroundImage: `url('${API_SERVER}:8000/api/temp/${thumbnailUrl}`, backgroundSize: 'cover' } : {}} />}
       <div className={`${target !== null && classes.messageInfo}`}>
         {!reverse && <div className={classes.target}>{user}</div>}
         <div className={`${classes.textWrapper} ${reverse && classes.reversedTextWrapper}`}>
@@ -65,19 +66,7 @@ function MessageBox(props: IMessageBoxProps) {
             <span>{getTimeText(time)}</span>
             {target !== null && (
               <div className={classes.messageInteraction}>
-                <div
-                  className={classes.interactionIcon}
-                  onClick={() => {
-                    setThread({
-                      chatName: target.chatName ?? (target.userId as string),
-                      messageList: threadList,
-                      parentId: chatId,
-                      parentMessage: message,
-                      parentTime: time,
-                      parentUser: user,
-                    })
-                  }}
-                >
+                <div className={classes.interactionIcon} onClick={handleSetThread}>
                   <SmsOutlined />
                 </div>
                 <div className={classes.interactionDivider} />
@@ -89,26 +78,14 @@ function MessageBox(props: IMessageBoxProps) {
           </span>
         </div>
         {target !== null && threadList.length > 0 && (
-          <div
-            className={classes.thread}
-            onClick={() => {
-              setThread({
-                chatName: target.chatName ?? (target.userId as string),
-                messageList: threadList,
-                parentId: chatId,
-                parentMessage: message,
-                parentTime: time,
-                parentUser: user,
-              })
-            }}
-          >
+          <div className={classes.thread} onClick={handleSetThread}>
             <div className={classes.threadParticipant}>
               {particiapntList.map((v, i) => (
                 <div key={`${chatId}-thread-${i}`}></div>
               ))}
             </div>
             <div className={classes.threadCount}>{threadList.length} replies</div>
-            <div className={classes.lastThread}>Last reply {threadList.slice(-1)[0].time} ago</div>
+            <div className={classes.lastThread}>Last reply {threadList.slice(-1)[0].time.split(' ')[0]}</div>
           </div>
         )}
       </div>

@@ -1,4 +1,3 @@
-import { Link } from '@material-ui/core'
 import {
   AlternateEmail,
   AttachFile,
@@ -11,6 +10,7 @@ import {
   SentimentSatisfiedOutlined,
   TextFormatOutlined,
   Code,
+  Link,
 } from '@material-ui/icons'
 import { useEffect } from 'react'
 
@@ -34,7 +34,9 @@ function ChatInput(props: IChatInputProps) {
   const ws: any = useWs()
 
   const sendMessage = (target: string, message: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    console.log(parentChatId)
+
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',

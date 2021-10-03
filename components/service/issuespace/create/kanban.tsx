@@ -29,10 +29,10 @@ function CreateKanban(props: ICreateKanbanProps) {
   }
 
   const handleSubmit = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'issue',
+          category: 'kanban',
           type: 'createKanban',
           data: payload,
         })

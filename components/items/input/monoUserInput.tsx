@@ -77,7 +77,6 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       marginLeft: '114px',
       marginTop: '1px',
       position: 'absolute',
-      maxWidth: '386px',
     },
     userInfo: {
       display: 'flex',
@@ -97,12 +96,12 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 interface IUserInputProps {
-  value: string[]
-  setValue: React.Dispatch<React.SetStateAction<string[]>>
+  value: string
+  setValue: React.Dispatch<React.SetStateAction<string>>
   label: string
 }
 
-function CustomUserInput(props: IUserInputProps) {
+function CustomMonoUserInput(props: IUserInputProps) {
   const { value, label, setValue } = props
   const classes = userInputStyle()
   const [participantList, setParticipantList] = useState<IUser[]>([])
@@ -121,11 +120,11 @@ function CustomUserInput(props: IUserInputProps) {
     setVisible(!visible)
   }
 
-  const handleDeleteItem = (userId: string) => (event: React.MouseEvent) => {
+  const handleDeleteItem = (event: React.MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
 
-    setValue(value.filter((item) => item !== userId))
+    setValue('')
   }
 
   useEffect(() => {
@@ -143,40 +142,30 @@ function CustomUserInput(props: IUserInputProps) {
       <div className={classes.participant}>
         <span className={classes.label}>{label}</span>
         <div className={classes.input} onClick={handleClickInput}>
-          {participantList.length > 0 && value.length > 0 ? (
-            <React.Fragment>
-              {value.map((v, i) => (
-                <div className={classes.item} key={`workspace-participant-${i}`}>
-                  {participantList.map((item) => {
-                    if (item.userId === v) return item.userName
-                  })}
-                  <div className={classes.icon} onClick={handleDeleteItem(v)}>
-                    <Close className={classes.delete} />
-                  </div>
-                </div>
-              ))}
-            </React.Fragment>
+          {participantList.length > 0 && value !== '' ? (
+            <div className={classes.item}>
+              {participantList.map((item) => {
+                if (item.userId === value) return item.userName
+              })}
+              <div className={classes.icon} onClick={handleDeleteItem}>
+                <Close className={classes.delete} />
+              </div>
+            </div>
           ) : (
-            `Input Workspace Participant`
+            `Input Direct Message Target`
           )}
         </div>
       </div>
       {visible && (
         <div className={classes.userList}>
           {participantList
-            .filter((item) => {
-              let check = true
-              value.forEach((v) => {
-                if (v === item.userId) check = false
-              })
-              return check
-            })
+            .filter((item) => value !== item.userId)
             .map((v, i) => (
               <div
                 className={classes.user}
                 key={`participant-${i}`}
                 onClick={() => {
-                  setValue([...value, v.userId])
+                  setValue(v.userId)
                 }}
               >
                 <div className={classes.userInfo}>
@@ -192,4 +181,4 @@ function CustomUserInput(props: IUserInputProps) {
   )
 }
 
-export default CustomUserInput
+export default CustomMonoUserInput

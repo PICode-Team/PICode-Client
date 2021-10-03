@@ -12,7 +12,7 @@ function MilestoneView(props: IMilestoneViewProps) {
   const ws: any = useWs()
 
   const getMilestone = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',
@@ -43,7 +43,7 @@ function MilestoneView(props: IMilestoneViewProps) {
     return () => {
       ws.removeEventListener('message', mileWebSocketHandler)
     }
-  }, [])
+  }, [ws?.readyState])
 
   const classes = milestoneStyle()
   return (

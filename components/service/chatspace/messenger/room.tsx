@@ -28,7 +28,7 @@ function Room(props: IRoomProps) {
   const ws: any = useWs()
 
   const sendMessage = (target: string, message: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',

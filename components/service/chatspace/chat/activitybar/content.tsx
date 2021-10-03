@@ -33,6 +33,8 @@ function Content(props: IContentProps) {
     creation: '',
     description: '',
     userId: '',
+    recentMessage: '',
+    recentTime: '',
   }
 
   return (

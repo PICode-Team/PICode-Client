@@ -10,6 +10,7 @@ const checkboxStyle = makeStyles((theme: IThemeStyle) =>
       fontSize: '12px',
       display: 'flex',
       justifyContent: 'flex-end',
+      marginTop: '8px',
     },
     checkbox: {
       marginRight: '4px',

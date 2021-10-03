@@ -42,7 +42,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
   }
 
   const handleSubmit = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',

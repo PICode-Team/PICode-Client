@@ -4,6 +4,7 @@ import { DeleteForever, Edit } from '@material-ui/icons'
 
 import { boardStyle } from '../../../styles/service/issuespace/issue'
 import { IMilestone } from '../../../types/issue.types'
+import { useWs } from '../../context/websocket'
 
 interface IMilestoneProps {
   milestoneList: IMilestone[] | null
@@ -11,14 +12,20 @@ interface IMilestoneProps {
   setModalMile: React.Dispatch<React.SetStateAction<IMilestone | null>>
 }
 
-export const getPercentage = (startData: string, endDate: string) => {
+export const getPercentage = (startDate: string, endDate: string) => {
   const date = new Date()
-  const whole = Number(endDate.slice(8, 10)) - Number(startData.slice(8, 10))
-  const today = Number(date.getDate()) - Number(startData.slice(8, 10))
+  console.log(startDate, endDate)
+
+  const whole = Number(endDate.slice(8, 10)) - Number(startDate.slice(8, 10))
+  const today = Number(date.getDate()) - Number(startDate.slice(8, 10))
   const percentage = today / whole
 
   if (percentage < 0) {
     return 0
+  }
+
+  if (percentage > 1) {
+    return 100
   }
 
   return percentage * 100
@@ -27,6 +34,7 @@ export const getPercentage = (startData: string, endDate: string) => {
 function Milestone(props: IMilestoneProps) {
   const { milestoneList, setModal, setModalMile } = props
   const classes = boardStyle()
+  const ws: any = useWs()
 
   const handleEditMile = (mile: IMilestone) => (event: React.MouseEvent) => {
     event.stopPropagation()
@@ -40,20 +48,18 @@ function Milestone(props: IMilestoneProps) {
     setModal(true)
   }
 
-  const handleDeleteMile = () => {
-    // (e) => {
-    //   e.stopPropagation();
-    //   ctx.ws.current.send(
-    //     JSON.stringify({
-    //       category: "milestone",
-    //       type: "deleteMilestone",
-    //       data: {
-    //         uuid: v.uuid,
-    //       },
-    //     })
-    //   );
-    //   window.location.reload();
-    // }
+  const handleDeleteMile = (uuid: string) => () => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'milestone',
+          type: 'deleteMilestone',
+          data: {
+            uuid,
+          },
+        })
+      )
+    }
   }
 
   const handleClickMile = () => {}
@@ -71,7 +77,7 @@ function Milestone(props: IMilestoneProps) {
                     <div className={classes.icon} onClick={handleEditMile(v)}>
                       <Edit className={classes.edit} />
                     </div>
-                    <div className={classes.icon} onClick={handleDeleteMile}>
+                    <div className={classes.icon} onClick={handleDeleteMile(v.uuid)}>
                       <DeleteForever className={classes.delete} />
                     </div>
                   </div>
@@ -81,7 +87,7 @@ function Milestone(props: IMilestoneProps) {
                     <div
                       className={classes.gauge}
                       style={{
-                        width: `${getPercentage(v.startDate, v.endDate)}%`,
+                        width: `${v.startDate !== undefined && v.endDate !== undefined ? getPercentage(v.startDate, v.endDate) : '0'}%`,
                       }}
                     ></div>
                   </div>

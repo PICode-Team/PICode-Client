@@ -8,8 +8,10 @@ export function useWs() {
 
 export function WsProvider({ children }: any) {
   let value: any
+
   if (typeof window !== 'undefined') {
-    const ws = new WebSocket(`ws://localhost:${process.env.NEXT_PUBLIC_WS_PORT}`)
+    const ws = new WebSocket(`ws://192.168.85.128:80`)
+
     ws.onopen = () => {
       if (ws!.readyState === WebSocket.OPEN) {
         ws!.send(JSON.stringify({ category: 'connect' }))

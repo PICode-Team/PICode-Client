@@ -11,11 +11,13 @@ export interface IBoundary {
 }
 
 export interface IChannel {
-  chatName?: string
-  userId?: string
+  chatName: string
+  userId: string
   chatParticipant: string[]
   creation: string
   description: string
+  recentMessage: string
+  recentTime: string
 }
 
 export interface IThread {

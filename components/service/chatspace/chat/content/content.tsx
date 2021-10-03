@@ -60,7 +60,7 @@ function Content(props: IContentProps) {
 
   return (
     <div className={classes.contentWrapper}>
-      <Header target={target} lastTime="sample text" />
+      <Header target={target} />
       <div className={classes.content}>
         <div className={classes.contentBox}>
           {renderMessage(messageList, userId, false, setThread, target, particiapntList)}

@@ -26,19 +26,20 @@ function Chat(ctx: any) {
   const [target, setTarget] = useState<IChannel | null>(null)
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [modal, setModal] = useState<boolean>(false)
+  const [userId, setUserId] = useState<IUser | null>(null)
   const ws: any = useWs()
 
   const getUserList = async () => {
     const response = await fetchSet('/userList', 'GET', false)
-    const { userList, code } = await response.json()
+    const { user, code } = await response.json()
 
     if (code === 200) {
-      setUserList(userList)
+      setUserList(user)
     }
   }
 
   const getChat = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
@@ -48,14 +49,14 @@ function Chat(ctx: any) {
     }
   }
 
-  const getChatLog = (target: string, page: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+  const getChatLog = (page: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
           type: 'getChatLog',
           data: {
-            target: target,
+            target: target!.chatName,
             page: page,
           },
         })
@@ -64,7 +65,7 @@ function Chat(ctx: any) {
   }
 
   const getChatLogList = (target: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.CONNECTING) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
@@ -108,7 +109,7 @@ function Chat(ctx: any) {
 
         case 'getChatLogList':
           message.data.forEach((v: string) => {
-            getChatLog(target?.chatName ?? (target?.userId as string), v)
+            getChatLog(v)
           })
 
           break
@@ -117,27 +118,31 @@ function Chat(ctx: any) {
           if (message.data.parentChatId !== undefined) {
             const messages: IChat[] = messageList.map((v) => {
               if (v.chatId === message.data.parentChatId) {
+                const newMessageData = {
+                  user: message.data.sender,
+                  message: message.data.message,
+                  time: message.data.time,
+                  chatId: message.data.chatId ?? '',
+                  threadList: message.data.threadList ?? [],
+                }
+
+                if (thread !== null) {
+                  setThread({ ...thread, messageList: [...thread?.messageList, newMessageData] })
+                }
+
                 return {
                   ...v,
-                  threadList: [
-                    ...v.threadList,
-                    {
-                      user: message.data.sender,
-                      message: message.data.message,
-                      time: message.data.time,
-                      chatId: message.data.chatId,
-                      threadList: message.data.threadList ?? [],
-                    },
-                  ],
+                  threadList: [...v.threadList, newMessageData],
                 }
               }
 
               return v
             })
+            console.log(messages)
 
             setMessageList(messages)
           } else {
-            if (message.data.sender !== ctx.session.userId) {
+            if (message.data.sender !== userId) {
               setNewMessage(true)
               setTimeout(() => {
                 setNewMessage(false)
@@ -173,20 +178,27 @@ function Chat(ctx: any) {
     setMessageList([])
 
     if (target !== null) {
-      getChatLogList(target?.chatName ?? (target?.userId as string))
+      getChatLogList(target.chatName)
     }
   }, [target])
 
   useEffect(() => {
     getUserList()
-    ws.addEventListener('message', chatWebSocketHandler)
-    getChat()
+
     window.addEventListener('resize', handleResize)
     return () => {
       window.removeEventListener('resize', handleResize)
-      ws.removeEventListener('message', chatWebSocketHandler)
     }
   }, [])
+
+  useEffect(() => {
+    ws.addEventListener('message', chatWebSocketHandler)
+    getChat()
+
+    return () => {
+      ws.removeEventListener('message', chatWebSocketHandler)
+    }
+  }, [ws?.readyState, target, messageList])
 
   return (
     <React.Fragment>

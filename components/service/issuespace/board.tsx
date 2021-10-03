@@ -57,6 +57,8 @@ function Board(props: IBoardProps) {
           <div className={classes.content} id="kanbanBoard">
             {kanbanList !== null &&
               kanbanList.map((v, i) => {
+                console.log(v)
+
                 return (
                   <div key={v.uuid} onClick={handleLinkIssuePage(v.title)} className={classes.item}>
                     <div className={classes.iconLayout}>

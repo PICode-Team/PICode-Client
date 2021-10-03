@@ -29,6 +29,7 @@ export interface IButtonProps {
   text: string
   color?: IButtonColor
   onClick?: (event: React.MouseEvent<HTMLElement> | React.MouseEvent<HTMLButtonElement>) => void
+  disable?: boolean
 }
 
 type IModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
