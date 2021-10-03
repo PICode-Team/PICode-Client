@@ -12,6 +12,8 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "@monaco-editor/react": "^4.2.2",
+    "clsx": "^1.1.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -19,14 +21,16 @@
     "http-proxy-middleware": "^2.0.1",
     "lodash": "^4.17.21",
     "logger": "0.0.1",
+    "monaco-editor-webpack-plugin": "^4.2.0",
     "next": "11.1.2",
     "next-redux-wrapper": "^7.0.5",
+    "next-transpile-modules": "^8.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-redux": "^7.2.5",
     "redux-persist": "^6.0.0",
-    "webpack-dev-server": "^4.2.1",
-    "ts-node": "^10.2.1"
+    "ts-node": "^10.2.1",
+    "webpack-dev-server": "^4.2.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",

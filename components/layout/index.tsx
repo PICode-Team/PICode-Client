@@ -18,9 +18,8 @@ function Layout(props: ILayoutProps) {
         <div className={`${classes.contentWrapper} ${toggle && classes.toggle}`}>
           <Topbar toggle={toggle} setToggle={setToggle} />
           <div className={classes.pageName}>
-            <div></div>
           </div>
-          <div>{props.children}</div>
+          {props.children}
         </div>
       </div>
       {!toggle && (
