@@ -10,6 +10,7 @@ interface ICreateMilestoneProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   modalMile: IMilestone | null
+  workspaceId: string
 }
 
 interface ICreateMileState {
@@ -27,7 +28,7 @@ const initialState: ICreateMileState = {
 }
 
 function CreateMilestone(props: ICreateMilestoneProps) {
-  const { modal, setModal, modalMile } = props
+  const { modal, setModal, modalMile, workspaceId } = props
   const [payload, setPayload] = useState<ICreateMileState>(initialState)
   const ws: any = useWs()
 
@@ -47,7 +48,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
         JSON.stringify({
           category: 'milestone',
           type: 'createMilestone',
-          data: payload,
+          data: { ...payload, workspaceId },
         })
       )
     }

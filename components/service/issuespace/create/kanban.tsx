@@ -9,6 +9,7 @@ interface ICreateKanbanProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   modalKanban: IKanban | null
+  workspaceId: string
 }
 
 interface ICreateKanbanState {
@@ -20,7 +21,7 @@ const initialState: ICreateKanbanState = {
 }
 
 function CreateKanban(props: ICreateKanbanProps) {
-  const { modal, setModal, modalKanban } = props
+  const { modal, setModal, modalKanban, workspaceId } = props
   const [payload, setPayload] = useState<ICreateKanbanState>(initialState)
   const ws: any = useWs()
 
@@ -34,7 +35,7 @@ function CreateKanban(props: ICreateKanbanProps) {
         JSON.stringify({
           category: 'kanban',
           type: 'createKanban',
-          data: payload,
+          data: { ...payload, workspaceId },
         })
       )
     }
