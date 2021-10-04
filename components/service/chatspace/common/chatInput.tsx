@@ -34,8 +34,6 @@ function ChatInput(props: IChatInputProps) {
   const ws: any = useWs()
 
   const sendMessage = (target: string, message: string) => {
-    console.log(parentChatId)
-
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({

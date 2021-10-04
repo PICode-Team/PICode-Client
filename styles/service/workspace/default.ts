@@ -6,7 +6,7 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
       width: '100%',
-      height: '100%',
+      height: 'calc(100% - 90px)',
       padding: '32px',
     },
     title: {
@@ -16,11 +16,11 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
     },
     content: {
       width: '100%',
-      height: 'calc(100% - 50px)',
-      background: '#3b434d',
+      height: 'calc(100% - 20px)',
+      backgroundColor: theme.backgroundColor.step2,
       color: theme.font.high.color,
       display: 'grid',
-      gridTemplateColumns: 'repeat(4, calc(25% - 21px))',
+      gridTemplateColumns: 'repeat(3, calc(33% - 21px))',
       gap: '28px 28px',
       padding: '30px',
       gridTemplateRows: 'repeat(4, 195px)',

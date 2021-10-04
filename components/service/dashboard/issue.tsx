@@ -9,7 +9,7 @@ function IssueView(props: IIssueViewProps) {
   const {} = props
   const classes = issueStyle()
   const [kanbanList, setKanbanList] = useState<string[]>([])
-  const [issueList, setIssueList] = useState<IIssue[]>([])
+  const [issueList, setIssueList] = useState<IIssue[] | null>(null)
   const ws: any = useWs()
 
   const getKanban = () => {
@@ -54,7 +54,7 @@ function IssueView(props: IIssueViewProps) {
     } else if (message.category === 'issue') {
       switch (message.type) {
         case 'getIssue':
-          if (message.data.issues.length > 0) setIssueList([...issueList, ...message.data.issues])
+          if (message.data.issues.length > 0) setIssueList([message.data.issues])
           break
       }
     }
@@ -72,13 +72,21 @@ function IssueView(props: IIssueViewProps) {
     kanbanList.map((v) => getIssue(v))
   }, [kanbanList])
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (issueList === null) {
+        setIssueList([])
+      }
+    }, 100)
+  }, [])
+
   const handleLinkIssue = () => {}
 
   return (
     <div className={classes.issue}>
       <div className={classes.title}>Issue</div>
       <div className={classes.content}>
-        {issueList.length > 0 ? (
+        {issueList !== null && issueList.length > 0 ? (
           issueList.map((v, i) => {
             return (
               <div key={`dashboard-issue-${i}`} className={classes.card} onClick={handleLinkIssue}>

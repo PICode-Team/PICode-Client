@@ -1,52 +1,46 @@
 import React from 'react'
 import { cardStyle } from '../../../../styles/service/issuespace/issue'
 import { IIssue } from '../../../../types/issue.types'
+import { useWs } from '../../../context/websocket'
 
 interface ICardProps {
   issue: IIssue
+  columnList: string[]
+  kanbanUUID: string
 }
 
 function Card(props: ICardProps) {
-  const { issue } = props
+  const { issue, kanbanUUID, columnList } = props
   const classse = cardStyle()
+  const ws: any = useWs()
 
-  const handleDradStartCard = () => {
-    // (e) => {
-    //     setNode(node);
-    //   }
+  const updateIssue = (column: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'issue',
+          type: 'updateIssue',
+          data: {
+            kanbanUUID: kanbanUUID,
+            issueData: {
+              uuid: issue.uuid,
+              column,
+            },
+          },
+        })
+      )
+    }
   }
 
-  const handleDradEndCard = () => {
-    // (e) => {
-    //     for (let i of col!) {
-    //       let tmpCol = document.getElementById(i)?.getBoundingClientRect();
-    //       if (tmpCol!.left < e.clientX && tmpCol!.right > e.clientX) {
-    //         props.ws.current.send(
-    //           JSON.stringify({
-    //             category: "issue",
-    //             type: "updateIssue",
-    //             data: {
-    //               kanbanUUID: kanban,
-    //               issueData: {
-    //                 uuid: node.uuid,
-    //                 column: i,
-    //               },
-    //             },
-    //           })
-    //         );
-    //         props.ws.current.send(
-    //           JSON.stringify({
-    //             category: "issue",
-    //             type: "getIssue",
-    //             data: {
-    //               kanbanUUID: kanban,
-    //               options: {},
-    //             },
-    //           })
-    //         );
-    //       }
-    //     }
-    //   }
+  const handleDradStartCard = () => {}
+
+  const handleDradEndCard = (event: any) => {
+    for (const column of columnList!) {
+      const tmpCol = document.getElementById(column)?.getBoundingClientRect()
+      if (tmpCol!.left < event.clientX && tmpCol!.right > event.clientX) {
+        updateIssue(column)
+      }
+    }
   }
 
   return (

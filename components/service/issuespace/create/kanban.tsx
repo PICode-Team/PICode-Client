@@ -38,6 +38,8 @@ function CreateKanban(props: ICreateKanbanProps) {
           data: { ...payload, workspaceId },
         })
       )
+
+      setModal(false)
     }
   }
 

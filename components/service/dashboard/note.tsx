@@ -8,7 +8,7 @@ interface INoteViewProps {}
 function NoteView(props: INoteViewProps) {
   const {} = props
   const classes = noteStyle()
-  const [fileView, setFileView] = useState<IFileView[]>([])
+  const [fileView, setFileView] = useState<IFileView[] | null>(null)
   const [userId, setUserId] = useState<string>('')
   const ws: any = useWs()
 
@@ -53,11 +53,19 @@ function NoteView(props: INoteViewProps) {
     }
   }, [ws?.readyState])
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (fileView === null) {
+        setFileView([])
+      }
+    }, 100)
+  }, [])
+
   return (
     <div className={classes.note}>
       <div className={classes.title}>Note</div>
       <div className={classes.content}>
-        {fileView.length > 0 ? (
+        {fileView !== null && fileView.length > 0 ? (
           fileView.map((v, i) => {
             const pathList = v.path.split('/')
             const fileName = pathList[pathList.length - 1]

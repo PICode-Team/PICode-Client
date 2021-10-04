@@ -51,6 +51,8 @@ function CreateMilestone(props: ICreateMilestoneProps) {
           data: { ...payload, workspaceId },
         })
       )
+
+      setModal(false)
     }
   }
 
@@ -63,7 +65,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
   }
 
   return (
-    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title="CreateMilestone" size="lg">
+    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title="Create Milestone" size="lg">
       <React.Fragment>
         <CustomTextInput required={true} id="title" onChange={handlePayload} value={payload.title} label="title" placeholder="title" />
         <CustomTextarea id="content" onChange={handlePayload} value={payload.content} label="content" placeholder="content" />

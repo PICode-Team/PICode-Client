@@ -14,7 +14,6 @@ interface IMilestoneProps {
 
 export const getPercentage = (startDate: string, endDate: string) => {
   const date = new Date()
-  console.log(startDate, endDate)
 
   const whole = Number(endDate.slice(8, 10)) - Number(startDate.slice(8, 10))
   const today = Number(date.getDate()) - Number(startDate.slice(8, 10))

@@ -8,7 +8,8 @@ interface IMilestoneViewProps {}
 
 function MilestoneView(props: IMilestoneViewProps) {
   const {} = props
-  const [mileList, setMileList] = useState<IMilestone[]>([])
+  const classes = milestoneStyle()
+  const [mileList, setMileList] = useState<IMilestone[] | null>(null)
   const ws: any = useWs()
 
   const getMilestone = () => {
@@ -45,27 +46,32 @@ function MilestoneView(props: IMilestoneViewProps) {
     }
   }, [ws?.readyState])
 
-  const classes = milestoneStyle()
+  useEffect(() => {
+    setTimeout(() => {
+      if (mileList === null) {
+        setMileList([])
+      }
+    }, 100)
+  }, [])
+
   return (
     <div className={classes.milestone}>
       <div className={classes.title}>Milestone</div>
       <div className={classes.content}>
-        {mileList.length > 0 ? (
-          mileList.map((v: any, idx: number) => {
-            return (
-              <div className={classes.card} key={v.uuid} onClick={handleLinkMilestone}>
-                <div className={classes.top}>
-                  <div className={classes.mileTitle}>{v.title}</div>
-                  <div className={classes.topWrapper}></div>
-                </div>
-                <div>
-                  <div className={classes.percentage}>
-                    <div className={classes.gauge} style={{ width: `${getPercentage(v.startDate, v.endDate)}%` }}></div>
-                  </div>
+        {mileList !== null && mileList.length > 0 ? (
+          mileList.map((v: any, idx: number) => (
+            <div className={classes.card} key={v.uuid} onClick={handleLinkMilestone}>
+              <div className={classes.top}>
+                <div className={classes.mileTitle}>{v.title}</div>
+                <div className={classes.topWrapper}></div>
+              </div>
+              <div className={classes.bottom}>
+                <div className={classes.percentage}>
+                  <div className={classes.gauge} style={{ width: `${getPercentage(v.startDate, v.endDate)}%` }}></div>
                 </div>
               </div>
-            )
-          })
+            </div>
+          ))
         ) : (
           <div className={classes.empty}>this server has no milestone</div>
         )}

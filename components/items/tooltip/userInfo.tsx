@@ -15,7 +15,7 @@ const userInfoStyle = makeStyles((theme: IThemeStyle) =>
       zIndex: 4,
       right: '43px',
       top: '35px',
-      backgroundColor: '#505965',
+      backgroundColor: theme.backgroundColor.step4,
       width: '240px',
       height: '300px',
       borderRadius: '6px',
@@ -128,6 +128,8 @@ export default function UserInfo(props: IUserInfoProps) {
 
   const handleLogout = async () => {
     await fetchSet('/user/sign', 'DELETE', true)
+    localStorage.removeItem('userId')
+
     window.location.reload()
   }
 

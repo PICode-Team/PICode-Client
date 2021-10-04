@@ -15,12 +15,12 @@ interface IChatProps {
   toggle: boolean
 }
 
-function Chat(ctx: any) {
+function Chat(ctx: IChatProps) {
   const { toggle } = ctx
   const classes = chatStyle()
   const [messageList, setMessageList] = useState<IChat[]>([])
   const [channelList, setChannelList] = useState<IChannel[]>([])
-  const [userList, setUserList] = React.useState<IUser[]>([])
+  const [userList, setUserList] = useState<IUser[]>([])
   const [thread, setThread] = useState<IThread | null>(null)
   const [typingUserList, setTypingUserList] = useState<IUser[]>([])
   const [target, setTarget] = useState<IChannel | null>(null)
@@ -138,7 +138,6 @@ function Chat(ctx: any) {
 
               return v
             })
-            console.log(messages)
 
             setMessageList(messages)
           } else {

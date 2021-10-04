@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { DeleteForever, Settings } from '@material-ui/icons'
 import Swal from 'sweetalert2'
@@ -10,29 +10,37 @@ import { fetchSet } from '../../context/fetch'
 
 function DefaultCodeView() {
   const classes = defaultStyle()
-  const [projectData, setProjectData] = useState<IWorkspaceSpec[]>([])
+  const [projectData, setWorkspaceData] = useState<IWorkspaceSpec[]>([])
 
-  const handleLinkCode = (projectName: string) => (event: React.MouseEvent) => {
-    window.location.href = `/code?projectName=${projectName}`
+  const getWorkspaceData = async () => {
+    const response = await fetchSet('/workspace', 'GET', true)
+    const { workspaceList, code } = await response.json()
+
+    if (code === 200) {
+      setWorkspaceData(workspaceList)
+    }
   }
 
-  const handleLinkIssue = (projectName: string) => (event: React.MouseEvent) => {
-    window.location.href = `/manage?projectName=${projectName}`
+  const handleLinkCode = (workspaceId: string) => () => {
+    window.location.href = `/codespace?workspaceId=${workspaceId}`
   }
 
-  const handleClickEdit = (projectName: string) => (event: React.MouseEvent) => {
+  const handleLinkIssue = (workspaceId: string) => () => {
+    window.location.href = `/issuespace?workspaceId=${workspaceId}`
+  }
+
+  const handleLinkEdit = (workspaceId: string) => (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    window.location.href = `/workspace/edit?projectName=${projectName}`
+    window.location.href = `/workspace/edit?workspaceId=${workspaceId}`
   }
 
-  const handleClickDelete = (projectName: string) => async (event: React.MouseEvent) => {
+  const handleClickDelete = (workspaceId: string) => async (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-
-    const result = await Swal.fire({
-      title: 'Delete Project',
-      text: `Are you sure delete ${projectName} Project?`,
+    let result = await Swal.fire({
+      title: 'Delete Workspace',
+      text: `Are you sure delete ${workspaceId} Workspace?`,
       icon: 'warning',
       heightAuto: false,
       showCancelButton: true,
@@ -40,13 +48,13 @@ function DefaultCodeView() {
       cancelButtonText: 'No',
     })
     if (result.isConfirmed) {
-      const response = await fetchSet(`/workspace?projectName=${projectName}`, 'DELETE', true)
+      const response = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true)
       const { code } = await response.json()
 
       if (code / 100 === 2) {
         Swal.fire({
           title: 'SUCCESS',
-          text: `DELETE ${projectName}`,
+          text: `DELETE ${workspaceId}`,
           icon: 'success',
           heightAuto: false,
         }).then(() => {
@@ -56,9 +64,9 @@ function DefaultCodeView() {
         Swal.fire({
           title: 'ERROR',
           html: `
-                  ERROR in DELETE ${projectName}
-                  <br />
-                  <span>${code}</span>
+                ERROR in DELETE ${workspaceId}
+                <br />
+                <span>${code}</span>
                 `,
           icon: 'error',
           heightAuto: false,
@@ -66,6 +74,10 @@ function DefaultCodeView() {
       }
     }
   }
+
+  useEffect(() => {
+    getWorkspaceData()
+  }, [])
 
   return (
     <div className={classes.wrapper}>
@@ -83,17 +95,17 @@ function DefaultCodeView() {
             <div className={classes.top}>
               <div className={classes.projectName}>{v.name}</div>
               <div className={classes.iconWrapper}>
-                <div className={classes.icon} onClick={handleClickEdit(v.name)}>
+                <div className={classes.icon} onClick={handleLinkEdit(v.workspaceId)}>
                   <Settings />
                 </div>
-                <div className={classes.icon} onClick={handleClickDelete(v.name)}>
+                <div className={classes.icon} onClick={handleClickDelete(v.workspaceId)}>
                   <DeleteForever />
                 </div>
               </div>
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Author</div>
-              <div className={classes.infoValue}></div>
+              <div className={classes.infoValue}>{v.participants}</div>
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Creator</div>
@@ -101,15 +113,15 @@ function DefaultCodeView() {
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Create time</div>
-              <div className={classes.infoValue}></div>
+              <div className={classes.infoValue}>{v.creation}</div>
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Description</div>
-              <div className={classes.infoValue}>{v.description}</div>
+              <div className={classes.infoValue}>{v.description === '' && 'no description'}</div>
             </div>
             <div className={classes.buttonGroup}>
-              <CustomButton text="To Code" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkCode(v.name)} />
-              <CustomButton text="To Issue" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkIssue(v.name)} />
+              <CustomButton text="To Code" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkCode(v.workspaceId)} />
+              <CustomButton text="To Issue" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkIssue(v.workspaceId)} />
             </div>
           </div>
         ))}

@@ -137,7 +137,7 @@ function SignUp() {
     const response = await fetchSet('/user', 'POST', true, JSON.stringify(payload))
     const { code } = await response.json()
 
-    if (code !== 200) return
+    if (code !== 201) return
     window.location.href = '/'
   }
 

@@ -6,7 +6,7 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
       width: '100%',
-      height: '100%',
+      height: 'calc(100% - 90px)',
     },
     title: {
       fontSize: theme.font.high.size,
@@ -16,7 +16,7 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
     },
     content: {
       width: '100%',
-      height: 'calc(100% - 61px)',
+      height: 'calc(100% - 63px)',
       display: 'flex',
       gap: '30px',
       padding: '30px',

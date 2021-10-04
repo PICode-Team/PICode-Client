@@ -20,19 +20,15 @@ function Board(props: IBoardProps) {
   const router = useRouter()
   const [kanbanIssue, setKanbanIssue] = useState<string>('')
 
-  const handleLinkIssuePage = (title: string) => (event: React.MouseEvent) => {
+  const handleLinkIssuePage = (uuid: string) => (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    window.location.href = router.route + '/issue' + router.asPath.split(router.route)[1] + `&kanban=${title}`
+    window.location.href = router.route + '/issue' + router.asPath.split(router.route)[1] + `&kanbanUUID=${uuid}`
   }
 
   const handleEditBoard = (kanban: IKanban) => (event: React.MouseEvent) => {
     event.stopPropagation()
-    setModalKanban({
-      title: kanban.title,
-      description: kanban.description ?? '',
-      uuid: kanban.uuid,
-    })
+    setModalKanban(kanban)
     setModal(true)
   }
 
@@ -57,10 +53,8 @@ function Board(props: IBoardProps) {
           <div className={classes.content} id="kanbanBoard">
             {kanbanList !== null &&
               kanbanList.map((v, i) => {
-                console.log(v)
-
                 return (
-                  <div key={v.uuid} onClick={handleLinkIssuePage(v.title)} className={classes.item}>
+                  <div key={v.uuid} onClick={handleLinkIssuePage(v.uuid)} className={classes.item}>
                     <div className={classes.iconLayout}>
                       <div className={classes.title}>{v.title}</div>
                       <div className={classes.iconWrapper}>
@@ -74,7 +68,13 @@ function Board(props: IBoardProps) {
                     </div>
                     <div className={classes.contentLayout}>
                       <div className={classes.percentage}>
-                        <div className={classes.gauge}></div>
+                        {console.log(v.totalIssue, v.doneIssue)}
+                        <div
+                          className={classes.gauge}
+                          style={{
+                            width: `${(v.doneIssue / v.totalIssue) * 100}%`,
+                          }}
+                        ></div>
                       </div>
                     </div>
                     <div>{v.description ?? 'this kanbanboard is no have description.'}</div>
