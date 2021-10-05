@@ -18,6 +18,7 @@ function IssueView(props: IIssueViewProps) {
         JSON.stringify({
           category: 'kanban',
           type: 'getKanban',
+          data: {},
         })
       )
     }
