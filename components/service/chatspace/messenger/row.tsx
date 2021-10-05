@@ -22,10 +22,10 @@ function Row(props: IRowProps) {
           <div className={classes.participant}>{target.chatName !== undefined && target.chatParticipant.length}</div>
           <div className={classes.etc}></div>
         </div>
-        <div className={classes.thumbnail}>gna. Sed consequat, leo eget bibendum sodales, augue velit cu</div>
+        <div className={classes.thumbnail}>{target.recentMessage}</div>
       </div>
       <div className={classes.chatInfo}>
-        <div className={classes.lastTime}>AM 12:32</div>
+        <div className={classes.lastTime}>{target.recentTime.split(' ')[0]}</div>
         {/*<div className={classes.count}>231</div>*/}
       </div>
     </div>
