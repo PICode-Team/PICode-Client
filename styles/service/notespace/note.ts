@@ -6,7 +6,7 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     note: {
       width: '100%',
-      height: '100%',
+      height: 'calc(100% - 90px)',
       position: 'relative',
       display: 'flex',
       background: theme.backgroundColor.step1,

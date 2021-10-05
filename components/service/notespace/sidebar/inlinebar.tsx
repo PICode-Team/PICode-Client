@@ -314,6 +314,10 @@ function Note(props: INoteProps) {
     }
   }
 
+  const handleAddFileClick = () => {
+    setAddFile(true)
+  }
+
   useEffect(() => {
     ws.addEventListener('message', noteWebSocketHandler)
     getDocument(userId)
@@ -321,6 +325,14 @@ function Note(props: INoteProps) {
       ws.removeEventListener('message', noteWebSocketHandler)
     }
   }, [ws?.readyState])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (fileViewList === null) {
+        setFileViewList([])
+      }
+    }, 100)
+  }, [])
 
   useEffect(() => {
     if (selectFile === null) return
@@ -413,12 +425,7 @@ function Note(props: INoteProps) {
     >
       <div className={classes.fileView}>
         <div className={classes.fileEdit}>
-          <IconButton
-            style={{ position: 'absolute', right: 0, padding: 0, paddingRight: '12px' }}
-            onClick={() => {
-              setAddFile(true)
-            }}
-          >
+          <IconButton style={{ position: 'absolute', right: 0, padding: 0, paddingRight: '12px' }} onClick={handleAddFileClick}>
             <Add className={classes.buttonColor} />
           </IconButton>
         </div>
