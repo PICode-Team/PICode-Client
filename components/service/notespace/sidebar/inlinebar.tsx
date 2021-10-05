@@ -52,7 +52,7 @@ function Note(props: INoteProps) {
 
     if (message.category === 'note') {
       switch (message.type) {
-        case 'getnote':
+        case 'getNote':
           setFileViewList(message.data)
           break
       }
@@ -64,7 +64,7 @@ function Note(props: INoteProps) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'getnote',
+          type: 'getNote',
           data: {
             userId,
           },
@@ -78,7 +78,7 @@ function Note(props: INoteProps) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'updatenote',
+          type: 'updateNote',
           data: {
             documentId,
             document: {

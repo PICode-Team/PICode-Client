@@ -26,7 +26,7 @@ function Context(props: INoteContextProps) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'deletenote',
+          type: 'deleteNote',
           data: {
             documentId,
           },
@@ -40,7 +40,7 @@ function Context(props: INoteContextProps) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'getnote',
+          type: 'getNote',
           data: {
             userId,
           },

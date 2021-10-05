@@ -30,7 +30,7 @@ function AddFile(props: IAddInput) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'createnote',
+          type: 'createNote',
           data: {
             path,
             creator,
@@ -46,7 +46,7 @@ function AddFile(props: IAddInput) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'getnote',
+          type: 'getNote',
           data: {
             userId,
           },

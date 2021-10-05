@@ -71,7 +71,7 @@ function Sidebar(props: INoteSidebar) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'updatenote',
+          type: 'updateNote',
           data: {
             documentId,
             document: {
@@ -88,7 +88,7 @@ function Sidebar(props: INoteSidebar) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'getnote',
+          type: 'getNote',
           data: {
             userId,
           },

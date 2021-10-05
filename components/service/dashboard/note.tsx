@@ -17,7 +17,7 @@ function NoteView(props: INoteViewProps) {
       ws.send(
         JSON.stringify({
           category: 'note',
-          type: 'getnote',
+          type: 'getNote',
           data: {
             userId,
           },
@@ -31,7 +31,7 @@ function NoteView(props: INoteViewProps) {
 
     if (message.category === 'note') {
       switch (message.type) {
-        case 'getnote':
+        case 'getNote':
           setFileView(message.data)
           break
       }
