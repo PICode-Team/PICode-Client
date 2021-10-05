@@ -335,6 +335,15 @@ function Note(props: INoteProps) {
   }, [])
 
   useEffect(() => {
+    if (typeof window === undefined) return
+
+    const value = window.localStorage.getItem('userId')
+    if (value === null) return
+
+    setUserId(value)
+  }, [])
+
+  useEffect(() => {
     if (selectFile === null) return
 
     updateDocument(selectFile.documentId, contentList)

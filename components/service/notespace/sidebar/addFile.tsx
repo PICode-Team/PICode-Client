@@ -3,18 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { IconButton } from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
 
-import { IFileView } from '../../../../types/note.types'
+import { IContextPosition, IFileView } from '../../../../types/note.types'
 import { noteStyle } from '../../../../styles/service/notespace/note'
 import { useWs } from '../../../context/websocket'
 
 interface IAddInput {
   setAddFile: React.Dispatch<React.SetStateAction<boolean>>
-  contextPosition?: {
-    x: number
-    y: number
-    target: string
-    path: string
-  }
+  contextPosition?: IContextPosition
   fileViewList: IFileView[]
 }
 
@@ -24,6 +19,8 @@ function AddFile(props: IAddInput) {
   const [tmpFileName, setTmpFileName] = useState<string>('')
   const [userId, setUserId] = useState<string>('')
   const ws: any = useWs()
+
+  console.log(contextPosition)
 
   const createDocument = (path: string, creator: string, content: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
@@ -114,8 +111,6 @@ function AddFile(props: IAddInput) {
 
     setUserId(value)
   }, [])
-
-  if (contextPosition === undefined) return <></>
 
   return (
     <div className={classes.fileRow}>
