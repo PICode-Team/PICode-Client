@@ -70,8 +70,8 @@ function Sidebar(props: INoteSidebar) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'updateDocument',
+          category: 'note',
+          type: 'updatenote',
           data: {
             documentId,
             document: {
@@ -87,8 +87,8 @@ function Sidebar(props: INoteSidebar) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'getDocument',
+          category: 'note',
+          type: 'getnote',
           data: {
             userId,
           },

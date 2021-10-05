@@ -50,9 +50,9 @@ function Note(props: INoteProps) {
   const noteWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
 
-    if (message.category === 'document') {
+    if (message.category === 'note') {
       switch (message.type) {
-        case 'getDocument':
+        case 'getnote':
           setFileViewList(message.data)
           break
       }
@@ -63,8 +63,8 @@ function Note(props: INoteProps) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'getDocument',
+          category: 'note',
+          type: 'getnote',
           data: {
             userId,
           },
@@ -77,8 +77,8 @@ function Note(props: INoteProps) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'updateDocument',
+          category: 'note',
+          type: 'updatenote',
           data: {
             documentId,
             document: {
