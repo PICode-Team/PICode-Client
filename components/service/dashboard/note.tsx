@@ -16,8 +16,8 @@ function NoteView(props: INoteViewProps) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'getDocument',
+          category: 'note',
+          type: 'getnote',
           data: {
             userId,
           },
@@ -29,9 +29,9 @@ function NoteView(props: INoteViewProps) {
   const noteWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
 
-    if (message.category === 'document') {
+    if (message.category === 'note') {
       switch (message.type) {
-        case 'getDocument':
+        case 'getnote':
           setFileView(message.data)
           break
       }

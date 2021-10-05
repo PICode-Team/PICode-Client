@@ -25,8 +25,8 @@ function Context(props: INoteContextProps) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'deleteDocument',
+          category: 'note',
+          type: 'deletenote',
           data: {
             documentId,
           },
@@ -39,8 +39,8 @@ function Context(props: INoteContextProps) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'getDocument',
+          category: 'note',
+          type: 'getnote',
           data: {
             userId,
           },

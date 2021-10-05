@@ -29,8 +29,8 @@ function AddFile(props: IAddInput) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'createDocument',
+          category: 'note',
+          type: 'createnote',
           data: {
             path,
             creator,
@@ -45,8 +45,8 @@ function AddFile(props: IAddInput) {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'getDocument',
+          category: 'note',
+          type: 'getnote',
           data: {
             userId,
           },
