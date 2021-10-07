@@ -190,7 +190,7 @@ function Sidebar(props: INoteSidebar) {
                 onContextMenu={handleFileRowContextMenu(v)}
               >
                 {Object.keys(output[v].children).length > 0 && <ExpandMoreRounded style={{ transform: `${output[v].open === undefined || !output[v].open ? 'rotate(-90deg)' : 'rotate(0deg)'}` }} />}
-                <Description style={{ height: '30px', marginLeft: `${Object.keys(output[v].children).length > 0 ? 0 : '5px'}` }} />
+                <Description style={{ height: '20px', marginLeft: `${Object.keys(output[v].children).length > 0 ? 0 : '5px'}` }} />
                 <div className={classes.key}>{v}</div>
               </div>
               {output[v].open !== undefined && output[v].open && makeFileView(output[v].children, num + 1)}

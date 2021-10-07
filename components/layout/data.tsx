@@ -17,7 +17,7 @@ export const sidebarData = {
         subUrl: ['/code'],
       },
       {
-        url: '/container',
+        url: '/workspace/container',
         icon: <ComputerOutlined />,
         title: 'Container',
       },

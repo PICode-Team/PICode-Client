@@ -63,7 +63,7 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
     },
     writeRoot: {
       width: '100%',
-      height: 'calc(100% - 230px)',
+      height: 'calc(100% - 245px)',
       textAlign: 'center',
     },
     writeContent: {
@@ -169,7 +169,7 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
     fileRow: {
       display: 'flex',
       position: 'relative',
-      height: '20px',
+      height: '25px',
       cursor: 'pointer',
       alignItems: 'center',
       paddingLeft: '16px',
@@ -227,8 +227,8 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
     },
     key: {
       display: 'flex',
-      paddingLeft: '10px',
-      lineHeight: '30px',
+      paddingLeft: '4px',
+      lineHeight: '24px',
     },
     contextIcon: {
       height: '20px',

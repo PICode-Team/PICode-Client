@@ -20,8 +20,6 @@ function AddFile(props: IAddInput) {
   const [userId, setUserId] = useState<string>('')
   const ws: any = useWs()
 
-  console.log(contextPosition)
-
   const createDocument = (path: string, creator: string, content: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(

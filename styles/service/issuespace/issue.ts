@@ -13,6 +13,8 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
       color: theme.font.high.color,
       padding: '20px 30px',
       paddingBottom: '0px',
+      display: 'flex',
+      alignItems: 'center',
     },
     content: {
       width: '100%',
@@ -21,6 +23,12 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
       gap: '30px',
       padding: '30px',
       borderRadius: '8px',
+    },
+    back: {
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      cursor: 'pointer',
     },
   })
 )

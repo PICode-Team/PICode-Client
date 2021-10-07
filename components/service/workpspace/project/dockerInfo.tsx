@@ -53,35 +53,32 @@ function DockerInfo(props: IDockerInfoProps) {
     }
   }
 
-  const getNetworkList = async (networkId: string) => {
-    const response = await fetchSet(`/docker/network?networkId=${networkId}`, 'GET', true)
+  const getNetworkList = async () => {
+    const response = await fetchSet(`/docker/network`, 'GET', true)
     const { networkList, code } = await response.json()
 
-    if (code === 200) {
-      setNetworkList(networkList)
-    }
+    if (code !== 200) return
+    if (networkList.lenght === 0) return
+
+    setNetworkList(networkList)
   }
 
-  const getContainerList = async (workspaceId: string) => {
-    const response = await fetchSet(`/docker?workspaceId=${workspaceId}`, 'GET', true)
-    const { containers, code } = await response.json()
+  const getContainerList = async () => {
+    const response = await fetchSet(`/docker`, 'GET', true)
+    const { dockerList, code } = await response.json()
 
-    if (code === 200) {
-      setContainerList(containers)
-    }
+    if (code !== 200) return
+    if (dockerList.length === 0) return
+
+    // setContainerList(dockerList)
   }
 
   useEffect(() => {
     if (edit === true && workspaceId !== undefined) {
-      getContainerList(workspaceId)
+      getContainerList()
+      getNetworkList()
     }
   }, [])
-
-  useEffect(() => {
-    if (containerList.length > 0) {
-      getNetworkList('')
-    }
-  }, [containerList])
 
   const onChangeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDockerInfo({ ...dockerInfo, [event.target.id]: event.target.value })

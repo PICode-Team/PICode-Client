@@ -47,8 +47,8 @@ function EditProject() {
     if (workspaceList.length === 0) return
 
     const [workspace] = workspaceList
-    setOriginWorkspace({ ...workspace })
-    setWorkspaceInfo({ ...workspace })
+    setOriginWorkspace(workspace)
+    setWorkspaceInfo(workspace)
   }
 
   const getDockerData = async () => {
@@ -58,7 +58,8 @@ function EditProject() {
     if (code !== 200) return
     if (dockerList.length === 0) return
 
-    console.log(dockerList)
+    // const [docker] = dockerList
+    // setDockerInfo(docker)
   }
 
   const handlePreviousButton = () => {
@@ -119,7 +120,7 @@ function EditProject() {
 
         <div className={classes.inputWrapper}>
           {step === 2 && <WorkspaceInfo workspaceInfo={workspaceInfo} setWorkspaceInfo={setWorkspaceInfo} type={type} source={source} setSource={setSource} edit={true} />}
-          {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={true} />}
+          {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={true} workspaceId={workspaceId as string} />}
           <div className={classes.content}>
             <div className={classes.inputContent}>
               <div className={classes.buttonBox}>

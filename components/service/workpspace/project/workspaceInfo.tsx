@@ -26,7 +26,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   const classes = createWorkspaceStyle()
   const [upload, setUpload] = useState<boolean>(false)
   const [imageName, setImageName] = useState<string>('')
-  const [fileeName, setFileName] = useState<string>('')
+  const [fileName, setFileName] = useState<string>('')
   const [userList, setUserList] = useState<string[]>([])
   const fileButton = useRef<any>(null)
 
@@ -106,6 +106,17 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
     setWorkspaceInfo({ ...workspaceInfo, [event.target.id]: event.target.value })
   }
 
+  const handleGitRepoChange = (event: any) => {
+    setSource(
+      source !== null
+        ? { ...source, gitUrl: event.target.value }
+        : {
+            type: type,
+            gitUrl: event.target.value,
+          }
+    )
+  }
+
   const handleUploadFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const tmpImage = event.target.files
 
@@ -136,6 +147,13 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
     }
   }
 
+  const handleIsExtractClick = (event: any) => {
+    let tmpSource = cloneDeep(source)
+    ;(tmpSource as any).upload.isExtract = event.currentTarget.checked
+    console.log(tmpSource)
+    setSource(tmpSource)
+  }
+
   return (
     <React.Fragment>
       <div className={classes.subTitle}>{edit === true ? 'Edit' : 'Create'} Code</div>
@@ -152,16 +170,18 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
           <span>Project Thumbnail</span>
           <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={thumbnailDrop} onClick={handleFileButtonClick}>
             {upload ? (
-              <div style={{ textAlign: 'center', pointerEvents: 'none' }}>
-                <InsertPhoto style={{ width: '40px', height: '40px' }} />
-                <br />
+              <div className={classes.upload}>
+                <div>
+                  <InsertPhoto className={classes.uploadIcon} />
+                </div>
                 <span>{imageName !== '' ? imageName : 'Drop Image'}</span>
               </div>
             ) : (
               <>
-                <div style={{ textAlign: 'center' }}>
-                  <CloudUpload style={{ width: '40px', height: '40px' }} />
-                  <br />
+                <div className={classes.textAlignCenter}>
+                  <div>
+                    <CloudUpload className={classes.uploadIcon} />
+                  </div>
                   <span>
                     {edit === true ? (
                       'If you want change image, upload image'
@@ -177,7 +197,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
             )}
           </div>
         </div>
-        <input ref={fileButton} style={{ display: 'none' }} type="file" id="getFile" onChange={handleUploadFileChange} />
+        <input ref={fileButton} className={classes.displayNone} type="file" id="getFile" onChange={handleUploadFileChange} />
         {type === 'upload' && (
           <React.Fragment>
             <div className={classes.textarea}>
@@ -185,38 +205,24 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
                 Project Zip File
                 <span className={classes.required}>*</span>
               </span>
-              <div
-                style={{
-                  display: 'inline-block',
-                  color: '#ffffff',
-                  fontSize: '12px',
-                  float: 'right',
-                }}
-              >
+              <div className={classes.isExtract}>
                 is Extract?
-                <input
-                  type="checkbox"
-                  checked={(source as any).upload ? (source as any).upload.isExtract : true}
-                  onClick={(e) => {
-                    let tmpSource = cloneDeep(source)
-                    ;(tmpSource as any).upload.isExtract = e.currentTarget.checked
-                    setSource(tmpSource)
-                  }}
-                  style={{ verticalAlign: 'middle' }}
-                />
+                <input type="checkbox" defaultChecked={(source as any).upload ? (source as any).upload.isExtract : true} onClick={handleIsExtractClick} className={classes.verticalAlignMiddle} />
               </div>
               <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop} onClick={handleFileButtonClick}>
                 {upload ? (
-                  <div style={{ textAlign: 'center', pointerEvents: 'none' }}>
-                    <InsertPhoto style={{ width: '40px', height: '40px' }} />
-                    <br />
-                    <span>{fileeName !== '' ? fileeName : 'Drop File'}</span>
+                  <div className={classes.upload}>
+                    <div>
+                      <InsertPhoto className={classes.uploadIcon} />
+                    </div>
+                    <span>{fileName !== '' ? fileName : 'Drop File'}</span>
                   </div>
                 ) : (
                   <>
                     <div style={{ textAlign: 'center' }}>
-                      <CloudUpload style={{ width: '40px', height: '40px' }} />
-                      <br />
+                      <div>
+                        <CloudUpload className={classes.uploadIcon} />
+                      </div>
                       <span>
                         <div>Drag and Drop File or</div>
                         <div>Click to upload File</div>
@@ -238,7 +244,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
           <div className={classes.divider}>
             <div />
           </div>
-          <CustomTextInput value={source?.gitUrl ?? ''} label="Repository URL" placeholder="Input Repository URL" />
+          <CustomTextInput value={source?.gitUrl ?? ''} label="Repository URL" placeholder="Input Repository URL" onChange={handleGitRepoChange} />
         </React.Fragment>
       )}
     </React.Fragment>

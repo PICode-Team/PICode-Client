@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { issueStyle } from '../../../../styles/service/issuespace/issue'
-import Col from './col'
 import { IIssue, IKanban, IMilestone } from '../../../../types/issue.types'
-import CreateIssue from '../create/issue'
+import { ArrowBackIos } from '@material-ui/icons'
 import { useWs } from '../../../context/websocket'
-
+import CreateIssue from '../create/issue'
+import Col from './col'
 interface IIssueProps {}
 
 function Issue(props: IIssueProps) {
@@ -95,6 +95,10 @@ function Issue(props: IIssueProps) {
     }
   }
 
+  const handleLinkKanban = () => {
+    window.location.href = `/issuespace?workspaceId=${router.query.workspaceId}`
+  }
+
   useEffect(() => {
     ws.addEventListener('message', issueWebSocketHandler)
     getKanban()
@@ -119,7 +123,12 @@ function Issue(props: IIssueProps) {
 
   return (
     <div className={classes.wrapper}>
-      <div className={classes.title}>{`${name === '' ? 'Kanban' : name} Board`}</div>
+      <div className={classes.title}>
+        <span className={classes.back} onClick={handleLinkKanban}>
+          <ArrowBackIos />
+        </span>
+        {`${name === '' ? 'Kanban' : name} Board`}
+      </div>
       <div className={classes.content}>
         {issueList !== null &&
           columnList.map((v: string) => <Col key={v} title={v} issueList={issueList} setModal={setModal} setColumn={setColumn} columnList={columnList} kanbanUUID={kanbanUUID as string} />)}

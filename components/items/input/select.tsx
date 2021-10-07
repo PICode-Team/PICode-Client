@@ -44,9 +44,9 @@ function CustomSelect(props: IItemDefautlProps & IInputProps) {
   return (
     <div className={classes.wrapper}>
       <span className={classes.label}>{label}</span>
-      <select id={id} className={classes.select} onChange={onChange as any}>
+      <select id={id} defaultValue="" className={classes.select} onChange={onChange as any}>
         {placeholder !== undefined && placeholder !== '' && (
-          <option value="" className={classes.option} disabled selected>
+          <option value="" className={classes.option} disabled>
             {placeholder}
           </option>
         )}
