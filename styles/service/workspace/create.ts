@@ -118,11 +118,12 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
     },
 
     inputContent: {
-      width: '500px',
+      minWidth: '500px',
+      width: '100%',
     },
     buttonBox: {
       display: 'flex',
-      width: '500px',
+      width: '100%',
       justifyContent: 'flex-end',
       marginTop: '15px',
     },

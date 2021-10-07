@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { recentWorkStyle } from '../../../styles/service/dashboard/dashboard'
 import { Add, ArrowBackIos, DeleteForever, Settings } from '@material-ui/icons'
-import { IconButton, Typography } from '@material-ui/core'
+import { IconButton } from '@material-ui/core'
 import { Carousel } from 'react-responsive-carousel'
 import Swal from 'sweetalert2'
 import * as d3 from 'd3'
@@ -82,18 +82,19 @@ function RecentWork(props: IRecentWorkProps) {
     window.location.href = `/workspace/edit?workspaceId=${workspaceId}`
   }
 
-  const handleClickDelete = (workspaceId: string) => async (event: React.MouseEvent) => {
+  const handleClickDelete = (workspaceId: string, name: string) => async (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    let result = await Swal.fire({
+    const result = await Swal.fire({
       title: 'Delete Workspace',
-      text: `Are you sure delete ${workspaceId} Workspace?`,
+      text: `Are you sure delete ${name} Workspace?`,
       icon: 'warning',
       heightAuto: false,
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
     })
+
     if (result.isConfirmed) {
       const response = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true)
       const { code } = await response.json()
@@ -101,7 +102,7 @@ function RecentWork(props: IRecentWorkProps) {
       if (code / 100 === 2) {
         Swal.fire({
           title: 'SUCCESS',
-          text: `DELETE ${workspaceId}`,
+          text: `DELETE ${name}`,
           icon: 'success',
           heightAuto: false,
         }).then(() => {
@@ -111,7 +112,7 @@ function RecentWork(props: IRecentWorkProps) {
         Swal.fire({
           title: 'ERROR',
           html: `
-                ERROR in DELETE ${workspaceId}
+                ERROR in DELETE ${name}
                 <br />
                 <span>${code}</span>
                 `,
@@ -161,7 +162,7 @@ function RecentWork(props: IRecentWorkProps) {
                 <span onClick={handleLinkEditPage(i.workspaceId)} className={classes.edit}>
                   <Settings className={classes.icon} />
                 </span>
-                <span onClick={handleClickDelete(i.workspaceId)} className={classes.delete}>
+                <span onClick={handleClickDelete(i.workspaceId, i.name)} className={classes.delete}>
                   <DeleteForever className={classes.icon} />
                 </span>
               </div>

@@ -30,7 +30,7 @@ const initialDocker: IDockerInfo = {
 
 function EditProject() {
   const classes = createWorkspaceStyle()
-  const [type, setType] = useState<ICreateType>('nothing')
+  const type = 'nothing'
   const [workspaceInfo, setWorkspaceInfo] = useState<IWorkspace>(initialWorkspace)
   const [originWorkspace, setOriginWorkspace] = useState<IWorkspace>(initialWorkspace)
   const [dockerInfo, setDockerInfo] = useState<IDockerInfo>(initialDocker)
@@ -53,12 +53,12 @@ function EditProject() {
 
   const getDockerData = async () => {
     const response = await fetchSet(`/docker?workspaceId=${workspaceId}`, 'GET', true)
-    const { dockerInfo, code } = await response.json()
+    const { dockerList, code } = await response.json()
 
     if (code !== 200) return
-    if (dockerInfo.length === 0) return
+    if (dockerList.length === 0) return
 
-    const [docker] = dockerInfo
+    console.log(dockerList)
   }
 
   const handlePreviousButton = () => {
@@ -113,7 +113,7 @@ function EditProject() {
 
   return (
     <div className={classes.create}>
-      <div className={classes.header}>{`Create Codespace`}</div>
+      <div className={classes.header}>{`Edit Codespace`}</div>
       <div className={classes.createWrapper}>
         <Stepper step={step} edit={true} />
 

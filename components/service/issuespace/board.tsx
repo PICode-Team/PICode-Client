@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { DeleteForever, Edit } from '@material-ui/icons'
 import { useRouter } from 'next/router'
+import Swal from 'sweetalert2'
 
 import { boardStyle } from '../../../styles/service/issuespace/issue'
 import { IKanban } from '../../../types/issue.types'
@@ -32,18 +33,37 @@ function Board(props: IBoardProps) {
     setModal(true)
   }
 
-  const handleDeleteBoard = (uuid: string) => (event: React.MouseEvent) => {
+  const deleteKanban = (uuid: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'kanban',
+          type: 'deleteKanban',
+          data: {
+            uuid,
+          },
+        })
+      )
+    }
+  }
+
+  const handleDeleteBoard = (uuid: string, name: string) => async (event: React.MouseEvent) => {
     event.stopPropagation()
-    ws.send(
-      JSON.stringify({
-        category: 'kanban',
-        type: 'deleteKanban',
-        data: {
-          uuid: uuid,
-        },
-      })
-    )
-    window.location.reload()
+    event.preventDefault()
+
+    const result = await Swal.fire({
+      title: 'Delete Kanban Board',
+      text: `Are you sure delete ${name} Kanban Board?`,
+      icon: 'warning',
+      heightAuto: false,
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    })
+
+    if (result.isConfirmed) {
+      deleteKanban(uuid)
+    }
   }
 
   return (
@@ -61,7 +81,7 @@ function Board(props: IBoardProps) {
                         <div className={classes.icon} onClick={handleEditBoard(v)}>
                           <Edit className={classes.edit} />
                         </div>
-                        <div className={classes.icon} onClick={handleDeleteBoard(v.uuid)}>
+                        <div className={classes.icon} onClick={handleDeleteBoard(v.uuid, v.title)}>
                           <DeleteForever className={classes.delete} />
                         </div>
                       </div>

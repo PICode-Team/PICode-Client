@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IKanban } from '../../../../types/issue.types'
 import { useWs } from '../../../context/websocket'
 
@@ -29,7 +29,7 @@ function CreateKanban(props: ICreateKanbanProps) {
     setPayload({ ...payload, [event.target.id]: event.target.value })
   }
 
-  const handleSubmit = () => {
+  const createKanban = (payload: ICreateKanbanState, workspaceId: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -38,13 +38,39 @@ function CreateKanban(props: ICreateKanbanProps) {
           data: { ...payload, workspaceId },
         })
       )
-
-      setModal(false)
     }
   }
 
+  const updateKanban = (payload: ICreateKanbanState, workspaceId: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'kanban',
+          type: 'updateKanban',
+          data: { ...payload, workspaceId },
+        })
+      )
+    }
+  }
+
+  const handleSubmit = (isCreate: boolean) => () => {
+    if (isCreate === true) {
+      createKanban(payload, workspaceId)
+    } else {
+      updateKanban(payload, workspaceId)
+    }
+    setPayload(initialState)
+    setModal(false)
+  }
+
+  useEffect(() => {
+    if (modalKanban !== null) {
+      setPayload(modalKanban)
+    }
+  }, [modalKanban])
+
   return (
-    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title={modalKanban === null ? 'Create Kanban' : 'Edit Kanban'}>
+    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit(modalKanban === null)} title={modalKanban === null ? 'Create Kanban' : 'Edit Kanban'}>
       <React.Fragment>
         <CustomTextInput id="title" value={payload.title} label="title" placeholder="title" onChange={handlePayload} />
       </React.Fragment>

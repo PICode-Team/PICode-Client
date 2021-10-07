@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { DeleteForever, Edit } from '@material-ui/icons'
+import Swal from 'sweetalert2'
 
 import { boardStyle } from '../../../styles/service/issuespace/issue'
 import { IMilestone } from '../../../types/issue.types'
@@ -35,19 +36,7 @@ function Milestone(props: IMilestoneProps) {
   const classes = boardStyle()
   const ws: any = useWs()
 
-  const handleEditMile = (mile: IMilestone) => (event: React.MouseEvent) => {
-    event.stopPropagation()
-    setModalMile({
-      uuid: mile.uuid,
-      title: mile.title,
-      content: mile.content,
-      startDate: mile.startDate,
-      endDate: mile.endDate,
-    })
-    setModal(true)
-  }
-
-  const handleDeleteMile = (uuid: string) => () => {
+  const deleteMilestone = (uuid: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -61,13 +50,44 @@ function Milestone(props: IMilestoneProps) {
     }
   }
 
+  const handleEditMile = (mile: IMilestone) => (event: React.MouseEvent) => {
+    event.stopPropagation()
+    setModalMile({
+      uuid: mile.uuid,
+      title: mile.title,
+      content: mile.content,
+      startDate: mile.startDate,
+      endDate: mile.endDate,
+    })
+    setModal(true)
+  }
+
+  const handleDeleteMile = (uuid: string, name: string) => async (event: React.MouseEvent) => {
+    event.stopPropagation()
+    event.preventDefault()
+
+    const result = await Swal.fire({
+      title: 'Delete Milestone',
+      text: `Are you sure delete ${name} Milestone?`,
+      icon: 'warning',
+      heightAuto: false,
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    })
+
+    if (result.isConfirmed) {
+      deleteMilestone(uuid)
+    }
+  }
+
   const handleClickMile = () => {}
 
   return (
     <div className={classes.board}>
       <div className={classes.content} id="kanbanBoard">
         {milestoneList !== null &&
-          milestoneList.map((v: any, idx: number) => {
+          milestoneList.map((v, idx: number) => {
             return (
               <div className={classes.item} key={v.uuid} onClick={handleClickMile}>
                 <div className={classes.iconLayout}>
@@ -76,7 +96,7 @@ function Milestone(props: IMilestoneProps) {
                     <div className={classes.icon} onClick={handleEditMile(v)}>
                       <Edit className={classes.edit} />
                     </div>
-                    <div className={classes.icon} onClick={handleDeleteMile(v.uuid)}>
+                    <div className={classes.icon} onClick={handleDeleteMile(v.uuid, v.title)}>
                       <DeleteForever className={classes.delete} />
                     </div>
                   </div>
