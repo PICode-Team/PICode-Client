@@ -21,9 +21,9 @@ function Sidebar(props: ISidebarProps) {
     const response = await fetchSet('/userList', 'GET', false)
     const { user, code } = await response.json()
 
-    if (code === 200) {
-      setParticipantList(user)
-    }
+    if (code !== 200) return
+
+    setParticipantList(user)
   }
 
   useEffect(() => {

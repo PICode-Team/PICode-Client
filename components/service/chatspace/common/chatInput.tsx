@@ -76,7 +76,7 @@ function ChatInput(props: IChatInputProps) {
     return () => {
       document.removeEventListener('keypress', pressEnterHandler)
     }
-  }, [])
+  }, [target])
 
   return (
     <div className={classes.input}>

@@ -50,13 +50,15 @@ function CreateChannel(props: ICreateChannelProps) {
           data: {
             ...payload,
             target: isDM ? name : `#${payload.name}`,
-            participants: isDM ? payload.participants : undefined,
+            chatParticipant: isDM ? undefined : payload.participants,
           },
         })
       )
-
-      setModal(false)
     }
+    setPayload(initialState)
+    setName('')
+    setUserList([])
+    setModal(false)
   }
 
   const handlePayload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +70,8 @@ function CreateChannel(props: ICreateChannelProps) {
   }
 
   useEffect(() => {
+    console.log(userList)
+
     setPayload({
       ...payload,
       participants: userList,
@@ -79,7 +83,7 @@ function CreateChannel(props: ICreateChannelProps) {
       <React.Fragment>
         {isDM ? <CustomMonoUserInput setValue={setName} value={name} label="name" /> : <CustomTextInput onChange={handlePayload} id="name" value={payload.name} label="name" placeholder="name" />}
         <CustomTextarea onChange={handlePayload} id="description" value={payload.description} label="description" placeholder="description" />
-        {!isDM && <CustomUserInput value={payload.participants} setValue={setUserList} label="Project Participant" />}
+        {!isDM && <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />}
         <CustomCheckbox value={isDM} label="is direct message?" onClick={handleSetChannelType} />
       </React.Fragment>
     </Modal>

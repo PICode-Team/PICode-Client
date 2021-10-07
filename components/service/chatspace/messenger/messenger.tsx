@@ -17,6 +17,12 @@ interface IMessengerProps {
 }
 
 function Messenger(props: IMessengerProps) {
+  const router = useRouter()
+
+  if (router.pathname === '/chatspace') {
+    return <React.Fragment></React.Fragment>
+  }
+
   const { userId } = props
   const classes = messengerStyle()
   const [open, setOpen] = useState<boolean>(false)
@@ -26,7 +32,6 @@ function Messenger(props: IMessengerProps) {
   const [userList, setUserList] = useState<IUser[]>([])
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [thread, setThread] = useState<IThread | null>(null)
-  const router = useRouter()
   const ws: any = useWs()
 
   const handleOpenMessenger = () => {
@@ -54,13 +59,13 @@ function Messenger(props: IMessengerProps) {
   }
 
   const getChatLog = (page: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN && target !== null) {
       ws.send(
         JSON.stringify({
           category: 'chat',
           type: 'getChatLog',
           data: {
-            target: target!.chatName,
+            target: target.chatName,
             page: page,
           },
         })
@@ -202,10 +207,6 @@ function Messenger(props: IMessengerProps) {
       ws.removeEventListener('message', chatWebSocketHandler)
     }
   }, [ws?.readyState, target, messageList])
-
-  if (router.pathname === '/chatspace') {
-    return <React.Fragment></React.Fragment>
-  }
 
   if (open) {
     return (

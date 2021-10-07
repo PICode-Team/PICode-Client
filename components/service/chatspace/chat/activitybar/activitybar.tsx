@@ -62,7 +62,7 @@ function Activitybar(props: IActivitybarProps) {
     return () => {
       document.removeEventListener('keypress', pressEnterHandler)
     }
-  }, [])
+  }, [thread])
 
   return (
     <div className={classes.activitybar}>

@@ -50,13 +50,13 @@ function Chat(ctx: IChatProps) {
   }
 
   const getChatLog = (page: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN && target !== null) {
       ws.send(
         JSON.stringify({
           category: 'chat',
           type: 'getChatLog',
           data: {
-            target: target!.chatName,
+            target: target.chatName,
             page: page,
           },
         })
@@ -80,6 +80,7 @@ function Chat(ctx: IChatProps) {
 
   const chatWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
+    console.log(message.data)
 
     if (message.category === 'chat') {
       switch (message.type) {
@@ -115,6 +116,8 @@ function Chat(ctx: IChatProps) {
           break
 
         case 'sendMessage':
+          getChat()
+
           if (message.data.parentChatId !== undefined) {
             const messages: IChat[] = messageList.map((v) => {
               if (v.chatId === message.data.parentChatId) {
@@ -192,7 +195,9 @@ function Chat(ctx: IChatProps) {
 
   useEffect(() => {
     ws.addEventListener('message', chatWebSocketHandler)
-    getChat()
+    if (channelList.length === 0) {
+      getChat()
+    }
 
     return () => {
       ws.removeEventListener('message', chatWebSocketHandler)

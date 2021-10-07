@@ -73,7 +73,7 @@ function Content(props: IContentProps) {
     return () => {
       document.removeEventListener('keypress', pressEnterHandler)
     }
-  }, [])
+  }, [target])
 
   return (
     <div className={`${classes.content} ${toggle && classes.toggleContent}`}>
