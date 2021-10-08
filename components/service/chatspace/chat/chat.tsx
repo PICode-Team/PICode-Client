@@ -80,7 +80,6 @@ function Chat(ctx: IChatProps) {
 
   const chatWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
-    console.log(message.data)
 
     if (message.category === 'chat') {
       switch (message.type) {

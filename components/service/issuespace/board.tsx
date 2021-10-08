@@ -88,7 +88,6 @@ function Board(props: IBoardProps) {
                     </div>
                     <div className={classes.contentLayout}>
                       <div className={classes.percentage}>
-                        {console.log(v.totalIssue, v.doneIssue)}
                         <div
                           className={classes.gauge}
                           style={{

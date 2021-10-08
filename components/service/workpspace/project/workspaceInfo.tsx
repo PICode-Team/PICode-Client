@@ -150,7 +150,6 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   const handleIsExtractClick = (event: any) => {
     let tmpSource = cloneDeep(source)
     ;(tmpSource as any).upload.isExtract = event.currentTarget.checked
-    console.log(tmpSource)
     setSource(tmpSource)
   }
 

@@ -12,7 +12,7 @@ function NoteView(props: INoteViewProps) {
   const [userId, setUserId] = useState<string>('')
   const ws: any = useWs()
 
-  const getDocument = () => {
+  const getNote = () => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -47,7 +47,7 @@ function NoteView(props: INoteViewProps) {
 
   useEffect(() => {
     ws.addEventListener('message', noteWebSocketHandler)
-    getDocument()
+    getNote()
     return () => {
       ws.removeEventListener('message', noteWebSocketHandler)
     }

@@ -16,7 +16,7 @@ export interface IFileView {
   children?: IFileView[]
   content?: INoteContent[]
   open?: boolean
-  documentId: string
+  noteId: string
   path: string
 }
 

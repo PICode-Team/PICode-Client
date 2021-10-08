@@ -23,7 +23,7 @@ interface INoteSidebar {
 const findNode = (fileViews: IFileView[] | null, documentId: string) => {
   if (fileViews === null) return
   for (const fileView of fileViews) {
-    if (fileView.documentId === documentId) {
+    if (fileView.noteId === documentId) {
       if (fileView.open) {
         fileView.open = false
       } else {
@@ -66,15 +66,15 @@ function Sidebar(props: INoteSidebar) {
     obj[key] = clone
   }
 
-  const updateDocument = (documentId: string, path: string) => {
+  const updateDocument = (noteId: string, path: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
           type: 'updateNote',
           data: {
-            documentId,
-            document: {
+            noteId,
+            note: {
               path,
             },
           },
@@ -115,7 +115,7 @@ function Sidebar(props: INoteSidebar) {
     if (fileViewList === undefined) return
     let dragEndNode: any
     for (let i of fileViewList) {
-      let node = document.getElementById(`${i.documentId}`)
+      let node = document.getElementById(`${i.noteId}`)
       if (node !== null && node.getBoundingClientRect().top < event.clientY && node.getBoundingClientRect().bottom > event.clientY) {
         dragEndNode = i
         break
@@ -127,7 +127,7 @@ function Sidebar(props: INoteSidebar) {
     })
     for (const node of nodeGroup) {
       const name = node.path.split('/')
-      updateDocument(node.documentId, dragEndNode.path + '/' + name[name.length - 1])
+      updateDocument(node.noteId, dragEndNode.path + '/' + name[name.length - 1])
       getDocument(userId)
     }
   }
@@ -139,11 +139,11 @@ function Sidebar(props: INoteSidebar) {
       setFileViewList(tmpFileViewList)
     }
     event.stopPropagation()
-    const tmpFile = {
+    const tmpFile: IFileView = {
       title: key,
       creator: output[key].creator,
       createTime: output[key].createTime,
-      documentId: output[key].documentId,
+      noteId: output[key].documentId,
       path: output[key].path,
     }
     setSelectFile(tmpFile)

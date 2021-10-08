@@ -70,8 +70,6 @@ function CreateChannel(props: ICreateChannelProps) {
   }
 
   useEffect(() => {
-    console.log(userList)
-
     setPayload({
       ...payload,
       participants: userList,

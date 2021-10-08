@@ -73,16 +73,16 @@ function Note(props: INoteProps) {
     }
   }
 
-  const updateDocument = (documentId: string, content: INoteContent[]) => {
+  const updateDocument = (noteId: string, content: INoteContent[]) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
           type: 'updateNote',
           data: {
-            documentId,
-            document: {
-              content: content,
+            noteId,
+            note: {
+              content
             },
           },
         })
@@ -346,7 +346,7 @@ function Note(props: INoteProps) {
   useEffect(() => {
     if (selectFile === null) return
 
-    updateDocument(selectFile.documentId, contentList)
+    updateDocument(selectFile.noteId, contentList)
   }, [contentList])
 
   useEffect(() => {
@@ -388,7 +388,7 @@ function Note(props: INoteProps) {
 
   useEffect(() => {
     if (selectFile === null || fileViewList === null) return
-    if (selectFile.documentId === undefined && selectFile.path === '') return
+    if (selectFile.noteId === undefined && selectFile.path === '') return
     const path = selectFile?.path.split('/')
     if (selectFile.title === undefined) {
       setSelectFile({ ...selectFile, title: path[path.length - 1] })
@@ -397,7 +397,7 @@ function Note(props: INoteProps) {
     path[path?.length - 1] = selectFile?.title
     let tmpResult = []
     for (let i of fileViewList) {
-      let node = fileViewList?.find((v) => v.documentId === i.documentId)
+      let node = fileViewList?.find((v) => v.noteId === i.noteId)
       if (node !== undefined) {
         if (node.open) {
           let tmpNode = node
