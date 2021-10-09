@@ -21,21 +21,21 @@ function Context(props: INoteContextProps) {
 
   if (ws?.readyState === WebSocket.CONNECTING) return <></>
 
-  const deleteDocument = (documentId: string) => {
+  const deleteNote = (noteId: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
           type: 'deleteNote',
           data: {
-            documentId,
+            noteId,
           },
         })
       )
     }
   }
 
-  const getDocument = (userId: string) => {
+  const getNote = (userId: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -68,15 +68,15 @@ function Context(props: INoteContextProps) {
     setOpenContext(false)
     if (fileViewList === null) return
 
-    const node = fileViewList.find((v) => v.documentId === contextPosition.target)
+    const node = fileViewList.find((v) => v.noteId === contextPosition.target)
     if (node !== undefined) {
       for (const fileView of fileViewList) {
         if (fileView.path.includes(node.path)) {
-          deleteDocument(fileView.documentId)
+          deleteNote(fileView.noteId)
         }
       }
     }
-    getDocument(userId)
+    getNote(userId)
     setSelectFile(null)
   }
 

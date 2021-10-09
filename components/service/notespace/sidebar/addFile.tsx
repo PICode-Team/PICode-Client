@@ -20,7 +20,7 @@ function AddFile(props: IAddInput) {
   const [userId, setUserId] = useState<string>('')
   const ws: any = useWs()
 
-  const createDocument = (path: string, creator: string, content: string) => {
+  const createNote = (path: string, creator: string, content: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -36,7 +36,7 @@ function AddFile(props: IAddInput) {
     }
   }
 
-  const getDocument = (userId: string) => {
+  const getNote = (userId: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -65,11 +65,11 @@ function AddFile(props: IAddInput) {
 
     setTmpFileName(event.target.value)
     if (contextPosition !== undefined) {
-      createDocument(`${contextPosition.path}/${event.target.value}`, userId, '')
+      createNote(`${contextPosition.path}/${event.target.value}`, userId, '')
     } else {
-      createDocument(`/${event.target.value}`, userId, '')
+      createNote(`/${event.target.value}`, userId, '')
     }
-    getDocument(userId)
+    getNote(userId)
   }
 
   const handleFileRowKeyDown = (event: any) => {
@@ -88,11 +88,11 @@ function AddFile(props: IAddInput) {
 
       setTmpFileName(event.target.value)
       if (contextPosition !== undefined) {
-        createDocument(`${contextPosition.path}/${event.target.value}`, userId, '')
+        createNote(`${contextPosition.path}/${event.target.value}`, userId, '')
       } else {
-        createDocument(`/${event.target.value}`, userId, '')
+        createNote(`/${event.target.value}`, userId, '')
       }
-      getDocument(userId)
+      getNote(userId)
     }
   }
 
