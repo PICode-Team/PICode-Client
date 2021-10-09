@@ -194,6 +194,8 @@ function Sidebar(props: INoteSidebar) {
       <React.Fragment>
         {Object.keys(output).map((v: string, idx: number) => {
           if (v.split('/').length - 1 !== num) return
+          const splitedPath = v.split('/')
+          const lastPath = splitedPath[splitedPath.length - 1]
 
           return (
             <React.Fragment key={output[v].noteId}>
@@ -210,7 +212,7 @@ function Sidebar(props: INoteSidebar) {
               >
                 <ExpandMoreRounded style={{ transform: `${output[v].open === undefined || !output[v].open ? 'rotate(-90deg)' : 'rotate(0deg)'}` }} />
                 <Description className={classes.description} />
-                <div className={classes.key}>{v}</div>
+                <div className={classes.key}>{lastPath}</div>
               </div>
               {output[v].open && makeFileView(output[v].children, num + 1)}
               {addFile && contextPosition.target === output[v].noteId && <AddFile setAddFile={setAddFile} contextPosition={contextPosition} fileViewList={fileViewList} />}
