@@ -57,8 +57,8 @@ function Sidebar(props: INoteSidebar) {
   const pushToOutput = (path: string, splitedPath: string[], obj: any, value: any): any => {
     const clone = { ...value }
     const pathList = path.split('/')
-    const splicedPath = pathList.slice(pathList.length - splitedPath.length, pathList.length - 1)
-    const parentPath = `/${splicedPath.join('/')}`
+    const splicedPath = pathList.slice(0, pathList.length - splitedPath.length + 1)
+    const parentPath = `${splicedPath.join('/')}`
 
     if (obj[path] === undefined) {
       obj[path] = clone
