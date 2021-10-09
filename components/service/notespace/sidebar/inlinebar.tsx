@@ -322,6 +322,11 @@ function Note(props: INoteProps) {
     setAddFile(true)
   }
 
+  const getLastPath = (path: string) => {
+    const splitedPath = path.split('/')
+    return splitedPath[splitedPath.length - 1]
+  }
+
   useEffect(() => {
     ws.addEventListener('message', noteWebSocketHandler)
     getNote(userId)
@@ -460,7 +465,7 @@ function Note(props: INoteProps) {
         <div id="writeSomeThing" className={classes.content}>
           <div className={classes.title}>
             <div className={classes.titleContent}>
-              <input id="title" className={clsx(classes.defaultTitle, classes.h1Input)} placeholder="title" onChange={handleSelectFileChange} value={selectFile.title} />
+              <input id="title" className={clsx(classes.defaultTitle, classes.h1Input)} placeholder="title" onChange={handleSelectFileChange} value={getLastPath(selectFile.title)} />
               <input id="creator" className={clsx(classes.defaultTitle, classes.h2Input)} placeholder="author" onChange={handleSelectFileChange} value={selectFile.creator} />
               <input id="type" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="category" onChange={handleSelectFileChange} value={selectFile.type} />
               <input id="createTime" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="creation" onChange={handleSelectFileChange} value={selectFile.createTime} />
