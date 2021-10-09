@@ -1,8 +1,11 @@
 import { FavoriteBorderOutlined, SmsOutlined } from '@material-ui/icons'
+import { useEffect, useState } from 'react'
 import { API_SERVER } from '../../../../constants/serverUrl'
 import { messageBoxStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
+import { domainURLRegex } from '../../../context/regex'
+import ogs from 'open-graph-scraper'
 
 interface IMessageBoxProps {
   messageInfo: IChat
@@ -41,6 +44,8 @@ function MessageBox(props: IMessageBoxProps) {
   const { user, message, time, chatId, threadList } = messageInfo
   const classes = messageBoxStyle()
   const thumbnailUrl = particiapntList.find((v) => v.userId === user)?.userThumbnail
+  const [url, setUrl] = useState<string | null>(null)
+  const [preview, setPreview] = useState<any | null>(null)
 
   const handleSetThread = () => {
     if (target !== null) {
@@ -54,6 +59,24 @@ function MessageBox(props: IMessageBoxProps) {
       })
     }
   }
+
+  const getOpenGraphMetaData = async (url: string) => {
+    // console.log(url)
+  }
+
+  useEffect(() => {
+    const regexMessage = domainURLRegex.exec(message)
+
+    if (regexMessage === null) return
+
+    setUrl(regexMessage[0])
+  }, [])
+
+  useEffect(() => {
+    if (url === null) return
+
+    getOpenGraphMetaData(url)
+  }, [url])
 
   return (
     <div className={`${classes.messageBox} ${reverse && classes.reversedMessageBox}`}>
@@ -88,6 +111,7 @@ function MessageBox(props: IMessageBoxProps) {
             <div className={classes.lastThread}>Last reply {threadList.slice(-1)[0].time.split(' ')[0]}</div>
           </div>
         )}
+        <div>{}</div>
       </div>
     </div>
   )

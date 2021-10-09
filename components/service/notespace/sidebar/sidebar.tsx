@@ -7,6 +7,7 @@ import { IContextPosition, IFileView, INoteContent } from '../../../../types/not
 import { useWs } from '../../../context/websocket'
 import { noteStyle } from '../../../../styles/service/notespace/note'
 import AddFile from './addFile'
+import { uuidv4 } from '../../../context/uuidv4'
 
 interface INoteSidebar {
   fileViewList: IFileView[] | null
@@ -20,10 +21,11 @@ interface INoteSidebar {
   contextPosition: IContextPosition
 }
 
-const findNode = (fileViews: IFileView[] | null, documentId: string) => {
+const findNode = (fileViews: IFileView[] | null, noteId: string) => {
   if (fileViews === null) return
+
   for (const fileView of fileViews) {
-    if (fileView.noteId === documentId) {
+    if (fileView.noteId === noteId) {
       if (fileView.open) {
         fileView.open = false
       } else {
@@ -52,21 +54,26 @@ function Sidebar(props: INoteSidebar) {
   if (fileViewList === null) return <></>
   if (ws.readyState === WebSocket.CONNECTING) return <></>
 
-  const pushToOutput = (path: any, obj: any, value: any): any => {
+  const pushToOutput = (path: string, splitedPath: string[], obj: any, value: any): any => {
     const clone = { ...value }
-    const key = path[0]
-    if (obj[key] === undefined) {
-      obj[key] = clone
-      obj[key].children = {}
+    const pathList = path.split('/')
+    const splicedPath = pathList.slice(pathList.length - splitedPath.length, pathList.length - 1)
+    const parentPath = `/${splicedPath.join('/')}`
+
+    if (obj[path] === undefined) {
+      obj[path] = clone
+      obj[path].children = {}
     }
-    path.shift()
-    if (path.length > 0) {
-      return pushToOutput(path, obj[key].children, clone)
+
+    splitedPath.shift()
+
+    if (splitedPath.length > 0) {
+      return pushToOutput(path, splitedPath, obj[parentPath].children, clone)
     }
-    obj[key] = clone
+    obj[path] = clone
   }
 
-  const updateDocument = (noteId: string, path: string) => {
+  const updateNote = (noteId: string, path: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -83,7 +90,7 @@ function Sidebar(props: INoteSidebar) {
     }
   }
 
-  const getDocument = (userId: string) => {
+  const getNote = (userId: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -98,14 +105,14 @@ function Sidebar(props: INoteSidebar) {
   }
 
   const handleFileRowDragOver = (key: string) => () => {
-    const node = document.getElementById(`${output[key].documentId}`)
+    const node = document.getElementById(`${output[key].noteId}`)
     if (node) {
       node.style.border = '1px solid #fff'
     }
   }
 
   const handleFileRowDragLeave = (key: string) => (event: any) => {
-    const node = document.getElementById(`${output[key].documentId}`)
+    const node = document.getElementById(`${output[key].noteId}`)
     if (node) {
       node.style.border = '0px'
     }
@@ -113,11 +120,11 @@ function Sidebar(props: INoteSidebar) {
 
   const handleFileRowDragEnd = (key: string) => (event: any) => {
     if (fileViewList === undefined) return
-    let dragEndNode: any
-    for (let i of fileViewList) {
-      let node = document.getElementById(`${i.noteId}`)
+    let dragEndNode: IFileView | undefined
+    for (const fileView of fileViewList) {
+      let node = document.getElementById(`${fileView.noteId}`)
       if (node !== null && node.getBoundingClientRect().top < event.clientY && node.getBoundingClientRect().bottom > event.clientY) {
-        dragEndNode = i
+        dragEndNode = fileView
         break
       }
     }
@@ -127,26 +134,26 @@ function Sidebar(props: INoteSidebar) {
     })
     for (const node of nodeGroup) {
       const name = node.path.split('/')
-      updateDocument(node.noteId, dragEndNode.path + '/' + name[name.length - 1])
-      getDocument(userId)
+      updateNote(node.noteId, dragEndNode.path + '/' + name[name.length - 1])
+      getNote(userId)
     }
   }
 
   const handleFileRowClick = (key: string) => (event: any) => {
-    if (Object.keys(output[key].children).length !== 0) {
-      const tmpFileViewList = cloneDeep(fileViewList)
-      findNode(tmpFileViewList, output[key].documentId)
-      setFileViewList(tmpFileViewList)
-    }
+    const tmpFileViewList = cloneDeep(fileViewList)
+    findNode(tmpFileViewList, output[key].noteId)
+    setFileViewList(tmpFileViewList)
+
     event.stopPropagation()
     const tmpFile: IFileView = {
       title: key,
       creator: output[key].creator,
       createTime: output[key].createTime,
-      noteId: output[key].documentId,
+      noteId: output[key].noteId,
       path: output[key].path,
     }
     setSelectFile(tmpFile)
+
     if (output[key].content) {
       setContentList(output[key].content)
     } else {
@@ -160,28 +167,40 @@ function Sidebar(props: INoteSidebar) {
     setContextPosition({
       x: event.currentTarget.getBoundingClientRect().left + event.currentTarget.getBoundingClientRect().width / 4,
       y: event.currentTarget.getBoundingClientRect().top - 35,
-      target: output[key].documentId,
+      target: output[key].noteId,
       path: output[key].path,
     })
   }
 
-  fileViewList.forEach((value: any) => {
-    const path = value.path.split('/')
-    path.splice(0, 1)
-    pushToOutput(path, output, value)
+  fileViewList.forEach((value: IFileView) => {
+    const { path } = value
+    const splitedPath = path.split('/')
+
+    splitedPath.splice(0, 1)
+
+    pushToOutput(path, splitedPath, output, value)
   })
 
-  const makeFileView = (output: any, num: number): any => {
+  const makeFileView = (output: any, num: number): JSX.Element => {
+    if (Object.keys(output).length === 0) {
+      return (
+        <div className={classes.fileRow} key={`empty-${uuidv4()}`} style={{ paddingLeft: `${16 * num + 4}px` }}>
+          <div className={classes.key}>No pages inside</div>
+        </div>
+      )
+    }
+
     return (
-      <>
+      <React.Fragment>
         {Object.keys(output).map((v: string, idx: number) => {
+          if (v.split('/').length - 1 !== num) return
+
           return (
-            <>
+            <React.Fragment key={output[v].noteId}>
               <div
                 className={classes.fileRow}
                 draggable={true}
-                key={idx}
-                id={output[v].documentId}
+                id={output[v].noteId}
                 onDragOver={handleFileRowDragOver(v)}
                 onDragLeave={handleFileRowDragLeave(v)}
                 onDragEnd={handleFileRowDragEnd(v)}
@@ -189,16 +208,16 @@ function Sidebar(props: INoteSidebar) {
                 onClick={handleFileRowClick(v)}
                 onContextMenu={handleFileRowContextMenu(v)}
               >
-                {Object.keys(output[v].children).length > 0 && <ExpandMoreRounded style={{ transform: `${output[v].open === undefined || !output[v].open ? 'rotate(-90deg)' : 'rotate(0deg)'}` }} />}
-                <Description style={{ height: '20px', marginLeft: `${Object.keys(output[v].children).length > 0 ? 0 : '5px'}` }} />
+                <ExpandMoreRounded style={{ transform: `${output[v].open === undefined || !output[v].open ? 'rotate(-90deg)' : 'rotate(0deg)'}` }} />
+                <Description className={classes.description} />
                 <div className={classes.key}>{v}</div>
               </div>
-              {output[v].open !== undefined && output[v].open && makeFileView(output[v].children, num + 1)}
-              {addFile && contextPosition.target === output[v].documentId && <AddFile setAddFile={setAddFile} contextPosition={contextPosition} fileViewList={fileViewList} />}
-            </>
+              {output[v].open && makeFileView(output[v].children, num + 1)}
+              {addFile && contextPosition.target === output[v].noteId && <AddFile setAddFile={setAddFile} contextPosition={contextPosition} fileViewList={fileViewList} />}
+            </React.Fragment>
           )
         })}
-      </>
+      </React.Fragment>
     )
   }
 

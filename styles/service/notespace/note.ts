@@ -233,5 +233,21 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
     contextIcon: {
       height: '20px',
     },
+
+    addFile: {
+      position: 'absolute',
+      right: 0,
+      padding: 0,
+      paddingRight: '12px',
+    },
+
+    contentWrapper: {
+      height: 'fit-content',
+      width: '100%',
+      position: 'relative',
+    },
+    description: {
+      height: '20px',
+    },
   })
 )

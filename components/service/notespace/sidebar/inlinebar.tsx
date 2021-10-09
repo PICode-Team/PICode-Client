@@ -55,11 +55,15 @@ function Note(props: INoteProps) {
         case 'getNote':
           setFileViewList(message.data)
           break
+        case 'updateNote':
+          break
+        case 'deleteNote':
+          break
       }
     }
   }
 
-  const getDocument = (userId: string) => {
+  const getNote = (userId: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -73,7 +77,7 @@ function Note(props: INoteProps) {
     }
   }
 
-  const updateDocument = (noteId: string, content: INoteContent[]) => {
+  const updateNote = (noteId: string, content: INoteContent[]) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -82,7 +86,7 @@ function Note(props: INoteProps) {
           data: {
             noteId,
             note: {
-              content
+              content,
             },
           },
         })
@@ -320,7 +324,7 @@ function Note(props: INoteProps) {
 
   useEffect(() => {
     ws.addEventListener('message', noteWebSocketHandler)
-    getDocument(userId)
+    getNote(userId)
     return () => {
       ws.removeEventListener('message', noteWebSocketHandler)
     }
@@ -346,7 +350,7 @@ function Note(props: INoteProps) {
   useEffect(() => {
     if (selectFile === null) return
 
-    updateDocument(selectFile.noteId, contentList)
+    updateNote(selectFile.noteId, contentList)
   }, [contentList])
 
   useEffect(() => {
@@ -434,7 +438,7 @@ function Note(props: INoteProps) {
     >
       <div className={classes.fileView}>
         <div className={classes.fileEdit}>
-          <IconButton style={{ position: 'absolute', right: 0, padding: 0, paddingRight: '12px' }} onClick={handleAddFileClick}>
+          <IconButton className={classes.addFile} onClick={handleAddFileClick}>
             <Add className={classes.buttonColor} />
           </IconButton>
         </div>
@@ -457,9 +461,9 @@ function Note(props: INoteProps) {
           <div className={classes.title}>
             <div className={classes.titleContent}>
               <input id="title" className={clsx(classes.defaultTitle, classes.h1Input)} placeholder="title" onChange={handleSelectFileChange} value={selectFile.title} />
-              <input id="author" className={clsx(classes.defaultTitle, classes.h2Input)} placeholder="author" value={selectFile.creator} />
-              <input id="category" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="category" value={selectFile.type && selectFile.type.join(', ')} />
-              <input id="creation" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="creation" value={selectFile.createTime} />
+              <input id="creator" className={clsx(classes.defaultTitle, classes.h2Input)} placeholder="author" onChange={handleSelectFileChange} value={selectFile.creator} />
+              <input id="type" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="category" onChange={handleSelectFileChange} value={selectFile.type} />
+              <input id="createTime" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="creation" onChange={handleSelectFileChange} value={selectFile.createTime} />
             </div>
           </div>
           <div className={classes.writeRoot} onKeyDown={handleCtrlZ}>
@@ -479,13 +483,8 @@ function Note(props: INoteProps) {
                   <div
                     key={i}
                     draggable={true}
-                    style={{
-                      height: 'fit-content',
-                      width: '100%',
-                      position: 'relative',
-                    }}
                     onClick={handleContentClick}
-                    className={clsx(v.clicked && classes.clicked)}
+                    className={clsx(classes.contentWrapper, v.clicked && classes.clicked)}
                     onMouseOver={handleContentMouseOver(i)}
                     onMouseOut={handleContentMouseOut(i)}
                     onDragStart={handleContentDragStart(i)}
