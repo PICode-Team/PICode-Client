@@ -58,7 +58,6 @@ function Activitybar(props: IActivitybarProps) {
     setUserId(value)
 
     document.addEventListener('keypress', pressEnterHandler)
-
     return () => {
       document.removeEventListener('keypress', pressEnterHandler)
     }

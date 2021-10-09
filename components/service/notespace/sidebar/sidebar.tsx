@@ -183,6 +183,10 @@ function Sidebar(props: INoteSidebar) {
 
   const makeFileView = (output: any, num: number): JSX.Element => {
     if (Object.keys(output).length === 0) {
+      if (num === 1 && addFile === true) {
+        return <React.Fragment></React.Fragment>
+      }
+
       return (
         <div className={classes.fileRow} key={`empty-${uuidv4()}`} style={{ paddingLeft: `${16 * num + 4}px` }}>
           <div className={classes.key}>No pages inside</div>

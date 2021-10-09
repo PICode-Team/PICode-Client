@@ -84,7 +84,9 @@ function MessageBox(props: IMessageBoxProps) {
       <div className={`${target !== null && classes.messageInfo}`}>
         {!reverse && <div className={classes.target}>{user}</div>}
         <div className={`${classes.textWrapper} ${reverse && classes.reversedTextWrapper}`}>
-          <span className={classes.messageText}>{message}</span>
+          <span className={classes.messageText} id="">
+            {message}
+          </span>
           <span className={classes.time}>
             <span>{getTimeText(time)}</span>
             {target !== null && (
