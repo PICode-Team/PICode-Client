@@ -71,10 +71,6 @@ function MessageBox(props: IMessageBoxProps) {
     setPreview(metaData)
   }
 
-  const handleLinkURL = (url: string) => () => {
-    window.location.href = url
-  }
-
   useEffect(() => {
     const regexMessage = domainURLRegex.exec(message)
 
@@ -130,12 +126,12 @@ function MessageBox(props: IMessageBoxProps) {
           </div>
         )}
         {preview !== null && preview.url !== undefined && (
-          <div className={classes.preview} onClick={handleLinkURL(preview.url)}>
+          <a className={classes.preview} href={preview.url}>
             {preview.image !== undefined && <div className={classes.image} style={{ backgroundImage: `url('${preview.image.url}')` }}></div>}
             <div className={classes.title}>{preview.title}</div>
             <div className={classes.description}>{preview.description}</div>
             <div className={classes.link}>{preview.url}</div>
-          </div>
+          </a>
         )}
       </div>
     </div>
