@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
+import { useRouter } from 'next/router'
+
 import { layoutStyle } from '../../styles/layout/layout'
+import { IPageInfo } from '../../types/layout.types'
 import { IPageProps } from '../../types/page.types'
+import { sidebarData } from './data'
 import Messenger from '../service/chatspace/messenger/messenger'
 import Sidebar from './sidebar'
 import Topbar from './topbar'
@@ -11,6 +15,9 @@ function Layout(props: IPageProps) {
   const classes = layoutStyle()
   const [toggle, setToggle] = useState<boolean>(false)
   const [userId, setUserId] = useState<string>('')
+  const [pageInfo, setPageInfo] = useState<IPageInfo | null>(null)
+  const pageData: any = sidebarData
+  const route = useRouter()
 
   useEffect(() => {
     if (typeof window === undefined) return
@@ -29,6 +36,34 @@ function Layout(props: IPageProps) {
     }
   }, [])
 
+  useEffect(() => {
+    if (pageInfo === null) {
+      for (let i in pageData) {
+        if (pageData[i].url === route.route) {
+          setPageInfo({
+            name: pageData[i].title,
+            icon: pageData[i].icon,
+          })
+        } else {
+          if (pageData[i].subUrl !== undefined && pageData[i].subUrl.some((v: any) => v === route.route)) {
+            if (pageData[i].children !== undefined) {
+              let realTile = pageData[i].children.find((v1: any) => v1.url === route.route || v1.subUrl.some((v2: any) => v2 === route.route))
+              setPageInfo({
+                name: realTile.title,
+                icon: realTile.icon,
+              })
+            } else {
+              setPageInfo({
+                name: pageData[i].title,
+                icon: pageData[i].icon,
+              })
+            }
+          }
+        }
+      }
+    }
+  }, [])
+
   return (
     <React.Fragment>
       <div className={classes.layout}>
@@ -36,7 +71,8 @@ function Layout(props: IPageProps) {
         <div className={`${classes.contentWrapper} ${toggle && classes.toggle}`}>
           <Topbar toggle={toggle} setToggle={setToggle} />
           <div className={classes.pageName}>
-            <div></div>
+            {pageInfo !== null && pageInfo.icon}
+            {pageInfo !== null && pageInfo.name}
           </div>
           {React.cloneElement(children, {
             path: path,

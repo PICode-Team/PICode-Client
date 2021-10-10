@@ -35,14 +35,14 @@ function Context(props: INoteContextProps) {
     }
   }
 
-  const getNote = (userId: string) => {
+  const getNote = (noteId?: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
           type: 'getNote',
           data: {
-            userId,
+            noteId,
           },
         })
       )
@@ -76,7 +76,7 @@ function Context(props: INoteContextProps) {
         }
       }
     }
-    getNote(userId)
+    getNote()
     setSelectFile(null)
   }
 

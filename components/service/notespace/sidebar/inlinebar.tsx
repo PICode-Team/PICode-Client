@@ -44,6 +44,7 @@ function Note(props: INoteProps) {
   const [addFile, setAddFile] = useState<boolean>(false)
   const [openContext, setOpenContext] = useState<boolean>(false)
   const ws: any = useWs()
+  const output: any = {}
 
   let tmpPosition: any = []
 
@@ -53,24 +54,39 @@ function Note(props: INoteProps) {
     if (message.category === 'note') {
       switch (message.type) {
         case 'getNote':
-          setFileViewList(message.data)
+          if (Object.keys(output).length !== 0 && message.data.length === 1) {
+            const [note]: IFileView[] = message.data
+
+            if (note === undefined) return
+
+            const splitedPath = note.path.split('/')
+            splitedPath.splice(0, 1)
+
+            pushToOutput(note.path, splitedPath, output, note)
+            setFileViewList([...(fileViewList ?? []), note])
+          } else {
+            setFileViewList(message.data)
+          }
           break
         case 'updateNote':
           break
         case 'deleteNote':
           break
+        case 'createNote':
+          getNote(message.data.noteId)
+          break
       }
     }
   }
 
-  const getNote = (userId: string) => {
+  const getNote = (noteId?: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
           type: 'getNote',
           data: {
-            userId,
+            noteId,
           },
         })
       )
@@ -92,6 +108,28 @@ function Note(props: INoteProps) {
         })
       )
     }
+  }
+
+  const pushToOutput = (path: string, splitedPath: string[], obj: any, value: any): any => {
+    const clone = { ...value, children: {} }
+    const pathList = path.split('/')
+    const splicedPath = pathList.slice(0, pathList.length - splitedPath.length + 1)
+    const parentPath = `${splicedPath.join('/')}`
+
+    if (obj[path] === undefined) {
+      obj[path] = clone
+    }
+
+    if (obj[path].children === undefined) {
+      obj[path].children = {}
+    }
+
+    splitedPath.shift()
+
+    if (splitedPath.length > 0) {
+      return pushToOutput(path, splitedPath, obj[parentPath].children, clone)
+    }
+    obj[path] = clone
   }
 
   const handleSelectFileChange = (event: any) => {
@@ -328,12 +366,16 @@ function Note(props: INoteProps) {
   }
 
   useEffect(() => {
+    if (fileViewList === null) return
+
     ws.addEventListener('message', noteWebSocketHandler)
-    getNote(userId)
+    if (fileViewList.length === 0) {
+      getNote()
+    }
     return () => {
       ws.removeEventListener('message', noteWebSocketHandler)
     }
-  }, [ws?.readyState])
+  }, [ws?.readyState, fileViewList, output])
 
   useEffect(() => {
     setTimeout(() => {
@@ -458,6 +500,7 @@ function Note(props: INoteProps) {
             setOpenContext={setOpenContext}
             setContextPosition={setContextPosition}
             contextPosition={contextPosition}
+            output={output}
           />
         )}
       </div>

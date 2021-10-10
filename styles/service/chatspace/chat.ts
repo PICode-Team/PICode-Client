@@ -189,7 +189,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       padding: '4px 14px',
       color: theme.font.high.color,
       maxWidth: '750px',
-      height: '24px',
+      height: 'fit-content',
     },
     time: {
       color: theme.font.high.color,
@@ -260,6 +260,47 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
     reversedTextWrapper: {
       display: 'flex',
       flexDirection: 'row-reverse',
+    },
+
+    preview: {
+      cursor: 'pointer',
+      width: '300px',
+      float: 'right',
+      marginTop: '10px',
+      backgroundColor: theme.backgroundColor.step2,
+    },
+    image: {
+      cursor: 'pointer',
+      height: '140px',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundColor: theme.backgroundColor.step3,
+    },
+
+    title: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      color: theme.font.high.color,
+      fontSize: theme.font.small.size,
+      padding: '0px 10px',
+      paddingTop: '5px',
+    },
+    description: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      color: theme.font.low.color,
+      fontSize: theme.font.small.size,
+      padding: '0px 10px',
+    },
+    link: {
+      color: theme.font.low.color,
+      fontSize: theme.font.small.size,
+      opacity: 0.6,
+      padding: '0px 10px',
+      paddingBottom: '5px',
     },
   })
 )
@@ -472,9 +513,9 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
     channelParticipant: {},
     lastContent: {
       overflow: 'hidden',
+      textOverflow: 'ellipsis',
       width: '160px',
       marginRight: '6px',
-      textOverflow: 'ellipsis',
     },
     channelTail: {
       width: '70px',
