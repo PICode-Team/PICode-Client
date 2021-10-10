@@ -397,7 +397,7 @@ function Note(props: INoteProps) {
   useEffect(() => {
     if (selectFile === null) return
 
-    updateNote(selectFile.noteId, contentList)
+    // updateNote(selectFile.noteId, contentList)
   }, [contentList])
 
   useEffect(() => {

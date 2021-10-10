@@ -143,7 +143,7 @@ function Sidebar(props: INoteSidebar) {
       if (dragEndNode.path !== node.path) {
         const name = node.path.split('/')
 
-        updateNote(node.noteId, dragEndNode.path + '/' + name[name.length - 1])
+        // updateNote(node.noteId, dragEndNode.path + '/' + name[name.length - 1])
         getNote()
       }
     }
