@@ -30,7 +30,7 @@ const initialDocker: IDockerInfo = {
 
 function EditProject() {
   const classes = createWorkspaceStyle()
-  const [type, setType] = useState<ICreateType>('nothing')
+  const type = 'nothing'
   const [workspaceInfo, setWorkspaceInfo] = useState<IWorkspace>(initialWorkspace)
   const [originWorkspace, setOriginWorkspace] = useState<IWorkspace>(initialWorkspace)
   const [dockerInfo, setDockerInfo] = useState<IDockerInfo>(initialDocker)
@@ -47,18 +47,19 @@ function EditProject() {
     if (workspaceList.length === 0) return
 
     const [workspace] = workspaceList
-    setOriginWorkspace({ ...workspace })
-    setWorkspaceInfo({ ...workspace })
+    setOriginWorkspace(workspace)
+    setWorkspaceInfo(workspace)
   }
 
   const getDockerData = async () => {
     const response = await fetchSet(`/docker?workspaceId=${workspaceId}`, 'GET', true)
-    const { dockerInfo, code } = await response.json()
+    const { dockerList, code } = await response.json()
 
     if (code !== 200) return
-    if (dockerInfo.length === 0) return
+    if (dockerList.length === 0) return
 
-    const [docker] = dockerInfo
+    // const [docker] = dockerList
+    // setDockerInfo(docker)
   }
 
   const handlePreviousButton = () => {
@@ -113,13 +114,13 @@ function EditProject() {
 
   return (
     <div className={classes.create}>
-      <div className={classes.header}>{`Create Codespace`}</div>
+      <div className={classes.header}>{`Edit Codespace`}</div>
       <div className={classes.createWrapper}>
         <Stepper step={step} edit={true} />
 
         <div className={classes.inputWrapper}>
           {step === 2 && <WorkspaceInfo workspaceInfo={workspaceInfo} setWorkspaceInfo={setWorkspaceInfo} type={type} source={source} setSource={setSource} edit={true} />}
-          {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={true} />}
+          {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={true} workspaceId={workspaceId as string} />}
           <div className={classes.content}>
             <div className={classes.inputContent}>
               <div className={classes.buttonBox}>

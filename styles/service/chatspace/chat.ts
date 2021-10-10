@@ -306,16 +306,17 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
       border: '1px solid rgba(255, 255, 255, 0.5)',
       color: theme.font.medium.color,
       backgroundColor: theme.backgroundColor.step1,
-      '&>input': {
-        minHeight: '38px',
-        width: '100%',
-        backgroundColor: 'inherit',
-        color: 'inherit',
-        outline: 'none',
-        border: 'none',
-        padding: '8px',
-        fontSize: '16px',
-      },
+    },
+    customInput: {
+      height: '38px',
+      width: '100%',
+      backgroundColor: 'inherit',
+      color: 'inherit',
+      outline: 'none',
+      border: 'none',
+      padding: '8px',
+      fontSize: '16px',
+      overflow: 'auto',
     },
     interaction: {
       display: 'flex',
@@ -364,6 +365,31 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
       marginRight: '4px',
     },
     send: {},
+
+    mentionHelper: {
+      position: 'absolute',
+      width: '200px',
+      bottom: '100px',
+      backgroundColor: theme.backgroundColor.step3,
+      marginLeft: '20px',
+      color: theme.font.high.color,
+    },
+
+    mentionTarget: {
+      height: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.font.high.color}`,
+      lineHeight: '26px',
+      padding: '0px 8px',
+      cursor: 'pointer',
+      '&:nth-last-child(1)': {
+        borderBottom: 'none',
+      },
+      '&:hover': {
+        backgroundColor: theme.backgroundColor.step4,
+      },
+    },
   })
 )
 

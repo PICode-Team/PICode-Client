@@ -11,13 +11,13 @@ export const sidebarData = {
     title: 'Workspace',
     children: [
       {
-        url: '/codespace',
+        url: '/workspace/codespace',
         icon: <DnsOutlined />,
         title: 'Codespace',
         subUrl: ['/code'],
       },
       {
-        url: '/container',
+        url: '/workspace/container',
         icon: <ComputerOutlined />,
         title: 'Container',
       },

@@ -10,6 +10,16 @@ function Layout(props: IPageProps) {
   const { children, path, cookie } = props
   const classes = layoutStyle()
   const [toggle, setToggle] = useState<boolean>(false)
+  const [userId, setUserId] = useState<string>('')
+
+  useEffect(() => {
+    if (typeof window === undefined) return
+
+    const value = window.localStorage.getItem('userId')
+    if (value === null) return
+
+    setUserId(value)
+  }, [])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -53,7 +63,7 @@ function Layout(props: IPageProps) {
           }}
         />
       )}
-      <Messenger userId="123" />
+      <Messenger userId={userId} />
     </React.Fragment>
   )
 }

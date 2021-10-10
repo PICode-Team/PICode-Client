@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { NavigateBefore, AttachFile, SentimentSatisfied, Send } from '@material-ui/icons'
 
@@ -23,6 +23,7 @@ interface IContentProps {
 function Content(props: IContentProps) {
   const { target, messageList, newMessage, userId, thread, particiapntList, setTarget, setThread, toggle } = props
   const classes = responsiveContentStyle()
+  const [onMention, setOnMention] = useState<boolean>(false)
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLInputElement>(null)
   const ws: any = useWs()
@@ -73,7 +74,7 @@ function Content(props: IContentProps) {
     return () => {
       document.removeEventListener('keypress', pressEnterHandler)
     }
-  }, [])
+  }, [target])
 
   return (
     <div className={`${classes.content} ${toggle && classes.toggleContent}`}>

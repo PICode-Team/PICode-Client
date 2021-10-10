@@ -16,17 +16,13 @@ function DefaultCodeView() {
     const response = await fetchSet('/workspace', 'GET', true)
     const { workspaceList, code } = await response.json()
 
-    if (code === 200) {
-      setWorkspaceData(workspaceList)
-    }
+    if (code !== 200) return
+
+    setWorkspaceData(workspaceList)
   }
 
-  const handleLinkCode = (workspaceId: string) => () => {
-    window.location.href = `/codespace?workspaceId=${workspaceId}`
-  }
-
-  const handleLinkIssue = (workspaceId: string) => () => {
-    window.location.href = `/issuespace?workspaceId=${workspaceId}`
+  const handleLinkVisualization = (workspaceId: string) => () => {
+    window.location.href = `/workspace/visualization?workspaceId=${workspaceId}`
   }
 
   const handleLinkEdit = (workspaceId: string) => (event: React.MouseEvent) => {
@@ -120,8 +116,11 @@ function DefaultCodeView() {
               <div className={classes.infoValue}>{v.description === '' && 'no description'}</div>
             </div>
             <div className={classes.buttonGroup}>
-              <CustomButton text="To Code" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkCode(v.workspaceId)} />
-              <CustomButton text="To Issue" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkIssue(v.workspaceId)} />
+              <CustomButton
+                text="To Visualization"
+                style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px', width: '100%', margin: '0px' }}
+                onClick={handleLinkVisualization(v.workspaceId)}
+              />
             </div>
           </div>
         ))}

@@ -9,6 +9,7 @@ import { toDark, toWhite } from '../../modules/theme'
 import UserInfo from '../items/tooltip/userInfo'
 import { IUser } from '../../types/user.types'
 import { fetchSet } from '../context/fetch'
+import AlertDialog from '../items/tooltip/alarm'
 
 interface ITopbarProps {
   toggle: boolean
@@ -20,7 +21,8 @@ function Topbar(props: ITopbarProps) {
   const classes = topbarStyle()
   const theme = useSelector((state: RootState) => state.theme).theme
   const dispatch = useDispatch()
-  const [open, setOpen] = useState<boolean>(false)
+  const [openUserInfo, setOpenUserInfo] = useState<boolean>(false)
+  const [openAlert, setOpenAlert] = useState<boolean>(false)
   const [userData, setUserData] = useState<IUser | null>(null)
 
   const getUserData = async () => {
@@ -36,14 +38,16 @@ function Topbar(props: ITopbarProps) {
     setToggle(!toggle)
   }
 
-  const handleAlarm = () => {}
+  const handleAlarm = () => {
+    setOpenAlert(!openAlert)
+  }
 
   const handleTheme = () => {
     theme === 'dark' ? dispatch(toWhite()) : dispatch(toDark())
   }
 
   const handleUserInfo = () => {
-    setOpen(!open)
+    setOpenUserInfo(!openUserInfo)
   }
 
   return (
@@ -54,17 +58,18 @@ function Topbar(props: ITopbarProps) {
         </div>
       </div>
       <div className={classes.interaction}>
-        <div className={classes.icon} onClick={handleUserInfo}>
-          <AccountCircleRounded />
+        <div className={classes.icon} onClick={handleAlarm}>
+          <Notifications />
         </div>
         <div className={classes.icon} onClick={handleTheme}>
           <Brightness4 />
         </div>
-        <div className={classes.icon}>
-          <Notifications />
+        <div className={classes.icon} onClick={handleUserInfo}>
+          <AccountCircleRounded />
         </div>
       </div>
-      {open === true && <UserInfo open={open} setOpen={setOpen} />}
+      {openUserInfo === true && <UserInfo open={openUserInfo} setOpen={setOpenUserInfo} />}
+      {openAlert === true && <AlertDialog open={openAlert} setOpen={setOpenAlert} />}
     </div>
   )
 }

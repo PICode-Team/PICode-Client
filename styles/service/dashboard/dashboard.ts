@@ -172,6 +172,7 @@ export const milestoneStyle = makeStyles((theme: IThemeStyle) =>
       padding: '8px 12px 10px',
       marginBottom: '12px',
       pointerEvents: 'none',
+      flexDirection: 'column',
     },
 
     top: {

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Layout from '../components/layout'
-import Note from '../components/service/notespace/note'
+import Note from '../components/service/notespace/sidebar/inlinebar'
 
 export default function NotePages(pageProps: any) {
   return (

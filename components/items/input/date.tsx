@@ -6,7 +6,8 @@ import { IItemDefautlProps, IInputProps } from '../../../types/item.types'
 const dateStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     textField: {
-      width: '380px',
+      width: '100%',
+      marginTop: '6px',
       color: '#ffffff !important',
       '& *': {
         color: '#ffffff !important',

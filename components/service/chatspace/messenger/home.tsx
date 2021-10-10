@@ -56,7 +56,7 @@ function Home(props: IHomeProps) {
         </div>
         <div className={classes.homeFooter}></div>
       </div>
-      <CreateChannel modal={modal} setModal={setModal} title="Create Channel" />
+      <CreateChannel modal={modal} setModal={setModal} />
     </div>
   )
 }

@@ -8,16 +8,16 @@ interface INoteViewProps {}
 function NoteView(props: INoteViewProps) {
   const {} = props
   const classes = noteStyle()
-  const [fileView, setFileView] = useState<IFileView[]>([])
+  const [fileView, setFileView] = useState<IFileView[] | null>(null)
   const [userId, setUserId] = useState<string>('')
   const ws: any = useWs()
 
-  const getDocument = () => {
+  const getNote = () => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
-          category: 'document',
-          type: 'getDocument',
+          category: 'note',
+          type: 'getNote',
           data: {
             userId,
           },
@@ -29,9 +29,9 @@ function NoteView(props: INoteViewProps) {
   const noteWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
 
-    if (message.category === 'document') {
+    if (message.category === 'note') {
       switch (message.type) {
-        case 'getDocument':
+        case 'getNote':
           setFileView(message.data)
           break
       }
@@ -47,17 +47,25 @@ function NoteView(props: INoteViewProps) {
 
   useEffect(() => {
     ws.addEventListener('message', noteWebSocketHandler)
-    getDocument()
+    getNote()
     return () => {
       ws.removeEventListener('message', noteWebSocketHandler)
     }
   }, [ws?.readyState])
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (fileView === null) {
+        setFileView([])
+      }
+    }, 100)
+  }, [])
+
   return (
     <div className={classes.note}>
       <div className={classes.title}>Note</div>
       <div className={classes.content}>
-        {fileView.length > 0 ? (
+        {fileView !== null && fileView.length > 0 ? (
           fileView.map((v, i) => {
             const pathList = v.path.split('/')
             const fileName = pathList[pathList.length - 1]

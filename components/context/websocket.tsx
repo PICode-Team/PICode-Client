@@ -10,7 +10,7 @@ export function WsProvider({ children }: any) {
   let value: any
 
   if (typeof window !== 'undefined') {
-    const ws = new WebSocket(`ws://192.168.85.128:80`)
+    const ws = new WebSocket(`ws://192.168.85.128:8000`)
 
     ws.onopen = () => {
       if (ws!.readyState === WebSocket.OPEN) {

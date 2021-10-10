@@ -34,8 +34,6 @@ App.getInitialProps = async ({ Component, ctx }: any): Promise<AppInitialProps> 
 
   pageProps = { ...pageProps, path: ctx.pathname, cookie: ctx.req?.headers.cookie }
 
-  console.log(pageProps)
-
   return { pageProps }
 }
 

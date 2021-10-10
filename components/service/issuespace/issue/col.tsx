@@ -8,17 +8,19 @@ import Card from './card'
 interface IColProps {
   title: string
   issueList: IIssue[]
+  setModal: React.Dispatch<React.SetStateAction<boolean>>
+  setColumn: React.Dispatch<React.SetStateAction<string>>
+  columnList: string[]
+  kanbanUUID: string
 }
 
 function Col(props: IColProps) {
-  const { title, issueList } = props
+  const { title, issueList, setModal, setColumn, columnList, kanbanUUID } = props
   const classes = colStyle()
 
   const handleAddIssue = () => {
-    // () => {
-    //     setColumn(title)
-    //     setOpen(true)
-    //   }
+    setColumn(title)
+    setModal(true)
   }
 
   return (
@@ -42,7 +44,7 @@ function Col(props: IColProps) {
       <div className={classes.issueWrapper}>
         {issueList.map((issue) => {
           if (title === issue.column) {
-            return <Card key={`issue-item-${uuidv4()}`} issue={issue} />
+            return <Card key={`issue-item-${uuidv4()}`} issue={issue} columnList={columnList} kanbanUUID={kanbanUUID} />
           }
         })}
       </div>

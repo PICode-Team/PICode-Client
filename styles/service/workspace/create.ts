@@ -118,11 +118,12 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
     },
 
     inputContent: {
-      width: '500px',
+      minWidth: '500px',
+      width: '100%',
     },
     buttonBox: {
       display: 'flex',
-      width: '500px',
+      width: '100%',
       justifyContent: 'flex-end',
       marginTop: '15px',
     },
@@ -201,6 +202,34 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       color: '#ffffff',
       marginRight: '20px',
       marginLeft: '-5px',
+    },
+
+    upload: {
+      textAlign: 'center',
+      pointerEvents: 'none',
+    },
+    uploadIcon: {
+      width: '40px',
+      height: '40px',
+    },
+
+    textAlignCenter: {
+      textAlign: 'center',
+    },
+
+    displayNone: {
+      display: 'none',
+    },
+
+    isExtract: {
+      display: 'inline-block',
+      color: '#ffffff',
+      fontSize: '12px',
+      float: 'right',
+    },
+
+    verticalAlignMiddle: {
+      verticalAlign: 'middle',
     },
   })
 )

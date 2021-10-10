@@ -10,6 +10,7 @@ interface ICreateMilestoneProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   modalMile: IMilestone | null
+  workspaceId: string
 }
 
 interface ICreateMileState {
@@ -27,30 +28,46 @@ const initialState: ICreateMileState = {
 }
 
 function CreateMilestone(props: ICreateMilestoneProps) {
-  const { modal, setModal, modalMile } = props
+  const { modal, setModal, modalMile, workspaceId } = props
   const [payload, setPayload] = useState<ICreateMileState>(initialState)
   const ws: any = useWs()
-
-  useEffect(() => {
-    if (modalMile !== null) {
-      setPayload(modalMile)
-    }
-  }, [modalMile])
 
   const handlePayload = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPayload({ ...payload, [event.target.id]: event.target.value })
   }
 
-  const handleSubmit = () => {
+  const createMilestone = (payload: ICreateMileState, workspaceId: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',
           type: 'createMilestone',
-          data: payload,
+          data: { ...payload, workspaceId },
         })
       )
     }
+  }
+
+  const updateMilestone = (payload: ICreateMileState, workspaceId: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'milestone',
+          type: 'updateMilestone',
+          data: { ...payload, workspaceId },
+        })
+      )
+    }
+  }
+
+  const handleSubmit = (isCreate: boolean) => () => {
+    if (isCreate) {
+      createMilestone(payload, workspaceId)
+    } else {
+      updateMilestone(payload, workspaceId)
+    }
+    setPayload(initialState)
+    setModal(false)
   }
 
   const handleStartDate = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +78,14 @@ function CreateMilestone(props: ICreateMilestoneProps) {
     setPayload({ ...payload, endDate: event.target.value })
   }
 
+  useEffect(() => {
+    if (modalMile !== null) {
+      setPayload(modalMile)
+    }
+  }, [modalMile])
+
   return (
-    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title="CreateMilestone" size="lg">
+    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit(modalMile === null)} title={modalMile === null ? 'Create Milestone' : 'Edit Milestone'} size="lg">
       <React.Fragment>
         <CustomTextInput required={true} id="title" onChange={handlePayload} value={payload.title} label="title" placeholder="title" />
         <CustomTextarea id="content" onChange={handlePayload} value={payload.content} label="content" placeholder="content" />

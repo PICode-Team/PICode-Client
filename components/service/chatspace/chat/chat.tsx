@@ -15,12 +15,12 @@ interface IChatProps {
   toggle: boolean
 }
 
-function Chat(ctx: any) {
+function Chat(ctx: IChatProps) {
   const { toggle } = ctx
   const classes = chatStyle()
   const [messageList, setMessageList] = useState<IChat[]>([])
   const [channelList, setChannelList] = useState<IChannel[]>([])
-  const [userList, setUserList] = React.useState<IUser[]>([])
+  const [userList, setUserList] = useState<IUser[]>([])
   const [thread, setThread] = useState<IThread | null>(null)
   const [typingUserList, setTypingUserList] = useState<IUser[]>([])
   const [target, setTarget] = useState<IChannel | null>(null)
@@ -50,13 +50,13 @@ function Chat(ctx: any) {
   }
 
   const getChatLog = (page: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN && target !== null) {
       ws.send(
         JSON.stringify({
           category: 'chat',
           type: 'getChatLog',
           data: {
-            target: target!.chatName,
+            target: target.chatName,
             page: page,
           },
         })
@@ -115,6 +115,8 @@ function Chat(ctx: any) {
           break
 
         case 'sendMessage':
+          getChat()
+
           if (message.data.parentChatId !== undefined) {
             const messages: IChat[] = messageList.map((v) => {
               if (v.chatId === message.data.parentChatId) {
@@ -138,7 +140,6 @@ function Chat(ctx: any) {
 
               return v
             })
-            console.log(messages)
 
             setMessageList(messages)
           } else {
@@ -193,7 +194,9 @@ function Chat(ctx: any) {
 
   useEffect(() => {
     ws.addEventListener('message', chatWebSocketHandler)
-    getChat()
+    if (channelList.length === 0) {
+      getChat()
+    }
 
     return () => {
       ws.removeEventListener('message', chatWebSocketHandler)

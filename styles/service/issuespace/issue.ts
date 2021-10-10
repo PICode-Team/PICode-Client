@@ -6,21 +6,29 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
       width: '100%',
-      height: '100%',
+      height: 'calc(100% - 90px)',
     },
     title: {
       fontSize: theme.font.high.size,
       color: theme.font.high.color,
       padding: '20px 30px',
       paddingBottom: '0px',
+      display: 'flex',
+      alignItems: 'center',
     },
     content: {
       width: '100%',
-      height: 'calc(100% - 61px)',
+      height: 'calc(100% - 63px)',
       display: 'flex',
       gap: '30px',
       padding: '30px',
       borderRadius: '8px',
+    },
+    back: {
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      cursor: 'pointer',
     },
   })
 )

@@ -35,13 +35,18 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
       color: '#C33030',
     },
     inputColon: {
-      width: '15px',
       textAlign: 'center',
       padding: '0px 6px',
       margin: '0px',
       fontWeight: 'bold',
+      color: theme.font.high.color,
     },
-    portColon: { padding: '0px 2px' },
+    portColon: {
+      padding: '0px 2px',
+      color: theme.font.high.color,
+      display: 'flex',
+      alignItems: 'center',
+    },
     addPort: {
       marginLeft: '8px',
       border: 'none',
@@ -77,6 +82,11 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
       padding: '2px 6px',
       borderRadius: '3px',
       marginTop: '1px',
+    },
+    portInfo: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: '8px',
     },
   })
 )
@@ -128,8 +138,8 @@ function CustomPortInput(props: IPortInputProps) {
         </button>
       </div>
       {dockerInfo.portInfo !== undefined && Object.keys(dockerInfo.portInfo).length > 0 && (
-        <div className={classes.input}>
-          <span></span>
+        <div className={classes.portInfo}>
+          <span className={classes.label}></span>
           {Object.keys(dockerInfo.portInfo).map((v, i) => (
             <div className={classes.portWrapper} key={`port-info-${i}`}>
               <div className={classes.left}>{v}</div>

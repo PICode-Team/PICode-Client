@@ -89,7 +89,7 @@ function Thread(props: IThreadProps) {
     return () => {
       document.removeEventListener('keypress', pressEnterHandler)
     }
-  }, [])
+  }, [thread])
 
   return (
     <div className={classes.messenger} style={{ boxShadow: 'none' }}>
