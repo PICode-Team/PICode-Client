@@ -1,0 +1,177 @@
+{
+    "container": [
+        {
+            "containerName": "testWork6",
+            "image": "ubuntu",
+            "tag": "latest",
+            "containerId": "42c1242d3cf54322a8ebcc346073dfaae26323d050378783d55da5f648875c05",
+            "status": "exited",
+            "bridgeInfo": {
+                "c4408d1793420db8f3aa140992339ed9e5969b159d3b0a0a2d5d53dd6f65d1b0": ""
+            },
+            "containers": [
+                "abc9ad30adb5dafbeddef04a32c9d45184dad00d69293d27fbf37feb7536c170"
+            ],
+            "containerIP": "172.22.0.3",
+            "ramUsage": "0.00",
+            "parent": [
+                "c4408d1793420db8f3aa140992339ed9e5969b159d3b0a0a2d5d53dd6f65d1b0"
+            ]
+        },
+        {
+            "containerName": "testWork5",
+            "image": "ubuntu",
+            "tag": "latest",
+            "containerId": "abc9ad30adb5dafbeddef04a32c9d45184dad00d69293d27fbf37feb7536c170",
+            "status": "exited",
+            "bridgeInfo": {
+                "c4408d1793420db8f3aa140992339ed9e5969b159d3b0a0a2d5d53dd6f65d1b0": "test"
+            },
+            "containers": [],
+            "containerIP": "172.22.0.2",
+            "ramUsage": "0.00",
+            "parent": [
+                "c4408d1793420db8f3aa140992339ed9e5969b159d3b0a0a2d5d53dd6f65d1b0"
+            ]
+        },
+        {
+            "containerName": "testWork",
+            "image": "ubuntu",
+            "tag": "latest",
+            "containerId": "8c8aad144a14a8f8b9b4fc6a385f1e360cdf35fabf07938e5ace2a529408b9a3",
+            "status": "exited",
+            "bridgeInfo": {
+                "0f290622f6ca2dec8f638d5030d1c2afb9bb7d79290814d3c0dac066d2b4bd2e": "test"
+            },
+            "containers": [],
+            "portInfo": {
+                "1234": 1234
+            },
+            "containerIP": "172.17.0.2",
+            "ramUsage": "0.00",
+            "parent": [
+                "0f290622f6ca2dec8f638d5030d1c2afb9bb7d79290814d3c0dac066d2b4bd2e"
+            ]
+        },
+        {
+            "containerName": "testWork2",
+            "image": "ubuntu",
+            "tag": "latest",
+            "containerId": "638a0afd0c03e2446f48673705108fc2fa78e6b15c0f5bfcb60e9a4bbdef8f78",
+            "status": "exited",
+            "bridgeInfo": {
+                "0f290622f6ca2dec8f638d5030d1c2afb9bb7d79290814d3c0dac066d2b4bd2e": "test"
+            },
+            "containers": [],
+            "portInfo": {
+                "1111": 1111,
+                "2222": 3333
+            },
+            "containerIP": "172.17.0.3",
+            "ramUsage": "0.00",
+            "parent": [
+                "0f290622f6ca2dec8f638d5030d1c2afb9bb7d79290814d3c0dac066d2b4bd2e"
+            ]
+        },
+        {
+            "containerName": "testWork3",
+            "image": "ubuntu",
+            "tag": "latest",
+            "containerId": "925c2848162a8a0e5b5de7026595084dbc1914485738734880cf6cdeb7174a83",
+            "status": "exited",
+            "bridgeInfo": {
+                "3cda4bdc00d31d17f02a16c2d9a72176ae81654aaf7862bd8c33c9d3213a1e09": "test"
+            },
+            "containers": [],
+            "containerIP": "172.23.0.2",
+            "ramUsage": "0.00",
+            "parent": [
+                "3cda4bdc00d31d17f02a16c2d9a72176ae81654aaf7862bd8c33c9d3213a1e09"
+            ]
+        },
+        {
+            "containerName": "testWork4",
+            "image": "ubuntu",
+            "tag": "latest",
+            "containerId": "a1c29a7ef6a22f339efd4aae6550129be859e5dbee4bf0f141e67696b60af463",
+            "status": "exited",
+            "bridgeInfo": {
+                "3cda4bdc00d31d17f02a16c2d9a72176ae81654aaf7862bd8c33c9d3213a1e09": "test"
+            },
+            "containers": [],
+            "containerIP": "172.23.0.3",
+            "ramUsage": "0.00",
+            "parent": [
+                "3cda4bdc00d31d17f02a16c2d9a72176ae81654aaf7862bd8c33c9d3213a1e09"
+            ]
+        }
+    ],
+    "port": [
+        {
+            "outBound": 1234,
+            "inBound": [
+                1234
+            ],
+            "onContainer": "",
+            "connectedContainers": [
+                "8c8aad144a14a8f8b9b4fc6a385f1e360cdf35fabf07938e5ace2a529408b9a3"
+            ]
+        },
+        {
+            "outBound": 1111,
+            "inBound": [
+                1111
+            ],
+            "onContainer": "",
+            "connectedContainers": [
+                "638a0afd0c03e2446f48673705108fc2fa78e6b15c0f5bfcb60e9a4bbdef8f78"
+            ]
+        },
+        {
+            "outBound": 2222,
+            "inBound": [
+                3333
+            ],
+            "onContainer": "",
+            "connectedContainers": [
+                "638a0afd0c03e2446f48673705108fc2fa78e6b15c0f5bfcb60e9a4bbdef8f78"
+            ]
+        }
+    ],
+    "network": [
+        {
+            "name": "none",
+            "networkId": "2d07c58758e07d3c84fc8e2df4269bd00432745492163ead657effba81742b98",
+            "containers": []
+        },
+        {
+            "name": "host",
+            "networkId": "51451691d45e04223b4da5da2bfcf40557f1d78504b7f6881126809d91988651",
+            "containers": []
+        },
+        {
+            "name": "bridge",
+            "networkId": "bb0089c35c48a2938d34eef0e1bed328ce7b350f751fcb17bc39837e77cc2588",
+            "ip": "172.17.0.0/16",
+            "containers": []
+        },
+        {
+            "name": "testNet1",
+            "networkId": "1343c4ad586305b52de66ba6eb9e11c88e368f4b2ca9167c5c6f77e6c0825ff7",
+            "ip": "172.21.0.0/16",
+            "containers": []
+        },
+        {
+            "name": "testNet2",
+            "networkId": "c4408d1793420db8f3aa140992339ed9e5969b159d3b0a0a2d5d53dd6f65d1b0",
+            "ip": "172.22.0.0/16",
+            "containers": []
+        },
+        {
+            "name": "testNet3",
+            "networkId": "3cda4bdc00d31d17f02a16c2d9a72176ae81654aaf7862bd8c33c9d3213a1e09",
+            "ip": "172.23.0.0/16",
+            "containers": []
+        }
+    ]
+}
