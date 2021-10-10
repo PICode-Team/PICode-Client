@@ -53,7 +53,9 @@ function Content(props: IContentProps) {
 
     sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.value)
     messageRef.current!.value = ''
-    endRef.current!.scrollIntoView()
+    setTimeout(() => {
+      endRef.current!.scrollIntoView()
+    }, 100)
   }
 
   const handleSendMessage = () => {
@@ -62,7 +64,9 @@ function Content(props: IContentProps) {
 
     sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.value)
     messageRef.current!.value = ''
-    endRef.current!.scrollIntoView()
+    setTimeout(() => {
+      endRef.current!.scrollIntoView()
+    }, 100)
   }
 
   const handleClickBack = () => {

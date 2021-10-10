@@ -19,6 +19,7 @@ interface INoteSidebar {
   setOpenContext: React.Dispatch<React.SetStateAction<boolean>>
   setContextPosition: React.Dispatch<React.SetStateAction<IContextPosition>>
   contextPosition: IContextPosition
+  output: any
 }
 
 const findNode = (fileViews: IFileView[] | null, noteId: string) => {
@@ -36,10 +37,10 @@ const findNode = (fileViews: IFileView[] | null, noteId: string) => {
 }
 
 function Sidebar(props: INoteSidebar) {
-  const { fileViewList, setFileViewList, setContentList, setAddFile, addFile, setSelectFile, setOpenContext, setContextPosition, contextPosition } = props
+  const { fileViewList, setFileViewList, setContentList, setAddFile, addFile, setSelectFile, setOpenContext, setContextPosition, contextPosition, output } = props
   const classes = noteStyle()
   const ws: any = useWs()
-  const output: any = {}
+
   const [userId, setUserId] = useState<string>('')
 
   useEffect(() => {
@@ -55,13 +56,16 @@ function Sidebar(props: INoteSidebar) {
   if (ws.readyState === WebSocket.CONNECTING) return <></>
 
   const pushToOutput = (path: string, splitedPath: string[], obj: any, value: any): any => {
-    const clone = { ...value }
+    const clone = { ...value, children: {} }
     const pathList = path.split('/')
     const splicedPath = pathList.slice(0, pathList.length - splitedPath.length + 1)
     const parentPath = `${splicedPath.join('/')}`
 
     if (obj[path] === undefined) {
       obj[path] = clone
+    }
+
+    if (obj[path].children === undefined) {
       obj[path].children = {}
     }
 
@@ -90,14 +94,14 @@ function Sidebar(props: INoteSidebar) {
     }
   }
 
-  const getNote = (userId: string) => {
+  const getNote = (noteId?: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
           type: 'getNote',
           data: {
-            userId,
+            noteId,
           },
         })
       )
@@ -128,14 +132,20 @@ function Sidebar(props: INoteSidebar) {
         break
       }
     }
+
     if (dragEndNode === undefined) return
+
     const nodeGroup = fileViewList.filter((check) => {
       return check.path.includes(output[key].path)
     })
+
     for (const node of nodeGroup) {
-      const name = node.path.split('/')
-      updateNote(node.noteId, dragEndNode.path + '/' + name[name.length - 1])
-      getNote(userId)
+      if (dragEndNode.path !== node.path) {
+        const name = node.path.split('/')
+
+        // updateNote(node.noteId, dragEndNode.path + '/' + name[name.length - 1])
+        getNote()
+      }
     }
   }
 
@@ -181,9 +191,9 @@ function Sidebar(props: INoteSidebar) {
     pushToOutput(path, splitedPath, output, value)
   })
 
-  const makeFileView = (output: any, num: number): JSX.Element => {
+  const makeFileView = (output: any, num: number, parent: string): JSX.Element => {
     if (Object.keys(output).length === 0) {
-      if (num === 1 && addFile === true) {
+      if (parent === contextPosition.target && addFile === true) {
         return <React.Fragment></React.Fragment>
       }
 
@@ -218,7 +228,7 @@ function Sidebar(props: INoteSidebar) {
                 <Description className={classes.description} />
                 <div className={classes.key}>{lastPath}</div>
               </div>
-              {output[v].open && makeFileView(output[v].children, num + 1)}
+              {output[v].open && makeFileView(output[v].children, num + 1, v)}
               {addFile && contextPosition.target === output[v].noteId && <AddFile setAddFile={setAddFile} contextPosition={contextPosition} fileViewList={fileViewList} />}
             </React.Fragment>
           )
@@ -229,7 +239,7 @@ function Sidebar(props: INoteSidebar) {
 
   return (
     <>
-      {makeFileView(output, 1)}
+      {makeFileView(output, 1, '')}
       {addFile && contextPosition.target === '' && <AddFile setAddFile={setAddFile} fileViewList={fileViewList} />}
     </>
   )

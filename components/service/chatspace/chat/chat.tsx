@@ -117,6 +117,8 @@ function Chat(ctx: IChatProps) {
         case 'sendMessage':
           getChat()
 
+          if (target!.chatName !== message.data.chatName) return
+
           if (message.data.parentChatId !== undefined) {
             const messages: IChat[] = messageList.map((v) => {
               if (v.chatId === message.data.parentChatId) {

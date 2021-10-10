@@ -1,11 +1,12 @@
 import { FavoriteBorderOutlined, SmsOutlined } from '@material-ui/icons'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { API_SERVER } from '../../../../constants/serverUrl'
 import { messageBoxStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel, IChat, IThread } from '../../../../types/chat.types'
+import { IOpenGraph } from '../../../../types/openGraph.types'
 import { IUser } from '../../../../types/user.types'
+import { fetchSet } from '../../../context/fetch'
 import { domainURLRegex } from '../../../context/regex'
-import ogs from 'open-graph-scraper'
 
 interface IMessageBoxProps {
   messageInfo: IChat
@@ -45,7 +46,8 @@ function MessageBox(props: IMessageBoxProps) {
   const classes = messageBoxStyle()
   const thumbnailUrl = particiapntList.find((v) => v.userId === user)?.userThumbnail
   const [url, setUrl] = useState<string | null>(null)
-  const [preview, setPreview] = useState<any | null>(null)
+  const [preview, setPreview] = useState<IOpenGraph | null>(null)
+  const contentRef = useRef<HTMLSpanElement>(null)
 
   const handleSetThread = () => {
     if (target !== null) {
@@ -61,7 +63,12 @@ function MessageBox(props: IMessageBoxProps) {
   }
 
   const getOpenGraphMetaData = async (url: string) => {
-    // console.log(url)
+    const response = await fetchSet('/openGraph', 'POST', true, JSON.stringify({ url }))
+    const { metaData, code } = await response.json()
+
+    if (code !== 200) return
+
+    setPreview(metaData)
   }
 
   useEffect(() => {
@@ -78,15 +85,20 @@ function MessageBox(props: IMessageBoxProps) {
     getOpenGraphMetaData(url)
   }, [url])
 
+  useEffect(() => {
+    if (contentRef === null) return
+    if (contentRef.current === null) return
+
+    contentRef.current.innerHTML = message
+  }, [])
+
   return (
     <div className={`${classes.messageBox} ${reverse && classes.reversedMessageBox}`}>
       {!reverse && <div className={classes.thumbnail} style={thumbnailUrl !== undefined ? { backgroundImage: `url('${API_SERVER}:8000/api/temp/${thumbnailUrl}`, backgroundSize: 'cover' } : {}} />}
       <div className={`${target !== null && classes.messageInfo}`}>
         {!reverse && <div className={classes.target}>{user}</div>}
         <div className={`${classes.textWrapper} ${reverse && classes.reversedTextWrapper}`}>
-          <span className={classes.messageText} id="">
-            {message}
-          </span>
+          <span className={classes.messageText} ref={contentRef}></span>
           <span className={classes.time}>
             <span>{getTimeText(time)}</span>
             {target !== null && (
@@ -113,7 +125,14 @@ function MessageBox(props: IMessageBoxProps) {
             <div className={classes.lastThread}>Last reply {threadList.slice(-1)[0].time.split(' ')[0]}</div>
           </div>
         )}
-        <div>{}</div>
+        {preview !== null && preview.url !== undefined && (
+          <a className={classes.preview} href={preview.url}>
+            {preview.image !== undefined && <div className={classes.image} style={{ backgroundImage: `url('${preview.image.url}')` }}></div>}
+            <div className={classes.title}>{preview.title}</div>
+            <div className={classes.description}>{preview.description}</div>
+            <div className={classes.link}>{preview.url}</div>
+          </a>
+        )}
       </div>
     </div>
   )

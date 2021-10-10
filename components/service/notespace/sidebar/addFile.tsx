@@ -36,14 +36,14 @@ function AddFile(props: IAddInput) {
     }
   }
 
-  const getNote = (userId: string) => {
+  const getNote = (noteId?: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
           type: 'getNote',
           data: {
-            userId,
+            noteId,
           },
         })
       )
@@ -69,7 +69,6 @@ function AddFile(props: IAddInput) {
     } else {
       createNote(`/${event.target.value}`, userId, '')
     }
-    getNote(userId)
   }
 
   const handleFileRowKeyDown = (event: any) => {
@@ -92,7 +91,6 @@ function AddFile(props: IAddInput) {
       } else {
         createNote(`/${event.target.value}`, userId, '')
       }
-      getNote(userId)
     }
   }
 

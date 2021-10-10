@@ -35,6 +35,7 @@ function ChatInput(props: IChatInputProps) {
   const [onMention, setOnMention] = useState<boolean>(false)
   const [mentionLeft, setMentionLeft] = useState<string>('')
   const [participantList, setParticipantList] = useState<IUser[]>([])
+  const [messageContent, setMessageContent] = useState<string>('')
   const ws: any = useWs()
 
   const getParticipantList = async () => {
@@ -62,7 +63,11 @@ function ChatInput(props: IChatInputProps) {
     }
   }
 
-  const createAlarm = (target: string[]) => {
+  const createAlarm = (targetList: string[]) => {
+    const checkAlarm = targetList.reduce((a, c) => {
+      return { ...a, [c]: false }
+    }, {})
+
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -72,7 +77,7 @@ function ChatInput(props: IChatInputProps) {
             type: 'chat',
             location: '/chatspace/',
             content: 'mention you',
-            checkAlarm: {},
+            checkAlarm,
           },
         })
       )
@@ -82,6 +87,7 @@ function ChatInput(props: IChatInputProps) {
   const handleSendMessage = () => {
     if (messageRef === null) return
     if (messageRef.current!.innerHTML === '') return
+    if (messageRef.current!.innerHTML.replaceAll('<br>', '') === '') return
 
     const elements = document.getElementsByTagName('picode-mention')
 
@@ -101,7 +107,9 @@ function ChatInput(props: IChatInputProps) {
 
     sendMessage(target?.chatName ?? (target.userId as string), messageRef.current!.innerHTML)
     messageRef.current!.innerHTML = ''
-    endRef.current!.scrollIntoView()
+    setTimeout(() => {
+      endRef.current!.scrollIntoView()
+    }, 100)
   }
 
   const handleChatInputKeypress = (event: any) => {
