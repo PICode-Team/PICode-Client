@@ -96,7 +96,14 @@ function CreateIssue(props: ICreateIssueProps) {
         JSON.stringify({
           category: 'issue',
           type: 'createIssue',
-          data: { kanbanUUID, issueData: payload },
+          data: {
+            kanbanUUID,
+            issueData: {
+              ...payload,
+              startDate: payload.startDate.slice(2),
+              dueDate: payload.dueDate.slice(2),
+            },
+          },
         })
       )
 
