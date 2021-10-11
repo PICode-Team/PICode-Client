@@ -42,7 +42,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
         JSON.stringify({
           category: 'milestone',
           type: 'createMilestone',
-          data: { ...payload, workspaceId },
+          data: { ...payload, workspaceId, startDate: payload.startDate.slice(2), endDate: payload.endDate.slice(2) },
         })
       )
     }
@@ -54,7 +54,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
         JSON.stringify({
           category: 'milestone',
           type: 'updateMilestone',
-          data: { ...payload, workspaceId },
+          data: { ...payload, workspaceId, startDate: payload.startDate.slice(2), endDate: payload.endDate.slice(2) },
         })
       )
     }
