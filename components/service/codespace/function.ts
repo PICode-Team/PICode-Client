@@ -421,7 +421,6 @@ export const createFileOrDir = (ws: any, filePath: string, type: string) => {
     type === "file"
         ? (payload.data.filePath = filePath)
         : (payload.data.dirPath = filePath);
-    console.log(payload);
     ws.send(JSON.stringify(payload));
     ws.send(
         JSON.stringify({

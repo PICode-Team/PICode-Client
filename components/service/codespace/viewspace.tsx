@@ -78,12 +78,10 @@ export default function ViewSpace({ position, children, setParentState,
         onDrop={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log(2)
             e.currentTarget.style.background = "inherit"
             if (dragId !== undefined) {
                 dropElement(e, viewState, setViewState, dragId)
             }
-            console.log(2)
             setMoveCheck(true);
         }}>
         {viewState?.children !== undefined && <CodeContent

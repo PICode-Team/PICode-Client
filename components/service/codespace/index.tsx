@@ -50,7 +50,7 @@ export default function CodeSpace() {
     }
 
     useEffect(() => {
-        console.log(viewState)
+        // console.log(viewState)
     }, [viewState])
 
     useEffect(() => {

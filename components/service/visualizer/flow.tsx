@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Container } from "@material-ui/core";
+import { Button, Container, IconButton } from "@material-ui/core";
 import React, { useCallback, useEffect, useState } from "react";
-
+import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import ReactFlow, { Controls, updateEdge, addEdge, getMarkerEnd, MiniMap } from 'react-flow-renderer';
 import BridgeNode from "./node/bridge";
 import CustomLine from "./line/connectionLine";
@@ -9,6 +9,7 @@ import ContainerNode from "./node/container";
 import data from "./data.json"
 import PortNode from "./node/port";
 import { visualizerStyle } from "../../../styles/service/dockerspace/visualspace";
+import VisualizerModal from "./modal";
 
 const UpdatableEdge = () => {
     const [elements, setElements] = useState<any>([]);
@@ -17,12 +18,22 @@ const UpdatableEdge = () => {
     const classes = visualizerStyle();
     const [reactflowInstance, setReactflowInstance] = useState<any>(null);
     const [highLightNode, setHighLightNode] = useState<string[]>();
+    const [modal, setModal] = React.useState<boolean>(false);
+    const [createType, setCreateType] = React.useState<boolean>(false);
+    const [connectEdge, setConnectEdge] = React.useState<{
+        new: any,
+        old?: any
+    }>({
+        new: undefined,
+        old: undefined
+    });
 
     const getDockerData = async () => {
-        let data = await fetch(`/api/docker/visualization`, {
-            method: "GET"
-        }).then((res) => res.json())
-        setDockerData(data.dockerVisualInfo);
+        setDockerData(data);
+        // let data = await fetch(`/api/docker/visualization`, {
+        //     method: "GET"
+        // }).then((res) => res.json())
+        // setDockerData(data.dockerVisualInfo);
     };
 
     const nodeStyle = {
@@ -32,13 +43,14 @@ const UpdatableEdge = () => {
     }
 
     const makeVisualization = () => {
+        if (dockerData === undefined) return;
         let nodeData: any[] = [];
         let lineData: any[] = [];
-        let maximumLength = data["container"].length;
+        let maximumLength = dockerData["container"].length;
 
         for (let i in data) {
-            if (data[i].length > maximumLength) {
-                maximumLength = data[i].length
+            if (dockerData[i].length > maximumLength) {
+                maximumLength = dockerData[i].length
             }
         }
 
@@ -47,8 +59,8 @@ const UpdatableEdge = () => {
 
         for (let i in data) {
             let idx = 0;
-            for (let j of data[i]) {
-                let dataLength = data[i].length
+            for (let j of dockerData[i]) {
+                let dataLength = dockerData[i].length
                 if (i === "container") {
                     nodeData.push({
                         id: j.containerId,
@@ -139,9 +151,18 @@ const UpdatableEdge = () => {
     }
 
     useEffect(() => {
+        if (connectEdge.new == undefined) return;
+        setCreateType(false)
+        setModal(true);
+    }, [connectEdge])
+
+    useEffect(() => {
         getDockerData();
-        makeVisualization();
     }, [])
+
+    useEffect(() => {
+        makeVisualization();
+    }, [dockerData])
 
     useEffect(() => {
         makeVisualization();
@@ -164,21 +185,20 @@ const UpdatableEdge = () => {
 
     // gets called after end of edge gets dragged to another source or target
     const onEdgeUpdate = (oldEdge: any, newConnection: any) => {
-        setElements((els: any) =>
-            updateEdge(oldEdge, newConnection, els)
-        )
+        setConnectEdge({ new: newConnection, old: oldEdge });
     };
 
     const onConnect = (params: any) => setElements((els: any) => {
         params.type = "smoothstep"
         params.animated = true
-
         if (data.container.some((v => v.containerId === params.source || v.containerId === params.target))) {
             if (data.container.some((v => v.containerId === params.source)) && data.container.some((v => v.containerId === params.target))) {
                 return els;
             }
             params.id = params.source + params.target;
-            return addEdge(params, els);
+            setConnectEdge({
+                new: params
+            });
         }
 
         return els
@@ -187,6 +207,16 @@ const UpdatableEdge = () => {
     return (
         <div className={classes.root}>
             <div className={classes.content}>
+                <Button
+                    className={classes.buttonHolder}
+                    onClick={() => {
+                        setModal(true);
+                        setCreateType(true);
+                    }}
+                >
+                    Create Network
+                    <AddOutlinedIcon />
+                </Button>
                 <ReactFlow
                     elements={elements}
                     onLoad={onLoad}
@@ -219,6 +249,13 @@ const UpdatableEdge = () => {
                     />
                 </ReactFlow>
             </div>
+            {modal && <VisualizerModal
+                setModal={setModal}
+                modal={modal}
+                dockerData={dockerData}
+                createType={createType}
+                connectEdge={connectEdge}
+            />}
         </div>
     );
 };
