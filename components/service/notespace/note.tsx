@@ -1,533 +1,581 @@
-import React, { useRef } from "react";
-import { noteStyle } from "../../../styles/service/notespace/note";
-import clsx from "clsx";
-import { useEffect } from "react";
-import { clone, cloneDeep } from "lodash";
-import AddIcon from "@material-ui/icons/Add";
-import { IconButton } from "@material-ui/core";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
-import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
-import DescriptionIcon from "@material-ui/icons/Description";
-import { Delete } from "@material-ui/icons";
-import NoteContext from "./context/context";
-import NoteSidebar from "./sidebar/sidebar";
+import React, { useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { clone, cloneDeep } from 'lodash'
 
-export interface INoteContent {
-  text: string;
-  content?: any; //table 이나 이미지 같은 거 넣을 때 사용할 듯
-  type?: string;
-  clicked?: boolean;
+import { IconButton } from '@material-ui/core'
+import { DragIndicator, Add } from '@material-ui/icons'
+
+import NoteContext from './context/context'
+import NoteSidebar from './sidebar/sidebar'
+import { noteStyle } from '../../../styles/service/notespace/note'
+import { IContextPosition, IFileView, INoteContent, IPosition } from '../../../types/note.types'
+import { useWs } from '../../context/websocket'
+import DrawDiagram from './content/diagram'
+
+const initialPositionState: IPosition = {
+  x: 0,
+  y: 0,
+  target: 0,
 }
 
-interface IPosition {
-  x: number;
-  y: number;
-  target: number;
+const initialContextPositionState: IContextPosition = {
+  x: 0,
+  y: 0,
+  target: '',
+  path: '',
 }
 
-export interface IFileView {
-  title: string;
-  createTime: string;
-  type?: string[];
-  isFolder?: boolean;
-  creator: string[];
-  children?: IFileView[];
-  content?: INoteContent[];
-  open?: boolean;
-  documentId: string;
-  path: string;
-}
+interface INoteProps { }
 
-export default function TestNote(ctx: any) {
-  const classes: any = noteStyle();
+function Note(props: INoteProps) {
+  const { } = props
+  const classes = noteStyle()
+  const [contentList, setContentList] = useState<INoteContent[]>([])
+  const [contextPosition, setContextPosition] = useState<IContextPosition>(initialContextPositionState)
+  const [position, setPosition] = useState<IPosition>(initialPositionState)
+  const [fileViewList, setFileViewList] = useState<IFileView[] | null>(null)
+  const [selectFile, setSelectFile] = useState<IFileView | null>(null)
+  const [cursor, setCursor] = useState<string>('')
+  const [drag, setDrag] = useState<string>('')
+  const [tmpFileName, setTmpFileName] = useState<string>('')
+  const [userId, setUserId] = useState<string>('')
+  const [highlight, setHighlight] = useState<number>()
+  const [show, setShow] = useState<boolean>(false)
+  const [dragEnd, setDragEnd] = useState<boolean>(false)
+  const [addFile, setAddFile] = useState<boolean>(false)
+  const [openContext, setOpenContext] = useState<boolean>(false)
+  const ws: any = useWs()
+  const output: any = {}
 
-  const [cursor, setCursor] = React.useState<string>();
-  const [test, setTest] = React.useState<INoteContent[]>([]);
-  const [show, setShow] = React.useState<boolean>(false);
-  const [position, setPosition] = React.useState<IPosition>({
-    x: 0,
-    y: 0,
-    target: 0,
-  });
-  const [highlight, setHighlight] = React.useState<number>();
-  const [drag, setDrag] = React.useState<string>("");
-  const [dragEnd, setDragEnd] = React.useState<boolean>(false);
-  const [fileView, setFileView] = React.useState<IFileView[]>();
-  const [selectFile, setSelectFile] = React.useState<IFileView>();
-  const [addFile, setAddFile] = React.useState<boolean>(false);
-  const [tmpFileName, setTmpFileName] = React.useState<string>("");
-  const [openContext, setOpenContext] = React.useState<boolean>(false);
-  const [contextPosition, setConextPosition] = React.useState<{ x: number, y: number, target: string, path: string }>({
-    x: 0, y: 0, target: "", path: ""
-  });
+  let tmpPosition: any = []
 
-  let tmpPosition: any = [];
+  const noteWebSocketHandler = (msg: any) => {
+    const message = JSON.parse(msg.data)
 
-  useEffect(() => {
-    if (cursor === undefined) return;
-    document.getElementById(cursor)?.focus();
-  }, [cursor]);
+    if (message.category === 'note') {
+      switch (message.type) {
+        case 'getNote':
+          if (Object.keys(output).length !== 0 && message.data.length === 1) {
+            const [note]: IFileView[] = message.data
 
-  useEffect(() => {
-    if (!dragEnd) return;
-    let tmpContent = cloneDeep(test);
-    for (let i in test) {
-      let node = document.getElementById(`${i}`);
-      if (node) {
-        node.innerText = test[i].text;
+            if (note === undefined) return
+
+            const splitedPath = note.path.split('/')
+            splitedPath.splice(0, 1)
+
+            pushToOutput(note.path, splitedPath, output, note)
+            setFileViewList([...(fileViewList ?? []), note])
+          } else {
+            setFileViewList(message.data)
+          }
+          break
+        case 'updateNote':
+          break
+        case 'deleteNote':
+          break
+        case 'createNote':
+          getNote(message.data.noteId)
+          break
       }
     }
-    setHighlight(undefined);
-    setDragEnd(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dragEnd]);
+  }
+
+  const getNote = (noteId?: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'note',
+          type: 'getNote',
+          data: {
+            noteId,
+          },
+        })
+      )
+    }
+  }
+
+  const updateNote = (noteId: string, content: INoteContent[]) => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'note',
+          type: 'updateNote',
+          data: {
+            noteId,
+            note: {
+              content,
+            },
+          },
+        })
+      )
+    }
+  }
+
+  const pushToOutput = (path: string, splitedPath: string[], obj: any, value: any): any => {
+    const clone = { ...value, children: {} }
+    const pathList = path.split('/')
+    const splicedPath = pathList.slice(0, pathList.length - splitedPath.length + 1)
+    const parentPath = `${splicedPath.join('/')}`
+
+    if (obj[path] === undefined) {
+      obj[path] = clone
+    }
+
+    if (obj[path].children === undefined) {
+      obj[path].children = {}
+    }
+
+    splitedPath.shift()
+
+    if (splitedPath.length > 0) {
+      return pushToOutput(path, splitedPath, obj[parentPath].children, clone)
+    }
+    obj[path] = clone
+  }
+
+  const handleSelectFileChange = (event: any) => {
+    if (selectFile === null) return
+
+    setSelectFile({ ...selectFile, [event.target.id]: event.target.value })
+  }
+
+  const handleCtrlZ = (event: any) => {
+    if (event.keyCode == 90 && event.ctrlKey) alert('Ctrl+z')
+  }
+
+  const handleClickContent = () => {
+    const tmpContent = cloneDeep(contentList)
+    if (show) {
+      setShow(false)
+    }
+    if (tmpContent.length > 0 && tmpContent[tmpContent.length - 1].text === '') {
+      document.getElementById(String(tmpContent.length - 1))?.focus()
+      return
+    }
+    tmpContent.push({
+      text: '',
+    })
+    setContentList(tmpContent)
+    setCursor(String(tmpContent.length - 1))
+  }
+
+  const handleClickSetting = () => {
+    const leftTool = document.getElementById(`${position.target}tool`)
+    const content = document.getElementById(`${position.target}`)
+    if (leftTool) {
+      leftTool.style.top = '17px'
+    }
+    const tmpContent = cloneDeep(contentList)
+    tmpContent[position.target].text = ''
+    tmpContent[position.target].type = 'h1Input'
+    if (content) {
+      content.innerText = ''
+    }
+    setContentList(tmpContent)
+  }
+
+  const handleContentClick = (event: any) => {
+    event.stopPropagation()
+  }
+
+  const handleContentMouseOver = (index: number) => (event: any) => {
+    const tool = document.getElementById(`${index}tool`)
+    if (tool) {
+      tool.style.visibility = 'visible'
+    }
+  }
+
+  const handleContentMouseOut = (index: number) => (event: any) => {
+    const tool = document.getElementById(`${index}tool`)
+    if (tool) {
+      tool.style.visibility = 'hidden'
+    }
+  }
+
+  const handleContentDragStart = (index: number) => (event: any) => {
+    event.stopPropagation()
+    const textNode = document.getElementById(`${index}`)
+    if (textNode) {
+      if (event.clientX > textNode.getBoundingClientRect().left) {
+        event.preventDefault()
+      }
+    }
+    setDrag(event.currentTarget.id)
+    for (const line in contentList) {
+      const node = document.getElementById(`${line}`)
+      if (node) {
+        tmpPosition.push(node.getBoundingClientRect().bottom)
+      }
+    }
+  }
+
+  const handleContentBlur = (index: number) => (event: any) => {
+    const tmpContent = cloneDeep(contentList)
+    tmpContent[index].clicked = false
+    setHighlight(undefined)
+    setContentList(tmpContent)
+  }
+
+  const handleContentMouseUpCapture = (content: INoteContent, index: number) => (event: any) => {
+    const nodePosition = document.getElementById(`${index}`)
+    const tmpContent = cloneDeep(contentList)
+    if (highlight !== undefined) {
+      if (tmpContent[highlight]) {
+        tmpContent[highlight].clicked = false
+      }
+    }
+    if (window && nodePosition) {
+      if (window.getSelection()?.toString() === content.text && event.clientX < nodePosition.getBoundingClientRect().left) {
+        tmpContent[index].clicked = true
+        setHighlight(index)
+      }
+    }
+    setContentList(tmpContent)
+  }
+
+  const handleContentDragOver = (index: number) => (event: any) => {
+    const node = document.getElementById(`${index}`)
+    if (node) {
+      node.style.borderTop = '1px solid #fff'
+    }
+  }
+
+  const handleContentDragLeave = (index: number) => (event: any) => {
+    const node = document.getElementById(`${index}`)
+    if (node) {
+      node.style.borderTop = '0px'
+    }
+  }
+
+  const handleContentDragEnd = (event: any) => {
+    let tmpContent = cloneDeep(contentList)
+    let tmpNode: any = tmpContent.splice(Number(drag), 1)
+    let lastCheck = true
+    for (const key in tmpPosition) {
+      if (tmpPosition[key] > event.clientY) {
+        tmpContent.splice(Number(key) - 1, 0, tmpNode[0])
+        setContentList(tmpContent)
+        lastCheck = false
+        setDragEnd(true)
+        return
+      }
+    }
+    if (lastCheck) {
+      tmpContent = tmpContent.concat(tmpNode)
+      setContentList(tmpContent)
+      setDragEnd(true)
+    }
+  }
+
+  const handleDragIndicatorClick = (index: number) => () => {
+    const tmpContent = cloneDeep(contentList)
+    tmpContent[index].clicked = true
+    setContentList(tmpContent)
+  }
+
+  const handleDragIndicatorMouseDown = () => { }
+
+  const handleAddClick = (index: number) => () => {
+    const tool = document.getElementById(`${index}tool`)
+    if (tool) {
+      setPosition({
+        x: tool.getBoundingClientRect().left - 10,
+        y: tool.getBoundingClientRect().top - 50,
+        target: index,
+      })
+      setShow(true)
+    }
+  }
+
+  const handleWriteSelect = (index: number) => (event: any) => {
+    const node = document.getElementById(`${index}`)
+    if (node) {
+      node?.setAttribute('placeholder', 'Plz Input Text')
+    }
+  }
+
+  const handleWriteBlur = (index: number) => (event: any) => {
+    const node = document.getElementById(`${index}`)
+    if (node) {
+      node?.setAttribute('placeholder', '')
+    }
+  }
+
+  const handleWriteInput = (index: number) => (event: any) => {
+    const tmpContent = cloneDeep(contentList)
+    tmpContent[index].text = event.currentTarget.textContent ?? ''
+    setContentList(tmpContent)
+  }
+
+  const handleWriteKeyDown = (content: INoteContent, index: number) => (event: any) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      if (event.currentTarget.textContent === '/h1') {
+        let leftTool = document.getElementById(`${index}tool`)
+        if (leftTool) {
+          leftTool.style.top = '17px'
+        }
+        let tmpContent = cloneDeep(contentList)
+        tmpContent[index].text = ''
+        tmpContent[index].type = 'h1Input'
+        event.currentTarget.textContent = ''
+        setContentList(tmpContent)
+      } else {
+        let tmpContent = cloneDeep(contentList)
+        tmpContent.splice(index + 1, 0, { text: '' })
+        setContentList(tmpContent)
+        setCursor(String(index + 1))
+      }
+    } else if (event.key === 'Backspace') {
+      if (event.currentTarget.textContent === '') {
+        event.preventDefault()
+        if (content.type !== undefined) {
+          let tmpContent = cloneDeep(contentList)
+          tmpContent[index].type = undefined
+          let leftTool = document.getElementById(`${index}tool`)
+          if (leftTool) {
+            leftTool.style.top = '0px'
+          }
+          setContentList(tmpContent)
+        } else {
+          let tmpContent = cloneDeep(contentList)
+          tmpContent.splice(index, 1)
+          setContentList(tmpContent)
+          setCursor(String(index - 1))
+        }
+      } else {
+        let tmpContent = cloneDeep(contentList)
+        tmpContent[index].text = tmpContent[index].text.slice(0, -1)
+        setContentList(tmpContent)
+      }
+    } else if (event.key === 'ArrowDown') {
+      if (document.getElementById(`${index + 1}`) === null) return
+      document.getElementById(`${index + 1}`)?.focus()
+    } else if (event.key === 'ArrowUp') {
+      if (index === 0) return
+      document.getElementById(`${index - 1}`)?.focus()
+    }
+  }
+
+  const handleAddFileClick = () => {
+    setAddFile(true)
+  }
+
+  const getLastPath = (path: string) => {
+    const splitedPath = path.split('/')
+    return splitedPath[splitedPath.length - 1]
+  }
 
   useEffect(() => {
-    if (selectFile === undefined || fileView === undefined) return;
-    if (selectFile.documentId === undefined && selectFile.path === "") return;
-    let path = selectFile?.path.split("/")
+    if (fileViewList === null) return
+
+    ws.addEventListener('message', noteWebSocketHandler)
+    if (fileViewList.length === 0) {
+      getNote()
+    }
+    return () => {
+      ws.removeEventListener('message', noteWebSocketHandler)
+    }
+  }, [ws?.readyState, fileViewList, output])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (fileViewList === null) {
+        setFileViewList([])
+      }
+    }, 100)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === undefined) return
+
+    const value = window.localStorage.getItem('userId')
+    if (value === null) return
+
+    setUserId(value)
+  }, [])
+
+  useEffect(() => {
+    if (selectFile === null) return
+
+    // updateNote(selectFile.noteId, contentList)
+  }, [contentList])
+
+  useEffect(() => {
+    if (tmpFileName === '') return
+    if (fileViewList === null) return
+
+    const selectNode = fileViewList.find((v: any) => {
+      const tmpFile = v.path.split('/')
+      const name = tmpFile[tmpFile.length - 1]
+      if (name === tmpFileName) {
+        setTmpFileName('')
+        return true
+      }
+    })
+
+    if (selectNode === undefined) return
+    setSelectFile(selectNode)
+  }, [fileViewList])
+
+  useEffect(() => {
+    if (cursor === '') return
+
+    document.getElementById(cursor)?.focus()
+  }, [cursor])
+
+  useEffect(() => {
+    if (!dragEnd) return
+
+    for (const i in contentList) {
+      const node = document.getElementById(`${i}`)
+      if (node !== null) {
+        node.innerText = contentList[i].text
+      }
+    }
+
+    setHighlight(undefined)
+    setDragEnd(false)
+  }, [dragEnd])
+
+  useEffect(() => {
+    if (selectFile === null || fileViewList === null) return
+    if (selectFile.noteId === undefined && selectFile.path === '') return
+    const path = selectFile?.path.split('/')
     if (selectFile.title === undefined) {
       setSelectFile({ ...selectFile, title: path[path.length - 1] })
       return
-    };
-    path[path?.length - 1] = selectFile?.title;
-    let tmpPath = path?.join("/");
-    let content = test;
-    let tmpResult = [];
-    for (let i of fileView) {
-      let node = fileView?.find((v) => v.documentId === i.documentId)
+    }
+    path[path?.length - 1] = selectFile?.title
+    let tmpResult = []
+    for (let i of fileViewList) {
+      let node = fileViewList?.find((v) => v.noteId === i.noteId)
       if (node !== undefined) {
         if (node.open) {
-          let tmpNode = node;
-          tmpNode.content = i.content;
-          tmpNode.path = i.path;
+          let tmpNode = node
+          tmpNode.content = i.content
+          tmpNode.path = i.path
           tmpResult.push(tmpNode)
         } else {
           tmpResult.push(i)
         }
       }
     }
-    setFileView(tmpResult);
+    setFileViewList(tmpResult)
 
-
-    for (let i in test) {
-      let node = document.getElementById(`${i}`);
+    for (let i in contentList) {
+      let node = document.getElementById(`${i}`)
       if (node) {
-        node.innerText = test[i].text;
+        node.innerText = contentList[i].text
       }
     }
-  }, [selectFile]);
-
-  useEffect(() => {
-    if (ctx.ws !== false) {
-      ctx.ws.current.addEventListener("message", (msg: any) => {
-        const message = JSON.parse(msg.data);
-        if (message.category === "document") {
-          switch (message.type) {
-            case "getDocument":
-              setFileView(message.data)
-              break;
-          }
-        }
-      })
-      ctx.ws.current.send(JSON.stringify({
-        category: "document",
-        type: "getDocument",
-        data: {
-          userId: ctx.session.userId,
-        }
-      }))
-    }
-  }, [ctx.ws])
-
-  useEffect(() => {
-    if (ctx.ws !== false && ctx.ws !== undefined && ctx.ws.current !== undefined && selectFile !== undefined) {
-      ctx.ws.current.send(JSON.stringify({
-        category: "document",
-        type: "updateDocument",
-        data: {
-          documentId: selectFile.documentId,
-          document: {
-            content: test
-          }
-        }
-      }))
-    }
-  }, [test])
-
-  useEffect(() => {
-    if (tmpFileName === "") return;
-    if (fileView === undefined) return;
-    let selectNode = fileView?.find((v: any) => {
-      let tmpFile = v.path.split("/");
-      let name = tmpFile[tmpFile.length - 1]
-      if (name === tmpFileName) {
-        setTmpFileName("")
-        return true;
-      }
-    })
-    setSelectFile(selectNode)
-  }, [fileView]);
+  }, [selectFile])
 
   return (
-    <div className={classes.root} onClick={() => {
-      setOpenContext(false)
-      setConextPosition({
-        x: 0, y: 0, target: "", path: ""
-      })
-    }}>
+    <div
+      className={classes.note}
+      onClick={() => {
+        setOpenContext(false)
+        setContextPosition({
+          x: 0,
+          y: 0,
+          target: '',
+          path: '',
+        })
+      }}
+    >
       <div className={classes.fileView}>
         <div className={classes.fileEdit}>
-          <IconButton style={{ position: "absolute", right: 0, padding: 0, paddingRight: "12px" }} onClick={() => {
-            setAddFile(true)
-          }}>
-            <AddIcon className={classes.buttonColor} />
+          <IconButton className={classes.addFile} onClick={handleAddFileClick}>
+            <Add className={classes.buttonColor} />
           </IconButton>
         </div>
-        {fileView && <NoteSidebar
-          fileView={fileView}
-          setFileView={setFileView}
-          classes={classes}
-          setTest={setTest}
-          setAddFile={setAddFile}
-          addFile={addFile}
-          setSelectFile={setSelectFile}
-          setOpenContext={setOpenContext}
-          selectFile={selectFile}
-          contextPosition={contextPosition}
-          setContextPosition={setConextPosition}
-          ctx={ctx}
-        />}
+        {fileViewList !== null && (
+          <NoteSidebar
+            fileViewList={fileViewList}
+            addFile={addFile}
+            setFileViewList={setFileViewList}
+            setContentList={setContentList}
+            setAddFile={setAddFile}
+            setSelectFile={setSelectFile}
+            setOpenContext={setOpenContext}
+            setContextPosition={setContextPosition}
+            contextPosition={contextPosition}
+            output={output}
+          />
+        )}
       </div>
-      {selectFile !== undefined && (
+      {selectFile !== null && (
         <div id="writeSomeThing" className={classes.content}>
           <div className={classes.title}>
             <div className={classes.titleContent}>
-              <input
-                className={clsx(classes.defaultTitle, classes.h1Input)}
-                placeholder={"제목"}
-                onChange={(e) => {
-                  setSelectFile({ ...selectFile, title: e.target.value });
-                }}
-                value={selectFile.title}
-              />
-              <input
-                className={clsx(classes.defaultTitle, classes.h2Input)}
-                placeholder={"작성자"}
-                value={selectFile.creator}
-              />
-              <input
-                className={clsx(classes.defaultTitle, classes.h3Input)}
-                placeholder={"구분"}
-                value={selectFile.type && selectFile.type.join(", ")}
-              />
-              <input
-                className={clsx(classes.defaultTitle, classes.h3Input)}
-                placeholder={"날짜"}
-                value={selectFile.createTime}
-              />
+              <input id="title" className={clsx(classes.defaultTitle, classes.h1Input)} placeholder="title" onChange={handleSelectFileChange} value={getLastPath(selectFile.title)} />
+              <input id="creator" className={clsx(classes.defaultTitle, classes.h2Input)} placeholder="author" onChange={handleSelectFileChange} value={selectFile.creator} />
+              <input id="type" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="category" onChange={handleSelectFileChange} value={selectFile.type} />
+              <input id="createTime" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="creation" onChange={handleSelectFileChange} value={selectFile.createTime} />
             </div>
           </div>
-          <div
-            className={classes.writeRoot}
-            onKeyDown={(e) => {
-              if (e.keyCode == 90 && e.ctrlKey) alert("Ctrl+z");
-            }}
-          >
-            <div
-              id="writeContent"
-              className={classes.writeContent}
-              onClick={(e) => {
-                let tmpContent = cloneDeep(test);
-                if (show) {
-                  setShow(false);
-                }
-                if (tmpContent[tmpContent.length - 1]?.text === "") {
-                  document
-                    .getElementById(String(tmpContent.length - 1))
-                    ?.focus();
-                  return;
-                }
-                tmpContent.push({
-                  text: "",
-                });
-                setTest(tmpContent);
-                setCursor(String(tmpContent.length - 1));
-              }}
-            >
-              {show && (
-                <div
-                  className={classes.settingTool}
-                  style={{ left: position.x, top: position.y }}
-                >
-                  <div className={classes.settingLine}>
-                    <span>Title</span>
-                    <button
-                      className={classes.settingButton}
-                      onClick={(e) => {
-                        let leftTool = document.getElementById(
-                          `${position.target}tool`
-                        );
-                        let content = document.getElementById(
-                          `${position.target}`
-                        );
-                        if (leftTool) {
-                          leftTool.style.top = "17px";
-                        }
-                        let tmpContent = cloneDeep(test);
-                        tmpContent[position.target].text = "";
-                        tmpContent[position.target].type = "h1Input";
-                        if (content) {
-                          content.innerText = "";
-                        }
-                        setTest(tmpContent);
-                      }}
+          {selectFile.path.split('\\').some((v) => v.includes(".io")) ?
+            <div className={classes.drawRoot} >
+              <DrawDiagram selectFile={selectFile} />
+            </div>
+            : <div className={classes.writeRoot} onKeyDown={handleCtrlZ}>
+              <div id="writeContent" className={classes.writeContent} onClick={handleClickContent}>
+                {show && (
+                  <div className={classes.settingTool} style={{ left: position.x, top: position.y }}>
+                    <div className={classes.settingLine}>
+                      <span>Title</span>
+                      <button className={classes.settingButton} onClick={handleClickSetting}>
+                        H1
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {contentList.map((v: INoteContent, i: number) => {
+                  return (
+                    <div
+                      key={i}
+                      draggable={true}
+                      onClick={handleContentClick}
+                      className={clsx(classes.contentWrapper, v.clicked && classes.clicked)}
+                      onMouseOver={handleContentMouseOver(i)}
+                      onMouseOut={handleContentMouseOut(i)}
+                      onDragStart={handleContentDragStart(i)}
+                      onBlur={handleContentBlur(i)}
+                      onMouseUpCapture={handleContentMouseUpCapture(v, i)}
+                      onDragOver={handleContentDragOver(i)}
+                      onDragLeave={handleContentDragLeave(i)}
+                      onDragEnd={handleContentDragEnd}
                     >
-                      H1
-                    </button>
-                  </div>
-                </div>
-              )}
-              {test.map((v: INoteContent, idx: number) => {
-                return (
-                  <div
-                    key={idx}
-                    draggable={true}
-                    style={{
-                      height: "fit-content",
-                      width: "100%",
-                      position: "relative",
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                    className={clsx(v.clicked && classes.clicked)}
-                    onMouseOver={() => {
-                      let tool = document.getElementById(`${idx}tool`);
-                      if (tool) {
-                        tool.style.visibility = "visible";
-                      }
-                    }}
-                    onMouseOut={() => {
-                      let tool = document.getElementById(`${idx}tool`);
-                      if (tool) {
-                        tool.style.visibility = "hidden";
-                      }
-                    }}
-                    onDragStart={(e) => {
-                      e.stopPropagation();
-                      let textNode = document.getElementById(`${idx}`);
-                      if (textNode) {
-                        if (e.clientX > textNode.getBoundingClientRect().left) {
-                          e.preventDefault();
-                        }
-                      }
-                      setDrag(e.currentTarget.id);
-                      for (let i in test) {
-                        let node = document.getElementById(`${i}`);
-                        if (node) {
-                          tmpPosition.push(node.getBoundingClientRect().bottom);
-                        }
-                      }
-                    }}
-                    onBlur={(e) => {
-                      let tmpContent = cloneDeep(test);
-                      tmpContent[idx].clicked = false;
-                      setHighlight(undefined);
-                      setTest(tmpContent);
-                    }}
-                    onMouseUpCapture={(e) => {
-                      let nodePosition = document.getElementById(`${idx}`);
-                      let tmpContent = cloneDeep(test);
-                      if (highlight !== undefined) {
-                        if (tmpContent[highlight]) {
-                          tmpContent[highlight].clicked = false;
-                        }
-                      }
-                      if (window && nodePosition) {
-                        if (
-                          window.getSelection()?.toString() === v.text &&
-                          e.clientX < nodePosition.getBoundingClientRect().left
-                        ) {
-                          tmpContent[idx].clicked = true;
-                          setHighlight(idx);
-                        }
-                      }
-                      setTest(tmpContent);
-                    }}
-                    onDragOver={(e) => {
-                      let node = document.getElementById(`${idx}`);
-                      if (node) {
-                        node.style.borderTop = "1px solid #fff";
-                      }
-                    }}
-                    onDragLeave={(e) => {
-                      let node = document.getElementById(`${idx}`);
-                      if (node) {
-                        node.style.borderTop = "0px";
-                      }
-                    }}
-                    onDragEnd={(e) => {
-                      let tmpContent = cloneDeep(test);
-                      let tmpNode: any = tmpContent.splice(Number(drag), 1);
-                      let lastCheck = true;
-                      for (let i in tmpPosition) {
-                        if (tmpPosition[i] > e.clientY) {
-                          tmpContent.splice(Number(i) - 1, 0, tmpNode[0]);
-                          setTest(tmpContent);
-                          lastCheck = false;
-                          setDragEnd(true);
-                          return;
-                        }
-                      }
-                      if (lastCheck) {
-                        tmpContent = tmpContent.concat(tmpNode);
-                        setTest(tmpContent);
-                        setDragEnd(true);
-                      }
-                    }}
-                  >
-                    <div className={classes.leftTool} id={`${idx}tool`}>
-                      <IconButton
-                        style={{
-                          cursor: "move",
-                          float: "left",
-                          width: "20px",
-                          height: "20px",
-                        }}
-                        className={classes.mouseOver}
-                        onClick={(e) => {
-                          let tmpContent = cloneDeep(test);
-                          tmpContent[idx].clicked = true;
-                          setTest(tmpContent);
-                        }}
-                        onMouseDown={(e) => {
-                          //
-                        }}
-                      >
-                        <DragIndicatorIcon
-                          className={classes.iconButtonColor}
+                      <div className={classes.leftTool} id={`${i}tool`}>
+                        <IconButton className={classes.mouseOver} onClick={handleDragIndicatorClick(i)} onMouseDown={handleDragIndicatorMouseDown}>
+                          <DragIndicator className={classes.iconButtonColor} />
+                        </IconButton>
+                        <IconButton className={classes.add} onClick={handleAddClick(i)}>
+                          <Add className={classes.iconButtonColor} />
+                        </IconButton>
+                      </div>
+                      <div className={classes.write}>
+                        <div
+                          className={clsx(classes.defaultInput, v.type !== undefined && classes[v.type])}
+                          id={String(i)}
+                          contentEditable={true}
+                          onSelect={handleWriteSelect(i)}
+                          onBlur={handleWriteBlur(i)}
+                          onInput={handleWriteInput(i)}
+                          onKeyDown={handleWriteKeyDown(v, i)}
                         />
-                      </IconButton>
-                      <IconButton
-                        style={{ float: "left", width: "20px", height: "20px" }}
-                        onClick={(e) => {
-                          let tool = document.getElementById(`${idx}tool`);
-                          if (tool) {
-                            setPosition({
-                              x: tool.getBoundingClientRect().left - 10,
-                              y: tool.getBoundingClientRect().top - 50,
-                              target: idx,
-                            });
-                            setShow(true);
-                          }
-                        }}
-                      >
-                        <AddIcon className={classes.iconButtonColor} />
-                      </IconButton>
+                      </div>
                     </div>
-                    <div className={classes.write}>
-                      <div
-                        className={clsx(
-                          classes.defaultInput,
-                          v.type !== undefined && classes[v.type]
-                        )}
-                        id={String(idx)}
-                        contentEditable={true}
-                        onSelect={(e) => {
-                          let node = document.getElementById(`${idx}`);
-                          if (node) {
-                            node?.setAttribute("placeholder", "Plz Input Text");
-                          }
-                        }}
-                        onBlur={(e) => {
-                          let node = document.getElementById(`${idx}`);
-                          if (node) {
-                            node?.setAttribute("placeholder", "");
-                          }
-                        }}
-                        onInput={(e) => {
-                          let tmpContent = cloneDeep(test);
-                          tmpContent[idx].text =
-                            e.currentTarget.textContent ?? "";
-                          setTest(tmpContent);
-                        }}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter") {
-                            event.preventDefault();
-                            if (event.currentTarget.textContent === "/h1") {
-                              let leftTool = document.getElementById(
-                                `${idx}tool`
-                              );
-                              if (leftTool) {
-                                leftTool.style.top = "17px";
-                              }
-                              let tmpContent = cloneDeep(test);
-                              tmpContent[idx].text = "";
-                              tmpContent[idx].type = "h1Input";
-                              event.currentTarget.textContent = "";
-                              setTest(tmpContent);
-                            } else {
-                              let tmpContent = cloneDeep(test);
-                              tmpContent.splice(idx + 1, 0, { text: "" });
-                              setTest(tmpContent);
-                              setCursor(String(idx + 1));
-                            }
-                          } else if (event.key === "Backspace") {
-                            if (event.currentTarget.textContent === "") {
-                              event.preventDefault();
-                              if (v.type !== undefined) {
-                                let tmpContent = cloneDeep(test);
-                                tmpContent[idx].type = undefined;
-                                let leftTool = document.getElementById(
-                                  `${idx}tool`
-                                );
-                                if (leftTool) {
-                                  leftTool.style.top = "0px";
-                                }
-                                setTest(tmpContent);
-                              } else {
-                                let tmpContent = cloneDeep(test);
-                                tmpContent.splice(idx, 1);
-                                setTest(tmpContent);
-                                setCursor(String(idx - 1));
-                              }
-                            } else {
-                              let tmpContent = cloneDeep(test);
-                              tmpContent[idx].text = tmpContent[idx].text.slice(
-                                0,
-                                -1
-                              );
-                              setTest(tmpContent);
-                            }
-                          } else if (event.key === "ArrowDown") {
-                            if (document.getElementById(`${idx + 1}`) === null)
-                              return;
-                            document.getElementById(`${idx + 1}`)?.focus();
-                          } else if (event.key === "ArrowUp") {
-                            if (idx === 0) return;
-                            document.getElementById(`${idx - 1}`)?.focus();
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  )
+                })}
+              </div>
+            </div>}
         </div>
       )}
-      {openContext && <NoteContext
-        classes={classes}
-        contextPosition={contextPosition}
-        ctx={ctx}
-        setOpenContext={setOpenContext}
-        setFileView={setFileView}
-        setSelectFile={setSelectFile}
-        fileView={fileView}
-        setAddFile={setAddFile}
-      />}
+      {openContext && <NoteContext contextPosition={contextPosition} setOpenContext={setOpenContext} setSelectFile={setSelectFile} fileViewList={fileViewList} setAddFile={setAddFile} />}
     </div>
-  );
+  )
 }
+
+export default Note
