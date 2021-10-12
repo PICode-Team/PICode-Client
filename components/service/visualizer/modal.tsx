@@ -27,17 +27,17 @@ export default function VisualizerModal({
     let networkName = "";
     let oldNetworkName = "";
 
-    if (!dockerData.container.some((v: any) => v.containerId === connectEdge.new.source)) {
+    if (!createType && !dockerData.container.some((v: any) => v.containerId === connectEdge.new.source)) {
         setModal(false)
         return <></>
     }
 
-    if (!dockerData.network.some((v: any) => v.networkId === connectEdge.new.target)) {
+    if (!createType && !dockerData.network.some((v: any) => v.networkId === connectEdge.new.target)) {
         setModal(false)
         return <></>
     }
 
-    if (connectEdge.old !== undefined) {
+    if (!createType && connectEdge.old !== undefined) {
         if (!dockerData.network.some((v: any) => v.networkId === connectEdge.old.target)) {
             setModal(false)
             return <></>
