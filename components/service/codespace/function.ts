@@ -250,16 +250,11 @@ export const dragFileToFolder = throttle(
     ) => {
         e.preventDefault();
         if (dragId === undefined) return;
-        if (file.children === undefined && file.path.includes(dragId)) {
+        if (file.path.includes(dragId)) {
             return;
         }
         if (file.children === undefined && dragId.includes(file.path)) {
             return;
-        }
-        if (file.children === undefined) {
-            if (file.path.split("\\").length === dragId.split("\\").length) {
-                return;
-            }
         }
         if (e.currentTarget === null) return;
         if (file.children !== undefined) {
@@ -273,6 +268,7 @@ export const dragFileToFolder = throttle(
                 return;
             } else {
                 let fileRealPath = file.path.split("\\");
+                console.log(fileRealPath.length - rootPath.split("\\").length);
                 if (fileRealPath.length - rootPath.split("\\").length > 0) {
                     let realPath = fileRealPath
                         .splice(0, fileRealPath.length - 1)
@@ -354,6 +350,7 @@ export const moveFile = (ws: any, filePath: string, newPath: ISidebarItem) => {
         tmpQuery[tmpKey[0]] = tmpKey[1];
     }
     let tmpWorkSpaceId = tmpQuery?.workspaceId;
+    let fileName = filePath.split("\\");
     if (tmpWorkSpaceId === undefined) return;
     if (newPath.children !== undefined) {
         ws.send(
@@ -363,13 +360,14 @@ export const moveFile = (ws: any, filePath: string, newPath: ISidebarItem) => {
                 data: {
                     workspaceId: tmpWorkSpaceId,
                     oldPath: filePath,
-                    newPath: newPath.path,
+                    newPath:
+                        newPath.path + "\\" + fileName[fileName.length - 1],
                 },
             })
         );
     } else {
         let parentPathSplit = newPath.path.split("\\");
-        parentPathSplit = parentPathSplit.splice(0, parentPathSplit.length - 2);
+        parentPathSplit = parentPathSplit.splice(0, parentPathSplit.length - 1);
         let parentPath = parentPathSplit.join("\\");
         ws.send(
             JSON.stringify({
@@ -378,7 +376,7 @@ export const moveFile = (ws: any, filePath: string, newPath: ISidebarItem) => {
                 data: {
                     workspaceId: tmpWorkSpaceId,
                     oldPath: filePath,
-                    newPath: parentPath,
+                    newPath: parentPath + "\\" + fileName[fileName.length - 1],
                 },
             })
         );

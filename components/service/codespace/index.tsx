@@ -8,10 +8,13 @@ import CodeSideBar from "./sidebar";
 import ViewSpace from "./viewspace";
 import CodeContent from "./codecontent";
 import wrapper from "../../../stores";
+import WebAssetIcon from '@material-ui/icons/WebAsset';
 import { cloneDeep, method } from "lodash";
 import { useRouter } from "next/router";
 import { useWs } from "../../context/websocket";
 import { fetchSet } from "../../context/fetch";
+import TerminalContent from "./terminal";
+import { IconButton } from "@material-ui/core";
 
 export interface ISidebarItem {
     path: string;
@@ -27,6 +30,10 @@ export default function CodeSpace() {
     const [dragId, setDragId] = React.useState<string>();
     const [openId, setOpenId] = React.useState<string>();
     const [focusId, setFocusId] = React.useState<string>();
+    const [height, setHeight] = React.useState<number>(300);
+    const [terminalUuid, setTerminalUuid] = React.useState<string[]>([]);
+    const [openTerminalCount, setOpenTerminalCount] = React.useState<number>(0);
+    const [terminalContent, setTerminalContent] = React.useState<{ [key: string]: string[] }>({});
     const router = useRouter();
     const [moveCheck, setMoveCheck] = React.useState<boolean>(false);
     const [workspaceId, setWorkspaceId] = React.useState<string>();
@@ -123,8 +130,60 @@ export default function CodeSpace() {
                     break;
                 }
             }
+        } else if (message.category === "terminal") {
+            switch (message.type) {
+                case "createTerminal": {
+                    let tmp = []
+                    let tmpTerminal = cloneDeep(terminalUuid)
+                    for (let i of tmpTerminal) {
+                        tmp.push(i)
+                    }
+                    tmp.push(message.data.uuid)
+                    setTerminalUuid(tmp)
+                    break;
+                }
+                case "commandTerminal": {
+                    let tmpContent = terminalContent;
+                    if (tmpContent[message.data.uuid as string] === undefined) {
+                        tmpContent[message.data.uuid as string] = [message.data.message]
+
+                        setTerminalContent(tmpContent)
+                    } else {
+                        tmpContent[message.data.uuid as string].push(message.data.message)
+                        setTerminalContent(tmpContent)
+                    }
+                    break;
+                }
+                case "deleteTerminal": {
+                    let tmp = [];
+                    for (let i of terminalUuid) {
+                        if (i !== message.data.uuid) {
+                            tmp.push(i)
+                        }
+                    }
+                    setOpenTerminalCount(tmp.length)
+                    setTerminalUuid(tmp)
+                    break;
+                }
+            }
         }
     }
+
+    useEffect(() => {
+        if (ws === undefined || openTerminalCount === 0) return;
+        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+            ws.send(
+                JSON.stringify({
+                    category: "terminal",
+                    type: "createTerminal",
+                    data: {
+                        workspaceId: workspaceId,
+                        size: { cols: 790, rows: 300 }
+                    }
+                })
+            );
+        }
+    }, [ws?.readyState, openTerminalCount])
 
     useEffect(() => {
         if (workspaceId === undefined) return;
@@ -144,7 +203,14 @@ export default function CodeSpace() {
 
     return <div className={classes.codeWrapper}>
         <div className={classes.topMenu}>
-
+            <IconButton onClick={(e) => {
+                e.stopPropagation()
+                setOpenTerminalCount(openTerminalCount + 1)
+            }} style={{
+                position: "absolute", left: "5px", top: 0, padding: 0,
+            }}>
+                <WebAssetIcon style={{ width: "20px", height: "20px", color: "#fff" }} />
+            </IconButton>
         </div>
         <div className={classes.contentWrapper}>
             <CodeSideBar
@@ -155,57 +221,69 @@ export default function CodeSpace() {
                 focusId={focusId}
                 setFocusId={setFocusId}
             />
-            <div className={classes.codeConent} id="rootCode"
-                onDragOver={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (dragId !== undefined) {
-                        dragComponent(e, viewState)
-                    }
-                }}
-                onDragLeave={(e) => {
-                    let drageventer = document.getElementById("dragEventer");
-                    if (drageventer === null) return;
-                    drageventer.style.background = "none";
-                }}
-                onDrop={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.currentTarget.style.background = "inherit"
-                    if (dragId !== undefined) {
-                        dropElement(e, viewState, setViewState, dragId)
-                    }
-                }}>
-                {viewState?.wrapper !== undefined && Object.keys(viewState.wrapper).map((v: string) => {
-                    if (v === undefined) return;
-                    return <ViewSpace
-                        setParentState={setViewState}
-                        setDragId={setDragId}
-                        dragId={dragId}
-                        type={v}
-                        key={v}
-                        moveCheck={moveCheck}
-                        setMoveCheck={setMoveCheck}
-                        focusId={focusId}
-                        parentState={viewState}
-                        position={{ width: (viewState.wrapper as any)[v].width, height: (viewState.wrapper as any)[v].height }}
-                        // eslint-disable-next-line react/no-children-prop
-                        children={(viewState.wrapper as any)[v]}
-                        setFocusId={setFocusId}
-                    />
-                })}
-                {viewState?.children !== undefined && <CodeContent
-                    setMoveCheck={setMoveCheck}
-                    dragId={dragId}
-                    setDragId={setDragId}
-                    viewState={viewState}
-                    focusId={focusId}
-                    setParentState={setViewState}
-                    setFocusId={setFocusId} />}
+            <div style={{ width: "100%", height: "100%" }}>
+                <div style={{ width: "100%", height: openTerminalCount > 0 ? `calc(100% - ${height}px)` : "100%" }}>
+                    <div className={classes.codeConent} id="rootCode"
+                        onDragOver={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (dragId !== undefined) {
+                                dragComponent(e, viewState)
+                            }
+                        }}
+                        onDragLeave={(e) => {
+                            let drageventer = document.getElementById("dragEventer");
+                            if (drageventer === null) return;
+                            drageventer.style.background = "none";
+                        }}
+                        onDrop={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.currentTarget.style.background = "inherit"
+                            if (dragId !== undefined) {
+                                dropElement(e, viewState, setViewState, dragId)
+                            }
+                        }}>
+                        {viewState?.wrapper !== undefined && Object.keys(viewState.wrapper).map((v: string) => {
+                            if (v === undefined) return;
+                            return <ViewSpace
+                                setParentState={setViewState}
+                                setDragId={setDragId}
+                                dragId={dragId}
+                                type={v}
+                                key={v}
+                                moveCheck={moveCheck}
+                                setMoveCheck={setMoveCheck}
+                                focusId={focusId}
+                                parentState={viewState}
+                                position={{ width: (viewState.wrapper as any)[v].width, height: (viewState.wrapper as any)[v].height }}
+                                // eslint-disable-next-line react/no-children-prop
+                                children={(viewState.wrapper as any)[v]}
+                                setFocusId={setFocusId}
+                            />
+                        })}
+                        {viewState?.children !== undefined && <CodeContent
+                            setMoveCheck={setMoveCheck}
+                            dragId={dragId}
+                            setDragId={setDragId}
+                            viewState={viewState}
+                            focusId={focusId}
+                            setParentState={setViewState}
+                            setFocusId={setFocusId} />}
+                    </div>
+                    <div className={classes.dragEventer} id="dragEventer"
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={(e) => e.preventDefault()} />
+                </div>
+                {openTerminalCount > 0 && <TerminalContent
+                    setOpenContent={setOpenTerminalCount}
+                    terminalCount={openTerminalCount}
+                    content={terminalContent}
+                    height={height}
+                    uuid={terminalUuid}
+                    setHeight={setHeight}
+                    projectName={projectName} />}
             </div>
-            <div className={classes.dragEventer} id="dragEventer"
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => e.preventDefault()} />
         </div>
     </div >
 }

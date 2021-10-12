@@ -109,7 +109,7 @@ export default function CodeSideBar({ setDragId, setOpenId, projectName, fileLis
                 </IconButton>
             </div>
         </div>
-        <div className={classes.itemContainer}>
+        <div className={classes.itemContainer} id="sidebarContainer">
             {(fileList !== undefined && fileList.children !== undefined) && expandCollapseMenu(fileList, openCheck, setOpenCheck, classes, setDragId, setOpenId, setSideDragId, setFocusId, focusId, fileList.path, sideDragId, ws, createFile, setCreateFile, sideFocusId, setSideFocusId, setRightClick, renameCheck, setRenameCheck)}
             {((focusId === undefined && sideFocusId === undefined) && createFile !== undefined) && <input
                 autoFocus

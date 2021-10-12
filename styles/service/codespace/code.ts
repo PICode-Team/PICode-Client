@@ -13,6 +13,7 @@ export const codeStyle = makeStyles((theme: IThemeStyle) =>
         topMenu: {
             width: "100%",
             height: "20px",
+            position: "relative",
             background: theme.backgroundColor.step3,
         },
         contentWrapper: {
@@ -187,6 +188,33 @@ export const codeStyle = makeStyles((theme: IThemeStyle) =>
         topIconSize: {
             height: "20px",
             color: "#fff",
+        },
+    })
+);
+
+export const terminalStyle = makeStyles((theme: IThemeStyle) =>
+    createStyles({
+        terminal: {
+            width: "100%",
+            position: "relative",
+            padding: "12px",
+            background: theme.backgroundColor.step3,
+            zIndex: 100,
+            "&:focus": {
+                outline: "none",
+            },
+            overflow: "hidden",
+        },
+        resizerBar: {
+            height: "10px",
+            width: "100%",
+            position: "absolute",
+            marginTop: "-12px",
+            marginLeft: "-12px",
+            "&:hover": {
+                background: theme.backgroundColor.step2,
+                cursor: "row-resize",
+            },
         },
     })
 );

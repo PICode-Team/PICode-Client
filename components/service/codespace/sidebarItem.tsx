@@ -137,19 +137,11 @@ export const expandCollapseMenu = (
                     e.preventDefault();
                     e.stopPropagation();
                     if (sideDragId === undefined) return;
-                    if (file.path.includes(sideDragId)) {
+                    dragFileToFolderOut(e, file, rootPath, sideDragId)
+                    if (file.children === undefined && sideDragId.includes(file.path)) {
                         return;
-                    }
-                    if (sideDragId.includes(file.path)) {
-                        return;
-                    }
-                    if (file.children === undefined) {
-                        if (file.path.split("\\").length === sideDragId.split("\\").length) {
-                            return;
-                        }
                     }
                     moveFile(ws, sideDragId, file)
-                    dragFileToFolderOut(e, file, rootPath, sideDragId)
                 }}
                 onDragEnd={(e) => {
                     checkPointerEvent(true);
@@ -199,7 +191,7 @@ export const expandCollapseMenu = (
                     e.stopPropagation();
                     dragFileToFolder(e, file, rootPath, sideDragId)
                     if (sideDragId === undefined) return
-                    if (file.path.includes(sideDragId)) {
+                    if (sideDragId.includes(file.path)) {
                         return;
                     }
                     if (Number((((Number(e.timeStamp) - time) % 60000) / 1000).toFixed(0)) > 0.5) {
