@@ -6,7 +6,6 @@ import ReactFlow, { Controls, updateEdge, addEdge, getMarkerEnd, MiniMap } from 
 import BridgeNode from "./node/bridge";
 import CustomLine from "./line/connectionLine";
 import ContainerNode from "./node/container";
-import data from "./data.json"
 import PortNode from "./node/port";
 import { visualizerStyle } from "../../../styles/service/dockerspace/visualspace";
 import VisualizerModal from "./modal";
@@ -29,11 +28,10 @@ const UpdatableEdge = () => {
     });
 
     const getDockerData = async () => {
-        setDockerData(data);
-        // let data = await fetch(`/api/docker/visualization`, {
-        //     method: "GET"
-        // }).then((res) => res.json())
-        // setDockerData(data.dockerVisualInfo);
+        let data = await fetch(`/api/docker/visualization`, {
+            method: "GET"
+        }).then((res) => res.json())
+        setDockerData(data.dockerVisualInfo);
     };
 
     const nodeStyle = {
@@ -48,7 +46,7 @@ const UpdatableEdge = () => {
         let lineData: any[] = [];
         let maximumLength = dockerData["container"].length;
 
-        for (let i in data) {
+        for (let i in dockerData) {
             if (dockerData[i].length > maximumLength) {
                 maximumLength = dockerData[i].length
             }
@@ -57,7 +55,7 @@ const UpdatableEdge = () => {
         const containerPosition: any = {};
         const portPosition: any = {};
 
-        for (let i in data) {
+        for (let i in dockerData) {
             let idx = 0;
             for (let j of dockerData[i]) {
                 let dataLength = dockerData[i].length
@@ -161,6 +159,12 @@ const UpdatableEdge = () => {
     }, [])
 
     useEffect(() => {
+        if (!modal) {
+            getDockerData();
+        }
+    }, [modal])
+
+    useEffect(() => {
         makeVisualization();
     }, [dockerData])
 
@@ -191,8 +195,8 @@ const UpdatableEdge = () => {
     const onConnect = (params: any) => setElements((els: any) => {
         params.type = "smoothstep"
         params.animated = true
-        if (data.container.some((v => v.containerId === params.source || v.containerId === params.target))) {
-            if (data.container.some((v => v.containerId === params.source)) && data.container.some((v => v.containerId === params.target))) {
+        if (dockerData.container.some(((v: any) => v.containerId === params.source || v.containerId === params.target))) {
+            if (dockerData.container.some(((v: any) => v.containerId === params.source)) && dockerData.container.some(((v: any) => v.containerId === params.target))) {
                 return els;
             }
             params.id = params.source + params.target;
