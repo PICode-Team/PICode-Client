@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback } from "react";
-import ReactFlow, { addEdge, Controls, ReactFlowProvider, removeElements } from "react-flow-renderer";
+import ReactFlow, { addEdge, Background, BackgroundVariant, Controls, ReactFlowProvider, removeElements } from "react-flow-renderer";
 import { diagrmStyle } from "../../../../styles/service/notespace/diagram";
 import { IFileView } from "../../../../types/note.types";
 import DiagramSidebar from "./diagramsidebat";
@@ -56,19 +56,28 @@ export default function DrawDiagram({ selectFile }: { selectFile: IFileView }) {
         }];
 
         setElements((es: any) => es.concat(newNode));
-    }, [id, elements])
+    }, [id, elements, reactFlowInstance])
 
     return <React.Fragment>
         <ReactFlowProvider>
             <div className="reactflow-wrapper" ref={reactFlowWrapper} style={{ width: "100%", height: "100%", position: "relative" }}>
                 <ReactFlow
                     elements={elements}
+                    snapToGrid
                     onConnect={onConnect}
+                    onEdgeUpdate={() => {
+
+                    }}
                     onElementsRemove={onElementsRemove}
                     onLoad={onLoad}
                     onDrop={onDrop}
                     onDragOver={onDragOver}
                 >
+                    <Background
+                        variant={BackgroundVariant.Lines}
+                        gap={25}
+                        size={0.1}
+                    />
                     <Controls />
                 </ReactFlow>
                 <DiagramSidebar />
