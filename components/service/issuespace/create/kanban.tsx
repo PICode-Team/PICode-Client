@@ -9,7 +9,7 @@ interface ICreateKanbanProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   modalKanban: IKanban | null
-  workspaceId: string
+  workspaceId?: string
 }
 
 interface ICreateKanbanState {
@@ -55,9 +55,9 @@ function CreateKanban(props: ICreateKanbanProps) {
 
   const handleSubmit = (isCreate: boolean) => () => {
     if (isCreate === true) {
-      createKanban(payload, workspaceId)
+      createKanban(payload, workspaceId ?? '')
     } else {
-      updateKanban(payload, workspaceId)
+      updateKanban(payload, workspaceId ?? '')
     }
     setPayload(initialState)
     setModal(false)

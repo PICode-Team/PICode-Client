@@ -1,4 +1,4 @@
-import { DashboardOutlined, DescriptionOutlined, ChatOutlined, SettingsOutlined, DnsOutlined, ComputerOutlined, WorkOutlineOutlined } from '@material-ui/icons'
+import { DashboardOutlined, DescriptionOutlined, ChatOutlined, SettingsOutlined, DnsOutlined, ComputerOutlined, WorkOutlineOutlined, Description } from '@material-ui/icons'
 
 export const sidebarData = {
   dashboard: {
@@ -24,12 +24,17 @@ export const sidebarData = {
     ],
     subUrl: ['/code', '/codeview', '/container'],
   },
-  note: {
+  // issuespace: {
+  //   url: '/issuespace',
+  //   icon: <Description />,
+  //   title: 'Issuespace',
+  // },
+  notespace: {
     url: '/notespace',
     icon: <DescriptionOutlined />,
     title: 'Notespace',
   },
-  chat: {
+  chatspace: {
     url: '/chatspace',
     icon: <ChatOutlined />,
     title: 'Chatspace',

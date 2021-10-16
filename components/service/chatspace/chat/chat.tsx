@@ -15,8 +15,8 @@ interface IChatProps {
   toggle: boolean
 }
 
-function Chat(ctx: IChatProps) {
-  const { toggle } = ctx
+function Chat(props: IChatProps) {
+  const { toggle } = props
   const classes = chatStyle()
   const [messageList, setMessageList] = useState<IChat[]>([])
   const [channelList, setChannelList] = useState<IChannel[]>([])
@@ -115,7 +115,19 @@ function Chat(ctx: IChatProps) {
           break
 
         case 'sendMessage':
-          getChat()
+          setChannelList(
+            channelList.map((v, i) => {
+              if (v.chatName === message.data.chatName) {
+                return {
+                  ...v,
+                  recentMessage: message.data.message,
+                  recentTime: message.data.time,
+                }
+              }
+
+              return v
+            })
+          )
 
           if (target!.chatName !== message.data.chatName) return
 

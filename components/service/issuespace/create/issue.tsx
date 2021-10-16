@@ -40,10 +40,10 @@ const initialState: ICreateIssueState = {
 interface ICreateIssueProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
-  kanbanUUID: string
+  kanbanUUID?: string
   mileList: IMilestone[]
-  column: string
-  workspaceId: string
+  column?: string
+  workspaceId?: string
 }
 
 interface IMilestoneSelect {

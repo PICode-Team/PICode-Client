@@ -18,6 +18,7 @@ import { chatInputStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
 import { fetchSet } from '../../../context/fetch'
+import { mentionRegex } from '../../../context/regex'
 import { useWs } from '../../../context/websocket'
 import Entering from './entering'
 
@@ -36,6 +37,7 @@ function ChatInput(props: IChatInputProps) {
   const [mentionLeft, setMentionLeft] = useState<string>('')
   const [participantList, setParticipantList] = useState<IUser[]>([])
   const [messageContent, setMessageContent] = useState<string>('')
+  const [mentionIndex, setMentionIndex] = useState<number>(0)
   const ws: any = useWs()
 
   const getParticipantList = async () => {
@@ -65,7 +67,7 @@ function ChatInput(props: IChatInputProps) {
 
   const createAlarm = (targetList: string[]) => {
     const checkAlarm = targetList.reduce((a, c) => {
-      return { ...a, [c]: false }
+      return { ...a, [c]: true }
     }, {})
 
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
@@ -86,22 +88,29 @@ function ChatInput(props: IChatInputProps) {
 
   const handleSendMessage = () => {
     if (messageRef === null) return
+    if (messageRef.current === null) return
     if (messageRef.current!.innerHTML === '') return
     if (messageRef.current!.innerHTML.replaceAll('<br>', '') === '') return
 
     const elements = document.getElementsByTagName('picode-mention')
 
-    for (let i = 0; i < elements.length; i++) {
-      const value = elements[i].innerHTML
+    const regexMention = messageRef.current.innerHTML.split(mentionRegex)
 
-      if (value === 'here') {
-        createAlarm(participantList.map((v) => v.userId))
-        return
-      } else if (value === 'channel') {
-        createAlarm(target.chatParticipant)
-        return
-      } else {
-        createAlarm([value])
+    for (let i = 0; i < regexMention.length; i++) {
+      if (regexMention[i].indexOf('@') === 0) {
+        if (i + 1 < regexMention.length) {
+          if (regexMention[i + 1] === '/picode-mention') {
+            const value = regexMention[i]
+
+            if (value === '@here') {
+              createAlarm(participantList.map((v) => v.userId))
+            } else if (value === '@channel') {
+              createAlarm(target.chatParticipant)
+            } else {
+              createAlarm([value])
+            }
+          }
+        }
       }
     }
 
@@ -113,7 +122,32 @@ function ChatInput(props: IChatInputProps) {
   }
 
   const handleChatInputKeypress = (event: any) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') return
+
     if (event.key === 'Enter' && event.shiftKey !== true) {
+      if (onMention === true) {
+        const target = [...participantList.map((v) => v.userName), 'here', 'channel'].filter((v) => v.indexOf(messageContent) === 0)[mentionIndex]
+        if (target !== undefined) {
+          const atSignsplitedText: string[] = event.target.innerHTML.split('@')
+          const cursor = document.getSelection()!.anchorOffset - 1
+          let sum = 0
+          const result: string[] = []
+
+          atSignsplitedText.map((v, i) => {
+            sum += v.length
+            if (sum + i > cursor) {
+              const prev = result.pop()
+              result.push(`${prev}<picode-mention>@${target}</picode-mention>`)
+            } else {
+              result.push(v)
+            }
+          })
+
+          messageRef.current!.innerHTML = result.join('@')
+
+          return
+        }
+      }
       event.preventDefault()
     } else {
       return
@@ -123,14 +157,30 @@ function ChatInput(props: IChatInputProps) {
   }
 
   const handleChatInputKeyup = (event: any) => {
-    if (event.key === 'Enter') return
-
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' || event.key === 'Enter') {
       setOnMention(false)
       return
     }
-
     if (event.key === 'Shift') return
+
+    if (onMention === true) {
+      const lastIndex = [...participantList.map((v) => v.userName), 'here', 'channel'].filter((v) => v.indexOf(messageContent) === 0).length - 1
+      if (event.key === 'ArrowDown') {
+        if (mentionIndex === lastIndex) {
+          setMentionIndex(0)
+        } else {
+          setMentionIndex(mentionIndex + 1)
+        }
+        return
+      } else if (event.key === 'ArrowUp') {
+        if (mentionIndex === 0) {
+          setMentionIndex(lastIndex)
+        } else {
+          setMentionIndex(mentionIndex - 1)
+        }
+        return
+      }
+    }
 
     const splitedText = event.target.innerHTML.split('')
     const cursor = document.getSelection()!.anchorOffset - 1
@@ -140,9 +190,19 @@ function ChatInput(props: IChatInputProps) {
         setOnMention(false)
       } else {
         setMentionLeft(`${20 + (splitedText.length - splitedText.reverse().indexOf('@')) * 6}px`)
-        return
       }
     }
+
+    const atSignsplitedText: string[] = event.target.innerHTML.split('@')
+    let sum = 0
+
+    atSignsplitedText.forEach((value) => {
+      if (sum + value.length > cursor) {
+        setMessageContent(value)
+      }
+
+      sum += value.length + 1
+    })
 
     const mentionCheck = (() => {
       for (let i = 0; i < 5; i++) {
@@ -154,9 +214,8 @@ function ChatInput(props: IChatInputProps) {
             return true
           }
         }
-        if (splitedText[cursor - i] !== ' ') return false
       }
-      return false
+      return ['here', 'channel', participantList.map((v) => v.userName)].some((v) => v.indexOf(messageContent) === 0)
     })()
 
     if (mentionCheck === false) {
@@ -171,7 +230,7 @@ function ChatInput(props: IChatInputProps) {
     if (messageRef !== null && messageRef.current !== null) {
       const originText = messageRef.current.innerHTML.split('')
       const atSignPosition = originText.length - originText.reverse().indexOf('@')
-      const message = `<picode-mention>@${target}</picode-mention> `.split('')
+      const message = `<picode-mention>@${target}</picode-mention>`.split('')
       const tailText = originText.splice(atSignPosition)
 
       const insertedText = [...originText.slice(1), ...message, '&nbsp', ...tailText]
@@ -217,6 +276,8 @@ function ChatInput(props: IChatInputProps) {
     }
   }
 
+  const handleMessageInputChange = (event: any) => {}
+
   const getMentionText = () => {}
 
   const mentionHelperRowVisible = (target: string) => {
@@ -235,8 +296,6 @@ function ChatInput(props: IChatInputProps) {
 
       const resultText = result.reverse().join('')
       if (resultText === '') return true
-
-      console.log(resultText)
 
       return target.indexOf(resultText) === 0
     }
@@ -267,32 +326,44 @@ function ChatInput(props: IChatInputProps) {
     <React.Fragment>
       {onMention === true && (
         <div className={classes.mentionHelper} style={{ marginLeft: mentionLeft }}>
-          {participantList.map((v, i) => {
-            if (!mentionHelperRowVisible(v.userName)) {
-              return <React.Fragment></React.Fragment>
-            }
+          {[...participantList.map((v) => v.userName), 'here', 'channel']
+            .filter((v) => v.indexOf(messageContent) === 0)
+            .map((v, i) => {
+              if (v === 'here') {
+                return (
+                  <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionAllClick}>
+                    @ here
+                  </div>
+                )
+              }
 
-            return (
-              <div key={`mention-helper-${i}`} className={classes.mentionTarget} onClick={handleMentionTargetClick(v.userId)}>
-                {v.userName}
-              </div>
-            )
-          })}
-          {mentionHelperRowVisible('here') && (
-            <div className={classes.mentionTarget} onClick={handleMentionAllClick}>
-              @ here
-            </div>
-          )}
-          {mentionHelperRowVisible('channel') && (
-            <div className={classes.mentionTarget} onClick={handleMentionChannelClick}>
-              @ channel
-            </div>
-          )}
+              if (v === 'channel') {
+                return (
+                  <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionChannelClick}>
+                    @ channel
+                  </div>
+                )
+              }
+
+              return (
+                <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick(v)}>
+                  {v}
+                </div>
+              )
+            })}
         </div>
       )}
       <div className={classes.input}>
         <div className={classes.inputBox}>
-          <div id="editor" className={classes.customInput} contentEditable={true} onKeyUp={handleChatInputKeyup} onKeyPress={handleChatInputKeypress} ref={messageRef}></div>
+          <div
+            id="editor"
+            className={classes.customInput}
+            contentEditable={true}
+            onKeyUp={handleChatInputKeyup}
+            onKeyPress={handleChatInputKeypress}
+            ref={messageRef}
+            onChange={handleMessageInputChange}
+          ></div>
           <div className={classes.interaction}>
             <div>
               <div>

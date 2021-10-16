@@ -141,7 +141,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
     if (message.category === 'alarm') {
       switch (message.type) {
         case 'getAlarm':
-          setAlarmList(message.data.filter((v: any) => !v.checkAlarm))
+          setAlarmList(message.data.filter((v: any) => v.checkAlarm))
           break
         case 'checkAlarm':
           if (alarmList !== null) {

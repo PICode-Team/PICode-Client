@@ -6,7 +6,8 @@ import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import { IOpenGraph } from '../../../../types/openGraph.types'
 import { IUser } from '../../../../types/user.types'
 import { fetchSet } from '../../../context/fetch'
-import { domainURLRegex } from '../../../context/regex'
+import { domainURLRegex, imageRegex, trimRegex } from '../../../context/regex'
+import { uuidv4 } from '../../../context/uuidv4'
 
 interface IMessageBoxProps {
   messageInfo: IChat
@@ -14,6 +15,7 @@ interface IMessageBoxProps {
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   target: IChannel | null
   particiapntList: IUser[]
+  setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 }
 
 const getTimeText = (time: string) => {
@@ -41,12 +43,14 @@ const getTimeText = (time: string) => {
 }
 
 function MessageBox(props: IMessageBoxProps) {
-  const { messageInfo, reverse, target, particiapntList, setThread } = props
+  const { messageInfo, reverse, target, particiapntList, setThread, setMediaViewData } = props
   const { user, message, time, chatId, threadList } = messageInfo
   const classes = messageBoxStyle()
   const thumbnailUrl = particiapntList.find((v) => v.userId === user)?.userThumbnail
   const [url, setUrl] = useState<string | null>(null)
   const [preview, setPreview] = useState<IOpenGraph | null>(null)
+  const [imageList, setImageList] = useState<string[]>([])
+  const [empty, setEmpty] = useState<boolean>(false)
   const contentRef = useRef<HTMLSpanElement>(null)
 
   const handleSetThread = () => {
@@ -71,6 +75,10 @@ function MessageBox(props: IMessageBoxProps) {
     setPreview(metaData)
   }
 
+  const handleMediaClick = (mediaList: string[]) => () => {
+    setMediaViewData(mediaList)
+  }
+
   useEffect(() => {
     const regexMessage = domainURLRegex.exec(message)
 
@@ -89,8 +97,27 @@ function MessageBox(props: IMessageBoxProps) {
     if (contentRef === null) return
     if (contentRef.current === null) return
 
-    contentRef.current.innerHTML = message
-  }, [])
+    const URLRegexMessage = domainURLRegex.exec(message)
+    const imageRegexMessage = message
+      .split(imageRegex)
+      .filter((v) => v.indexOf(' src=') === 0)
+      .map((v) => v.trim().replace(trimRegex, ''))
+
+    setImageList(imageRegexMessage)
+
+    const processedMessage = (() => {
+      if (URLRegexMessage !== null) {
+        return message.replace(URLRegexMessage[0], `<a href="${URLRegexMessage[0]}">${URLRegexMessage[0]}</a>`).replace(imageRegex, '')
+      }
+
+      return message.replace(imageRegex, '')
+    })()
+
+    if (processedMessage === '') {
+      setEmpty(true)
+    }
+    contentRef.current.innerHTML = processedMessage
+  }, [contentRef, contentRef.current])
 
   return (
     <div className={`${classes.messageBox} ${reverse && classes.reversedMessageBox}`}>
@@ -98,19 +125,23 @@ function MessageBox(props: IMessageBoxProps) {
       <div className={`${target !== null && classes.messageInfo}`}>
         {!reverse && <div className={classes.target}>{user}</div>}
         <div className={`${classes.textWrapper} ${reverse && classes.reversedTextWrapper}`}>
-          <span className={classes.messageText} ref={contentRef}></span>
+          {!empty && <span className={classes.messageText} ref={contentRef}></span>}
           <span className={classes.time}>
-            <span>{getTimeText(time)}</span>
+            <strong>
+              <span>{getTimeText(time)}</span>
+            </strong>
             {target !== null && (
-              <div className={classes.messageInteraction}>
-                <div className={classes.interactionIcon} onClick={handleSetThread}>
-                  <SmsOutlined />
+              <strong>
+                <div className={classes.messageInteraction}>
+                  <div className={classes.interactionIcon} onClick={handleSetThread}>
+                    <SmsOutlined />
+                  </div>
+                  <div className={classes.interactionDivider} />
+                  <div className={classes.interactionIcon}>
+                    <FavoriteBorderOutlined />
+                  </div>
                 </div>
-                <div className={classes.interactionDivider} />
-                <div className={classes.interactionIcon}>
-                  <FavoriteBorderOutlined />
-                </div>
-              </div>
+              </strong>
             )}
           </span>
         </div>
@@ -123,6 +154,13 @@ function MessageBox(props: IMessageBoxProps) {
             </div>
             <div className={classes.threadCount}>{threadList.length} replies</div>
             <div className={classes.lastThread}>Last reply {threadList.slice(-1)[0].time.split(' ')[0]}</div>
+          </div>
+        )}
+        {imageList.length > 0 && (
+          <div className={classes.imageWrapper}>
+            {imageList.map((v) => (
+              <img className={classes.contentImage} key={`message-key-${uuidv4()}`} src={v} style={{ marginTop: `${empty ? 2 : 10}px` }} onClick={handleMediaClick(imageList)} />
+            ))}
           </div>
         )}
         {preview !== null && preview.url !== undefined && (

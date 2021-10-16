@@ -297,3 +297,45 @@ export const manageStyle = makeStyles((theme: IThemeStyle) =>
     },
   })
 )
+
+export const issueTableStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    issueTable: {
+      width: '100%',
+      height: '100%',
+      color: theme.font.high.color,
+    },
+    headerWrapper: {
+      backgroundColor: '#49525e',
+      display: 'flex',
+      justifyContent: 'space-between',
+      height: '54px',
+      padding: '16px',
+    },
+    leftHeader: {
+      display: 'flex',
+    },
+    rightHeader: {
+      display: 'flex',
+    },
+
+    checkbox: {
+      width: '30px',
+      height: '30px',
+      display: 'flex',
+    },
+    active: {},
+    inactive: {},
+    filterMenu: {},
+
+    bodyWrapper: {
+      backgroundColor: '#5a6473',
+      display: 'flex',
+      height: '54px',
+      padding: '16px',
+    },
+    activeStatus: {},
+    content: {},
+    assignee: {},
+  })
+)

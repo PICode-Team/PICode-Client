@@ -153,11 +153,14 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
     },
     messageInfo: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
       '&:hover': {
-        '&>div>span>span': {
+        '&>div>span>strong>span': {
           display: 'none',
         },
-        '&>div>span>div': {
+        '&>div>span>strong>div': {
           display: 'flex',
         },
       },
@@ -195,6 +198,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       color: theme.font.high.color,
       fontSize: '10px',
       margin: '0px 5px',
+      height: '18px',
     },
     interactionDivider: {
       width: '1px',
@@ -301,6 +305,16 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       opacity: 0.6,
       padding: '0px 10px',
       paddingBottom: '5px',
+    },
+
+    imageWrapper: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+
+    contentImage: {
+      marginTop: '2px',
+      marginLeft: '10px',
     },
   })
 )
@@ -431,6 +445,10 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
         backgroundColor: theme.backgroundColor.step4,
       },
     },
+
+    active: {
+      backgroundColor: 'red',
+    },
   })
 )
 
@@ -516,6 +534,7 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       textOverflow: 'ellipsis',
       width: '160px',
       marginRight: '6px',
+      height: '20px',
     },
     channelTail: {
       width: '70px',
