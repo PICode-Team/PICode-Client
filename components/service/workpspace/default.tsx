@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { DeleteForever, Settings } from '@material-ui/icons'
+import { CloudDownload, DeleteForever, Settings } from '@material-ui/icons'
 import Swal from 'sweetalert2'
 
 import { defaultStyle } from '../../../styles/service/workspace/default'
@@ -19,6 +19,44 @@ function DefaultCodeView() {
     if (code === 200) {
       setWorkspaceData(workspaceList)
     }
+  }
+
+  const handleExportWorkspace = (workspaceInfo: IWorkspaceSpec) => async (event: React.MouseEvent) => {
+    event.stopPropagation()
+    event.preventDefault()
+
+    const result = await Swal.fire({
+      title: 'Export Workspace',
+      text: `Are you sure export Codespace files?`,
+      icon: 'info',
+      heightAuto: false,
+      showCancelButton: true,
+    })
+
+    if (result.isConfirmed !== true) return
+
+    const extension = await Swal.fire({
+      title: 'Submit file extension \n(e.g. zip, tar, tar.gz, etc)',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      showCancelButton: true,
+      heightAuto: false,
+    })
+
+    if (extension.value === undefined) return
+
+    const payload = {
+      option: {
+        workspaceOption: {
+          workspaceId: workspaceInfo.workspaceId,
+          extension: extension.value,
+        },
+      },
+    }
+
+    await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
   }
 
   const handleLinkCode = (workspaceId: string) => () => {
@@ -95,6 +133,9 @@ function DefaultCodeView() {
             <div className={classes.top}>
               <div className={classes.projectName}>{v.name}</div>
               <div className={classes.iconWrapper}>
+                <span className={classes.icon} onClick={handleExportWorkspace(v)}>
+                  <CloudDownload />
+                </span>
                 <div className={classes.icon} onClick={handleLinkEdit(v.workspaceId)}>
                   <Settings />
                 </div>
@@ -113,7 +154,7 @@ function DefaultCodeView() {
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Create time</div>
-              <div className={classes.infoValue}>{v.creation}</div>
+              <div className={classes.infoValue}>{`20${v.creation}`}</div>
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Description</div>

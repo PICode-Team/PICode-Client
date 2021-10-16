@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { DeleteForever, Settings } from '@material-ui/icons'
+import { CloudDownload, DeleteForever, Settings } from '@material-ui/icons'
 import Swal from 'sweetalert2'
 
 import { defaultStyle } from '../../../styles/service/workspace/default'
@@ -19,6 +19,57 @@ function DefaultCodeView() {
     if (code !== 200) return
 
     setWorkspaceData(workspaceList)
+  }
+
+  const handleExportWorkspace = (workspaceInfo: IWorkspaceSpec) => async (event: React.MouseEvent) => {
+    event.stopPropagation()
+    event.preventDefault()
+
+    const result = await Swal.fire({
+      title: 'Export Workspace',
+      text: `Are you sure export Container itself?`,
+      icon: 'info',
+      heightAuto: false,
+      showCancelButton: true,
+    })
+
+    if (result.isConfirmed !== true) return
+
+    const imageName = await Swal.fire({
+      title: 'Submit image name',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      showCancelButton: true,
+      heightAuto: false,
+    })
+
+    if (imageName.value === undefined) return
+
+    const tagName = await Swal.fire({
+      title: 'Submit tag name',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      showCancelButton: true,
+      heightAuto: false,
+    })
+
+    if (tagName.value === undefined) return
+
+    const payload = {
+      option: {
+        dockerOption: {
+          containerId: workspaceInfo.containerId,
+          imageName: imageName.value,
+          tagName: tagName.value,
+        },
+      },
+    }
+
+    await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
   }
 
   const handleLinkVisualization = (workspaceId: string) => () => {
@@ -91,6 +142,9 @@ function DefaultCodeView() {
             <div className={classes.top}>
               <div className={classes.projectName}>{v.name}</div>
               <div className={classes.iconWrapper}>
+                <span className={classes.icon} onClick={handleExportWorkspace(v)}>
+                  <CloudDownload />
+                </span>
                 <div className={classes.icon} onClick={handleLinkEdit(v.workspaceId)}>
                   <Settings />
                 </div>
@@ -109,7 +163,7 @@ function DefaultCodeView() {
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Create time</div>
-              <div className={classes.infoValue}>{v.creation}</div>
+              <div className={classes.infoValue}>{`20${v.creation}`}</div>
             </div>
             <div className={classes.infoWrapper}>
               <div className={classes.infoKey}>Description</div>

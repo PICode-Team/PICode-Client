@@ -7,6 +7,7 @@ export interface IWorkspaceSpec {
   thumbnail?: string
   creation: string
   workspaceId: string
+  containerId: string
 }
 
 export interface IWorkspace {

@@ -318,6 +318,13 @@ export const recentWorkStyle = makeStyles((theme: IThemeStyle) =>
       top: '-25px',
       zIndex: 999,
     },
+    export: {
+      position: 'absolute',
+      right: '80px',
+      cursor: 'pointer',
+      top: '-25px',
+      zIndex: 999,
+    },
 
     icon: {
       width: '24px',

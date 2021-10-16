@@ -30,8 +30,6 @@ function DefaultIssue() {
   const [modalIssue, setModalIssue] = useState<IIssue | null>(null)
   const ws: any = useWs()
 
-  console.log(modal)
-
   const handleCreateButton = (event: React.MouseEvent<HTMLElement>) => {
     setModal(true)
   }
