@@ -5,7 +5,7 @@ import Chat from '../components/service/chatspace/chat/chat'
 export default function Home(pageProps: any) {
   return (
     <Layout {...pageProps}>
-      <Chat />
+      <Chat toggle={true} />
     </Layout>
   )
 }

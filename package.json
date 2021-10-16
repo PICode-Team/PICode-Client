@@ -6,8 +6,8 @@
     "dev": "set NODE_ENV=dev && ts-node --project tsconfig.server.json server/index.ts",
     "build:next": "next build",
     "build:server": "tsc --project tsconfig.server.json",
-    "build": "npm run build:next && npm run build:server",
-    "start": "set NODE_ENV=production && node dist/index.js"
+    "build": "set NODE_ENV=production && npm run build:next && npm run build:server",
+    "start": "node dist"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
