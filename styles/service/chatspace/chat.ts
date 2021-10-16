@@ -447,7 +447,7 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
     },
 
     active: {
-      backgroundColor: 'red',
+      backgroundColor: '#525252',
     },
   })
 )
