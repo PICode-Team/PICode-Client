@@ -10,6 +10,7 @@ import { fetchSet } from '../../../context/fetch'
 import CreateChannel from '../common/createChannel'
 import ResponsiveChat from './responsive/resposiveChat'
 import { useWs } from '../../../context/websocket'
+import MediaView from '../common/mediaView'
 
 interface IChatProps {
   toggle: boolean
@@ -251,6 +252,7 @@ function Chat(props: IChatProps) {
           setMediaViewData={setMediaViewData}
         />
         <CreateChannel modal={modal} setModal={setModal} />
+        {mediaViewData !== null && <MediaView mediaViewData={mediaViewData} setMediaViewData={setMediaViewData} />}
       </div>
     </React.Fragment>
   )

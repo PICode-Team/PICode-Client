@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { useWs } from '../../../context/websocket'
 import { fetchSet } from '../../../context/fetch'
 import { IUser } from '../../../../types/user.types'
+import MediaView from '../common/mediaView'
 
 interface IMessengerProps {
   userId: string
@@ -229,6 +230,7 @@ function Messenger(props: IMessengerProps) {
           />
         )}
         {thread !== null && <Thread userId={userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} setMediaViewData={setMediaViewData} />}
+        {mediaViewData !== null && <MediaView mediaViewData={mediaViewData} setMediaViewData={setMediaViewData} />}
       </React.Fragment>
     )
   }

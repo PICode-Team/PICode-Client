@@ -315,6 +315,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
     contentImage: {
       marginTop: '2px',
       marginLeft: '10px',
+      cursor: 'pointer',
     },
   })
 )
@@ -1256,6 +1257,107 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
 
     active: {
       backgroundColor: '#525252',
+    },
+  })
+)
+
+export const mediaViewStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    overlay: {
+      width: '100%',
+      height: '100%',
+      position: 'fixed',
+      backgroundColor: 'black',
+      top: 0,
+      left: 0,
+      opacity: 0.4,
+      zIndex: 9999,
+    },
+    content: {
+      position: 'fixed',
+      backgroundColor: theme.backgroundColor.step2,
+      zIndex: 99999,
+      top: 0,
+      left: 0,
+      marginLeft: '5%',
+      marginTop: '2.5%',
+      borderRadius: '12px',
+      display: 'flex',
+      flexDirection: 'column',
+      width: '90%',
+      height: '90%',
+    },
+
+    header: {
+      height: '50px',
+      width: '100%',
+      display: 'flex',
+      padding: '8px 12px',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      zIndex: 999999,
+    },
+
+    info: {},
+    interaction: {
+      display: 'flex',
+    },
+
+    body: {
+      flex: 1,
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    footer: {
+      height: '50px',
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: '8px 12px',
+    },
+
+    icon: {
+      color: theme.font.high.color,
+      width: '36px',
+      height: '36px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      '&>svg': {
+        width: '20px',
+        height: '20px',
+      },
+    },
+
+    arrowWrapper: {
+      position: 'absolute',
+      height: 'calc(50% + 40px)',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+    },
+    arrow: {
+      color: theme.font.high.color,
+      width: '80px',
+      height: '80px',
+      display: 'flex',
+      alignItems: 'flex-end',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      '&>svg': {
+        width: '60px',
+        height: '60px',
+      },
+    },
+
+    disabled: {
+      opacity: 0.3,
+      pointerEvents: 'none',
     },
   })
 )
