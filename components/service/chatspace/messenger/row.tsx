@@ -1,4 +1,5 @@
 import { IChannel } from '../../../../types/chat.types'
+import { allTagRegex, imageRegex } from '../../../context/regex'
 
 interface IRowProps {
   target: IChannel
@@ -8,6 +9,18 @@ interface IRowProps {
 
 function Row(props: IRowProps) {
   const { target, setTarget, classes } = props
+  const filteredMessage = (target.recentMessage ?? '').replace(allTagRegex, '')
+  const checkImage = (() => {
+    const regexMessage = imageRegex.exec(target.recentMessage)
+    if (regexMessage === null) return false
+    return true
+  })()
+  const recentText = (() => {
+    if (filteredMessage === '' && checkImage === true) {
+      return '(image)'
+    }
+    return filteredMessage
+  })()
 
   const handleClickRow = () => {
     setTarget(target)
@@ -22,7 +35,7 @@ function Row(props: IRowProps) {
           <div className={classes.participant}>{target.chatName !== undefined && target.chatParticipant.length}</div>
           <div className={classes.etc}></div>
         </div>
-        <div className={classes.thumbnail}>{target.recentMessage}</div>
+        <div className={classes.thumbnail}>{recentText}</div>
       </div>
       <div className={classes.chatInfo}>
         <div className={classes.lastTime}>{target.recentTime.split(' ')[0]}</div>

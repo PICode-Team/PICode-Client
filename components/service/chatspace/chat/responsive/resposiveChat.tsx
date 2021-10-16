@@ -17,6 +17,7 @@ interface IResponsiveProps {
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
+  setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 }
 
 function ResponsiveChat(props: IResponsiveProps) {

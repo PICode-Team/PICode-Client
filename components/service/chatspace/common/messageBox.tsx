@@ -62,6 +62,7 @@ function MessageBox(props: IMessageBoxProps) {
         parentMessage: message,
         parentTime: time,
         parentUser: user,
+        parentChatParticipant: target.chatParticipant,
       })
     }
   }

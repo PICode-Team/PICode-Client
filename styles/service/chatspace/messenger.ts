@@ -35,6 +35,19 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '8px',
       boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 10px',
       zIndex: 9,
+      '& *::-webkit-scrollbar': {
+        height: '10px',
+        width: '8px',
+        backgroundColor: theme.scroll.bar,
+      },
+      '& *::-webkit-scrollbar-thumb': {
+        borderRadius: '10px',
+        backgroundColor: theme.scroll.thumb,
+      },
+      '& *::-webkit-scrollbar-track': {
+        borderRadius: '10px',
+        backgroundColor: theme.scroll.track,
+      },
     },
 
     wrapper: {
@@ -163,7 +176,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
     time: {
       fontSize: '10px',
       margin: '0px 5px',
-      width: 'fit-content',
+      width: '46px',
       whiteSpace: 'nowrap',
       color: '#ffffff',
     },
@@ -200,6 +213,8 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
           color: 'rgba(255, 255, 255, 0.7)',
         },
       },
+      display: 'flex',
+      alignItems: 'center',
     },
     imoji: {
       cursor: 'pointer',
@@ -212,6 +227,8 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
           color: 'rgba(255, 255, 255 0.7)',
         },
       },
+      display: 'flex',
+      alignItems: 'center',
     },
     input: {
       width: '100%',
@@ -232,6 +249,8 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
           color: 'rgba(255, 255, 255, 0.7)',
         },
       },
+      display: 'flex',
+      alignItems: 'center',
     },
 
     homeHeader: {
@@ -245,15 +264,6 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       overflow: 'auto',
       display: 'flex',
       flexDirection: 'column',
-      '&::-webkit-scrollbar': {
-        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
-      },
-      '&::-webkit-scrollbar-thumb': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      },
-      '&::-webkit-scrollbar-track': {
-        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
-      },
     },
     homeFooter: {
       display: 'flex',
@@ -333,7 +343,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
     lastTime: {
       fontSize: '10px',
       color: 'rgba(255, 255, 255, 0.3)',
-      width: '44px',
+      width: '55px',
     },
     count: {
       fontSize: '10px',
@@ -387,6 +397,47 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       display: 'none',
       backgroundColor: '#667485',
       borderRadius: '4px',
+    },
+
+    customInput: {
+      height: '38px',
+      width: '100%',
+      backgroundColor: 'inherit',
+      outline: 'none',
+      border: 'none',
+      padding: '8px',
+      fontSize: '16px',
+      overflow: 'auto',
+      color: theme.font.high.color,
+    },
+
+    mentionHelper: {
+      position: 'absolute',
+      width: '200px',
+      bottom: '40px',
+      backgroundColor: theme.backgroundColor.step3,
+      marginLeft: '80px',
+      color: theme.font.high.color,
+    },
+
+    mentionTarget: {
+      height: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.font.high.color}`,
+      lineHeight: '26px',
+      padding: '0px 8px',
+      cursor: 'pointer',
+      '&:nth-last-child(1)': {
+        borderBottom: 'none',
+      },
+      '&:hover': {
+        backgroundColor: theme.backgroundColor.step4,
+      },
+    },
+
+    active: {
+      backgroundColor: '#525252',
     },
   })
 )

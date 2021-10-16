@@ -11,6 +11,19 @@ export const layoutStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      '& *::-webkit-scrollbar': {
+        height: '10px',
+        width: '8px',
+        backgroundColor: theme.scroll.bar,
+      },
+      '& *::-webkit-scrollbar-thumb': {
+        borderRadius: '10px',
+        backgroundColor: theme.scroll.thumb,
+      },
+      '& *::-webkit-scrollbar-track': {
+        borderRadius: '10px',
+        backgroundColor: theme.scroll.track,
+      },
     },
     loginContent: {
       backgroundColor: theme.loginBackground,

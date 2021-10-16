@@ -26,7 +26,8 @@ function Chat(props: IChatProps) {
   const [target, setTarget] = useState<IChannel | null>(null)
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [modal, setModal] = useState<boolean>(false)
-  const [userId, setUserId] = useState<IUser | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const ws: any = useWs()
 
   const getUserList = async () => {
@@ -207,6 +208,15 @@ function Chat(props: IChatProps) {
   }, [])
 
   useEffect(() => {
+    if (typeof window === undefined) return
+
+    const value = window.localStorage.getItem('userId')
+    if (value === null) return
+
+    setUserId(value)
+  }, [])
+
+  useEffect(() => {
     ws.addEventListener('message', chatWebSocketHandler)
     if (channelList.length === 0) {
       getChat()
@@ -222,11 +232,11 @@ function Chat(props: IChatProps) {
       <div className={classes.chat}>
         <Sidebar channelList={channelList} setTarget={setTarget} setModal={setModal} />
         {target !== null ? (
-          <Content target={target} messageList={messageList} typingUserList={typingUserList} setThread={setThread} particiapntList={userList} />
+          <Content target={target} messageList={messageList} typingUserList={typingUserList} setThread={setThread} particiapntList={userList} setMediaViewData={setMediaViewData} />
         ) : (
           <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
         )}
-        {thread !== null && <Activitybar thread={thread} setThread={setThread} particiapntList={userList} />}
+        {thread !== null && <Activitybar thread={thread} setThread={setThread} particiapntList={userList} setMediaViewData={setMediaViewData} />}
         <ResponsiveChat
           messageList={messageList}
           newMessage={newMessage}
@@ -238,6 +248,7 @@ function Chat(props: IChatProps) {
           setTarget={setTarget}
           setModal={setModal}
           setThread={setThread}
+          setMediaViewData={setMediaViewData}
         />
         <CreateChannel modal={modal} setModal={setModal} />
       </div>

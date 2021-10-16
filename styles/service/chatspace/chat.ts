@@ -191,7 +191,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '14px',
       padding: '4px 14px',
       color: theme.font.high.color,
-      maxWidth: '750px',
+      flex: 1,
       height: 'fit-content',
     },
     time: {
@@ -687,8 +687,8 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     footer: {
       display: 'flex',
       borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-      padding: '10px',
-      paddingTop: '15px',
+      padding: '6px 10px',
+      paddingTop: '10px',
       alignItems: 'center',
     },
     row: {
@@ -815,22 +815,12 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       height: 'calc(100% - 129px)',
       overflow: 'auto',
       display: 'flex',
-      flexDirection: 'column',
-      '&::-webkit-scrollbar': {
-        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
-      },
-      '&::-webkit-scrollbar-thumb': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      },
-      '&::-webkit-scrollbar-track': {
-        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
-      },
     },
     footer: {
       display: 'flex',
       borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-      padding: '10px',
-      paddingTop: '15px',
+      padding: '6px 10px',
+      paddingTop: '10px',
       alignItems: 'center',
     },
     row: {
@@ -969,6 +959,47 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'flex-end',
       margin: '10px 0px',
     },
+
+    customInput: {
+      height: '38px',
+      width: '100%',
+      backgroundColor: 'inherit',
+      outline: 'none',
+      border: 'none',
+      padding: '8px',
+      fontSize: '16px',
+      overflow: 'auto',
+      color: theme.font.high.color,
+    },
+
+    mentionHelper: {
+      position: 'absolute',
+      width: '200px',
+      bottom: '40px',
+      backgroundColor: theme.backgroundColor.step3,
+      marginLeft: '80px',
+      color: theme.font.high.color,
+    },
+
+    mentionTarget: {
+      height: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.font.high.color}`,
+      lineHeight: '26px',
+      padding: '0px 8px',
+      cursor: 'pointer',
+      '&:nth-last-child(1)': {
+        borderBottom: 'none',
+      },
+      '&:hover': {
+        backgroundColor: theme.backgroundColor.step4,
+      },
+    },
+
+    active: {
+      backgroundColor: '#525252',
+    },
   })
 )
 
@@ -1035,8 +1066,8 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     footer: {
       display: 'flex',
       borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-      padding: '10px',
-      paddingTop: '15px',
+      padding: '6px 10px',
+      paddingTop: '10px',
       alignItems: 'center',
     },
     row: {
@@ -1184,6 +1215,47 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
           display: 'flex',
         },
       },
+    },
+
+    customInput: {
+      height: '38px',
+      width: '100%',
+      backgroundColor: 'inherit',
+      color: 'inherit',
+      outline: 'none',
+      border: 'none',
+      padding: '8px',
+      fontSize: '16px',
+      overflow: 'auto',
+    },
+
+    mentionHelper: {
+      position: 'absolute',
+      width: '200px',
+      bottom: '100px',
+      backgroundColor: theme.backgroundColor.step3,
+      marginLeft: '20px',
+      color: theme.font.high.color,
+    },
+
+    mentionTarget: {
+      height: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.font.high.color}`,
+      lineHeight: '26px',
+      padding: '0px 8px',
+      cursor: 'pointer',
+      '&:nth-last-child(1)': {
+        borderBottom: 'none',
+      },
+      '&:hover': {
+        backgroundColor: theme.backgroundColor.step4,
+      },
+    },
+
+    active: {
+      backgroundColor: '#525252',
     },
   })
 )
