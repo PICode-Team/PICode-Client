@@ -56,24 +56,24 @@ export const signupStyle = makeStyles((theme: IThemeStyle) =>
     },
     activeCir: {
       '&>span>span>svg': {
-        color: '#609FF3!important',
+        color: '#609FF3 !important',
       },
     },
     disableCir: {
       '&>span>span>svg': {
-        color: '#566372!important',
+        color: '#566372 !important',
       },
     },
     stepperTextact: {
       '&>span>span': {
-        color: `${theme.font.high.color}!important`,
-        marginTop: '8px!important',
+        color: `${theme.font.high.color} !important`,
+        marginTop: '8px !important',
       },
     },
     stepperText: {
       '&>span>span': {
-        color: '#566372!important',
-        marginTop: '8px!important',
+        color: '#566372 !important',
+        marginTop: '8px !important',
       },
     },
     uploadFile: {

@@ -46,8 +46,16 @@ function CreateProject() {
 
   const handleNextButton = () => {
     if (step === 2) {
+      if (workspaceInfo.name === '') {
+        alert('Please fill in the essential information.')
+        return
+      }
       setStep(3)
     } else {
+      if (dockerInfo.image === '') {
+        alert('Please fill in the essential information.')
+        return
+      }
       submitData()
     }
   }

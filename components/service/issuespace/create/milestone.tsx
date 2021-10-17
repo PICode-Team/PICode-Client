@@ -10,7 +10,7 @@ interface ICreateMilestoneProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   modalMile: IMilestone | null
-  workspaceId: string
+  workspaceId?: string
 }
 
 interface ICreateMileState {
@@ -42,7 +42,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
         JSON.stringify({
           category: 'milestone',
           type: 'createMilestone',
-          data: { ...payload, workspaceId },
+          data: { ...payload, workspaceId, startDate: payload.startDate.slice(2), endDate: payload.endDate.slice(2) },
         })
       )
     }
@@ -54,7 +54,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
         JSON.stringify({
           category: 'milestone',
           type: 'updateMilestone',
-          data: { ...payload, workspaceId },
+          data: { ...payload, workspaceId, startDate: payload.startDate.slice(2), endDate: payload.endDate.slice(2) },
         })
       )
     }
@@ -62,9 +62,9 @@ function CreateMilestone(props: ICreateMilestoneProps) {
 
   const handleSubmit = (isCreate: boolean) => () => {
     if (isCreate) {
-      createMilestone(payload, workspaceId)
+      createMilestone(payload, workspaceId ?? '')
     } else {
-      updateMilestone(payload, workspaceId)
+      updateMilestone(payload, workspaceId ?? '')
     }
     setPayload(initialState)
     setModal(false)

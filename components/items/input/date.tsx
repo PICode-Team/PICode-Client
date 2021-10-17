@@ -8,23 +8,23 @@ const dateStyle = makeStyles((theme: IThemeStyle) =>
     textField: {
       width: '100%',
       marginTop: '6px',
-      color: '#ffffff !important',
+      color: `${theme.font.high.color} !important`,
       '& *': {
-        color: '#ffffff !important',
-        borderColor: '#ffffff',
-        fill: '#ffffff',
+        fill: `${theme.font.high.color} !important`,
+        color: `${theme.font.high.color} !important`,
+        borderColor: `${theme.font.high.color} !important`,
       },
       '& input::-webkit-calendar-picker-indicator': {
-        fill: '#ffffff !important',
-        color: '#ffffff !important',
+        fill: `${theme.font.high.color} !important`,
+        color: `${theme.font.high.color} !important`,
         filter: 'invert(48%) sepia(30%) saturate(0%) hue-rotate(203deg) brightness(90%) contrast(95%)',
       },
       '& input::-webkit-inner-spin-button': {
-        fill: '#ffffff',
-        color: '#ffffff !important',
+        fill: `${theme.font.high.color} !important`,
+        color: `${theme.font.high.color} !important`,
       },
       '& svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
       },
       '& .MuiInput-underline:before': {
         borderColor: 'rgba(255, 255, 255, 0.32) !important',

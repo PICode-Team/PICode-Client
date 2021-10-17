@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { recentWorkStyle } from '../../../styles/service/dashboard/dashboard'
-import { Add, ArrowBackIos, DeleteForever, Settings } from '@material-ui/icons'
+import { Add, ArrowBackIos, DeleteForever, Settings, CloudDownload } from '@material-ui/icons'
 import { IconButton } from '@material-ui/core'
 import { Carousel } from 'react-responsive-carousel'
 import Swal from 'sweetalert2'
@@ -75,6 +75,83 @@ function RecentWork(props: IRecentWorkProps) {
   useEffect(() => {
     getWorkspaceData()
   }, [])
+
+  const handleExportWorkspace = (workspaceInfo: IWorkspaceSpec) => async (event: React.MouseEvent) => {
+    event.stopPropagation()
+    event.preventDefault()
+
+    const result = await Swal.fire({
+      title: 'Export Workspace',
+      text: `Choose between Codespace files and Container itself.`,
+      icon: 'info',
+      heightAuto: false,
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Codespace files',
+      denyButtonText: `Container itself`,
+    })
+
+    if (result.isConfirmed) {
+      const extension = await Swal.fire({
+        title: 'Submit file extension \n(e.g. zip, tar, tar.gz, etc)',
+        input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off',
+        },
+        showCancelButton: true,
+        heightAuto: false,
+      })
+
+      if (extension.value === undefined) return
+
+      const payload = {
+        option: {
+          workspaceOption: {
+            workspaceId: workspaceInfo.workspaceId,
+            extension: extension.value,
+          },
+        },
+      }
+
+      await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
+    } else if (result.isDenied) {
+      const imageName = await Swal.fire({
+        title: 'Submit image name',
+        input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off',
+        },
+        showCancelButton: true,
+        heightAuto: false,
+      })
+
+      if (imageName.value === undefined) return
+
+      const tagName = await Swal.fire({
+        title: 'Submit tag name',
+        input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off',
+        },
+        showCancelButton: true,
+        heightAuto: false,
+      })
+
+      if (tagName.value === undefined) return
+
+      const payload = {
+        option: {
+          dockerOption: {
+            containerId: workspaceInfo.containerId,
+            imageName: imageName.value,
+            tagName: tagName.value,
+          },
+        },
+      }
+
+      await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
+    }
+  }
 
   const handleLinkEditPage = (workspaceId: string) => (event: React.MouseEvent) => {
     event.stopPropagation()
@@ -159,6 +236,9 @@ function RecentWork(props: IRecentWorkProps) {
             <div className={classes.full}>
               <div className={classes.projectName}>
                 <span>{i.name}</span>
+                <span onClick={handleExportWorkspace(i)} className={classes.export}>
+                  <CloudDownload />
+                </span>
                 <span onClick={handleLinkEditPage(i.workspaceId)} className={classes.edit}>
                   <Settings className={classes.icon} />
                 </span>

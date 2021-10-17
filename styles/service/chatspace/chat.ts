@@ -5,7 +5,7 @@ import { IThemeStyle } from '../../theme'
 export const chatStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     chat: {
-      backgroundColor: '#2c3239',
+      backgroundColor: theme.backgroundColor.step1,
       width: '100%',
       height: 'calc(100% - 90px)',
       display: 'flex',
@@ -46,7 +46,7 @@ export const activitybarHeaderStyle = makeStyles((theme: IThemeStyle) =>
       height: '60px',
       width: '100%',
       borderBottom: '1px solid #505050',
-      color: '#ffffff',
+      color: theme.font.high.color,
       display: 'flex',
       alignItems: 'center',
       padding: '0px 20px',
@@ -90,7 +90,7 @@ export const contentStyle = makeStyles((theme: IThemeStyle) =>
     contentWrapper: {
       height: '100%',
       flex: 1,
-      backgroundColor: '#2C3239',
+      backgroundColor: theme.backgroundColor.step1,
       '@media screen and (max-width: 1280px)': {
         display: 'none',
       },
@@ -153,17 +153,20 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
     },
     messageInfo: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
       '&:hover': {
-        '&>div>span>span': {
+        '&>div>span>strong>span': {
           display: 'none',
         },
-        '&>div>span>div': {
+        '&>div>span>strong>div': {
           display: 'flex',
         },
       },
     },
     thumbnail: {
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       width: '22px',
       height: '22px',
       borderRadius: '11px',
@@ -188,13 +191,14 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '14px',
       padding: '4px 14px',
       color: theme.font.high.color,
-      maxWidth: '750px',
+      flex: 1,
       height: 'fit-content',
     },
     time: {
       color: theme.font.high.color,
       fontSize: '10px',
       margin: '0px 5px',
+      height: '18px',
     },
     interactionDivider: {
       width: '1px',
@@ -213,7 +217,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       },
       '&:hover': {
         '&>svg': {
-          color: '#ffffff',
+          color: theme.font.high.color,
         },
       },
     },
@@ -240,17 +244,17 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
         width: '18px',
         height: '18px',
         borderRadius: '9px',
-        backgroundColor: '#ffffff',
+        backgroundColor: theme.font.high.color,
         marginRight: '4px',
       },
     },
     threadCount: {
       marginRight: '6px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontSize: '12px',
     },
     lastThread: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontSize: '12px',
     },
     reversedMessageBox: {
@@ -301,6 +305,17 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       opacity: 0.6,
       padding: '0px 10px',
       paddingBottom: '5px',
+    },
+
+    imageWrapper: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+
+    contentImage: {
+      marginTop: '2px',
+      marginLeft: '10px',
+      cursor: 'pointer',
     },
   })
 )
@@ -371,10 +386,10 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
         alignItems: 'center',
       },
       '&>div>div>svg': {
-        color: '#515C60',
+        color: theme.backgroundColor.step3,
         cursor: 'pointer',
         '&:hover': {
-          color: '#ffffff',
+          color: theme.font.high.color,
         },
       },
     },
@@ -431,6 +446,10 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
         backgroundColor: theme.backgroundColor.step4,
       },
     },
+
+    active: {
+      backgroundColor: '#525252',
+    },
   })
 )
 
@@ -439,7 +458,7 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
     sidebar: {
       width: '350px',
       height: '100%',
-      backgroundColor: '#3b434d',
+      backgroundColor: theme.backgroundColor.step2,
       padding: '20px',
       '@media screen and (max-width: 600px)': {
         display: 'none',
@@ -454,20 +473,21 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
     search: {
       width: '100%',
       height: '40px',
-      backgroundColor: '#434D59',
+      backgroundColor: theme.backgroundColor.step2,
+      filter: 'brightness(0.85)',
       borderRadius: '20px',
       display: 'flex',
       padding: '0px 12px',
       alignItems: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         marginRight: '6px',
       },
       '&>input': {
         backgroundColor: 'inherit',
         outline: 'none',
         border: 'none',
-        color: '#ffffff',
+        color: theme.font.high.color,
         marginTop: '4px',
         '&::placeholder': {
           color: 'rgba(183, 183, 183, 0.42)',
@@ -483,18 +503,19 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       width: 'calc(100% + 30px)',
       height: '60px',
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
       padding: '10px 26px',
       borderRadius: '10px',
       cursor: 'pointer',
       '&:hover': {
-        backgroundColor: '#505866',
+        backgroundColor: theme.backgroundColor.step2,
+        filter: 'brightness(1.1)',
       },
     },
     channelThumbnail: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
       backgroundImage: "url('/images/picode-7.svg')",
@@ -516,6 +537,7 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       textOverflow: 'ellipsis',
       width: '160px',
       marginRight: '6px',
+      height: '20px',
     },
     channelTail: {
       width: '70px',
@@ -530,19 +552,20 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       width: 'calc(100% + 30px)',
       height: '60px',
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
       padding: '10px 26px',
       borderRadius: '10px',
       justifyContent: 'center',
       alignItems: 'center',
       cursor: 'pointer',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         width: '40px',
         height: '40px',
       },
       '&:hover': {
-        backgroundColor: '#505866',
+        backgroundColor: theme.backgroundColor.step2,
+        filter: 'brightness(1.1)',
       },
     },
   })
@@ -562,7 +585,7 @@ export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
     targetThumbnail: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
       backgroundImage: "url('/images/picode-7.svg')",
@@ -571,7 +594,7 @@ export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
       backgroundRepeat: 'no-repeat',
     },
     targetInfo: {
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     targetName: {
       fontWeight: 'bold',
@@ -632,7 +655,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     },
     channel: { width: '90%' },
     name: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>span': {
         marginRight: '4px',
         fontSize: '18px',
@@ -642,7 +665,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     online: {
       display: 'flex',
       fontSize: '11px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>svg': {
         width: '12px',
         height: '12px',
@@ -668,8 +691,8 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     footer: {
       display: 'flex',
       borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-      padding: '10px',
-      paddingTop: '15px',
+      padding: '6px 10px',
+      paddingTop: '10px',
       alignItems: 'center',
     },
     row: {
@@ -687,7 +710,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       justifyContent: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         width: '30px',
         height: '30px',
       },
@@ -695,7 +718,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     users: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
     },
@@ -704,17 +727,17 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     },
     title: {
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     titleText: {
       fontSize: '11px',
       fontWeight: 'bold',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     participant: {
       fontSize: '11px',
       marginLeft: '4px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     etc: {},
     thumbnail: {
@@ -737,7 +760,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     count: {
       fontSize: '10px',
       backgroundColor: 'red',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontWeight: 'bold',
       padding: '2px 6px',
       borderRadius: '10px',
@@ -753,9 +776,12 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       width: '100%',
       height: 'calc(100% - 90px)',
       position: 'absolute',
-      backgroundColor: '#2C3239',
+      backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
         width: 'calc(100% - 550px)',
+      },
+      '@media screen and (min-width: 960px)': {
+        width: 'calc(100% - 414px) !important',
       },
     },
     toggleContent: {
@@ -774,7 +800,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     },
     channel: { width: '90%' },
     name: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>span': {
         marginRight: '4px',
         fontSize: '18px',
@@ -784,7 +810,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     online: {
       display: 'flex',
       fontSize: '11px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>svg': {
         width: '12px',
         height: '12px',
@@ -796,22 +822,12 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       height: 'calc(100% - 129px)',
       overflow: 'auto',
       display: 'flex',
-      flexDirection: 'column',
-      '&::-webkit-scrollbar': {
-        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
-      },
-      '&::-webkit-scrollbar-thumb': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      },
-      '&::-webkit-scrollbar-track': {
-        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
-      },
     },
     footer: {
       display: 'flex',
       borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-      padding: '10px',
-      paddingTop: '15px',
+      padding: '6px 10px',
+      paddingTop: '10px',
       alignItems: 'center',
     },
     row: {
@@ -829,7 +845,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       justifyContent: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         width: '30px',
         height: '30px',
       },
@@ -837,7 +853,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     users: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
     },
@@ -846,17 +862,17 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     },
     title: {
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     titleText: {
       fontSize: '11px',
       fontWeight: 'bold',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     participant: {
       fontSize: '11px',
       marginLeft: '4px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     etc: {},
     thumbnail: {
@@ -879,7 +895,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     count: {
       fontSize: '10px',
       backgroundColor: 'red',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontWeight: 'bold',
       padding: '2px 6px',
       borderRadius: '10px',
@@ -892,7 +908,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       '&>svg': {
         width: '28px',
         height: '28px',
-        color: '#ffffff',
+        color: theme.font.high.color,
       },
     },
     attachFile: {
@@ -927,7 +943,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       padding: '8px 12px',
       paddingTop: '2px',
       backgroundColor: 'inherit',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     send: {
       cursor: 'pointer',
@@ -950,6 +966,47 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'flex-end',
       margin: '10px 0px',
     },
+
+    customInput: {
+      height: '38px',
+      width: '100%',
+      backgroundColor: 'inherit',
+      outline: 'none',
+      border: 'none',
+      padding: '8px',
+      fontSize: '16px',
+      overflow: 'auto',
+      color: theme.font.high.color,
+    },
+
+    mentionHelper: {
+      position: 'absolute',
+      width: '200px',
+      bottom: '40px',
+      backgroundColor: theme.backgroundColor.step3,
+      marginLeft: '80px',
+      color: theme.font.high.color,
+    },
+
+    mentionTarget: {
+      height: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.font.high.color}`,
+      lineHeight: '26px',
+      padding: '0px 8px',
+      cursor: 'pointer',
+      '&:nth-last-child(1)': {
+        borderBottom: 'none',
+      },
+      '&:hover': {
+        backgroundColor: theme.backgroundColor.step4,
+      },
+    },
+
+    active: {
+      backgroundColor: '#525252',
+    },
   })
 )
 
@@ -959,9 +1016,12 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       width: '100%',
       height: 'calc(100% - 90px)',
       position: 'absolute',
-      backgroundColor: '#2C3239',
+      backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
         width: 'calc(100% - 550px)',
+      },
+      '@media screen and (min-width: 960px)': {
+        width: 'calc(100% - 414px) !important',
       },
     },
     toggleThread: {
@@ -980,7 +1040,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     },
     channel: { width: '90%' },
     name: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>span': {
         marginRight: '4px',
         fontSize: '18px',
@@ -990,7 +1050,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     online: {
       display: 'flex',
       fontSize: '11px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>svg': {
         width: '12px',
         height: '12px',
@@ -1016,8 +1076,8 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     footer: {
       display: 'flex',
       borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-      padding: '10px',
-      paddingTop: '15px',
+      padding: '6px 10px',
+      paddingTop: '10px',
       alignItems: 'center',
     },
     row: {
@@ -1035,7 +1095,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       justifyContent: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         width: '30px',
         height: '30px',
       },
@@ -1043,7 +1103,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     users: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
     },
@@ -1052,17 +1112,17 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     },
     title: {
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     titleText: {
       fontSize: '11px',
       fontWeight: 'bold',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     participant: {
       fontSize: '11px',
       marginLeft: '4px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     etc: {},
     thumbnail: {
@@ -1085,7 +1145,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     count: {
       fontSize: '10px',
       backgroundColor: 'red',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontWeight: 'bold',
       padding: '2px 6px',
       borderRadius: '10px',
@@ -1098,7 +1158,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       '&>svg': {
         width: '28px',
         height: '28px',
-        color: '#ffffff',
+        color: theme.font.high.color,
       },
     },
     attachFile: {
@@ -1133,7 +1193,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       padding: '8px 12px',
       paddingTop: '2px',
       backgroundColor: 'inherit',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     send: {
       cursor: 'pointer',
@@ -1165,6 +1225,148 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
           display: 'flex',
         },
       },
+    },
+
+    customInput: {
+      height: '38px',
+      width: '100%',
+      backgroundColor: 'inherit',
+      color: 'inherit',
+      outline: 'none',
+      border: 'none',
+      padding: '8px',
+      fontSize: '16px',
+      overflow: 'auto',
+    },
+
+    mentionHelper: {
+      position: 'absolute',
+      width: '200px',
+      bottom: '100px',
+      backgroundColor: theme.backgroundColor.step3,
+      marginLeft: '20px',
+      color: theme.font.high.color,
+    },
+
+    mentionTarget: {
+      height: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.font.high.color}`,
+      lineHeight: '26px',
+      padding: '0px 8px',
+      cursor: 'pointer',
+      '&:nth-last-child(1)': {
+        borderBottom: 'none',
+      },
+      '&:hover': {
+        backgroundColor: theme.backgroundColor.step4,
+      },
+    },
+
+    active: {
+      backgroundColor: '#525252',
+    },
+  })
+)
+
+export const mediaViewStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    overlay: {
+      width: '100%',
+      height: '100%',
+      position: 'fixed',
+      backgroundColor: 'black',
+      top: 0,
+      left: 0,
+      opacity: 0.4,
+      zIndex: 9999,
+    },
+    content: {
+      position: 'fixed',
+      backgroundColor: theme.backgroundColor.step2,
+      zIndex: 99999,
+      top: 0,
+      left: 0,
+      marginLeft: '5%',
+      marginTop: '2.5%',
+      borderRadius: '12px',
+      display: 'flex',
+      flexDirection: 'column',
+      width: '90%',
+      height: '90%',
+    },
+
+    header: {
+      height: '50px',
+      width: '100%',
+      display: 'flex',
+      padding: '8px 12px',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      zIndex: 999999,
+    },
+
+    info: {},
+    interaction: {
+      display: 'flex',
+    },
+
+    body: {
+      flex: 1,
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    footer: {
+      height: '50px',
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: '8px 12px',
+    },
+
+    icon: {
+      color: theme.font.high.color,
+      width: '36px',
+      height: '36px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      '&>svg': {
+        width: '20px',
+        height: '20px',
+      },
+    },
+
+    arrowWrapper: {
+      position: 'absolute',
+      height: 'calc(50% + 40px)',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+    },
+    arrow: {
+      color: theme.font.high.color,
+      width: '80px',
+      height: '80px',
+      display: 'flex',
+      alignItems: 'flex-end',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      '&>svg': {
+        width: '60px',
+        height: '60px',
+      },
+    },
+
+    disabled: {
+      opacity: 0.3,
+      pointerEvents: 'none',
     },
   })
 )

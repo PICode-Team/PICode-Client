@@ -24,7 +24,8 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
     },
     input: {
       width: '100%',
-      backgroundColor: '#3b434c',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: 'brightness(1.2)',
       padding: '4px 8px',
       border: 'none',
       borderRadius: '2px',
@@ -46,7 +47,7 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       backgroundColor: '#5b6878',
       borderRadius: '4px',
       marginRight: '8px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontSize: '10px',
       display: 'flex',
       alignItems: 'center',
@@ -72,7 +73,8 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       },
     },
     userList: {
-      backgroundColor: '#3b434c',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: 'brightness(1.2)',
       width: 'calc(100% - 174px)',
       marginLeft: '114px',
       marginTop: '1px',
@@ -84,12 +86,12 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
     thumbnail: {
       width: '18px',
       height: '18px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '12px',
       marginRight: '6px',
     },
     userName: {
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     privileges: {},
   })

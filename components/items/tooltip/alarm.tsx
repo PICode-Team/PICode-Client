@@ -38,7 +38,7 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
       backgroundColor: '#505965',
     },
     row: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       padding: '6px 14px',
       backgroundColor: '#505965',
       display: 'flex',
@@ -53,7 +53,7 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
     thumbnail: {
       width: '32px',
       height: '32px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '16px',
       marginRight: '6px',
     },
@@ -141,7 +141,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
     if (message.category === 'alarm') {
       switch (message.type) {
         case 'getAlarm':
-          setAlarmList(message.data.filter((v: any) => !v.checkAlarm))
+          setAlarmList(message.data.filter((v: any) => v.checkAlarm))
           break
         case 'checkAlarm':
           if (alarmList !== null) {

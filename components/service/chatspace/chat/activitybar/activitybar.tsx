@@ -10,10 +10,11 @@ interface IActivitybarProps {
   thread: IThread
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   particiapntList: IUser[]
+  setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 }
 
 function Activitybar(props: IActivitybarProps) {
-  const { thread, setThread, particiapntList } = props
+  const { thread, setThread, particiapntList, setMediaViewData } = props
   const classes = activitybarStyle()
   const threadMessageRef = useRef<HTMLInputElement>(null)
   const threadEndRef = useRef<HTMLInputElement>(null)
@@ -36,19 +37,6 @@ function Activitybar(props: IActivitybarProps) {
     }
   }
 
-  const pressEnterHandler = (event: KeyboardEvent) => {
-    if (event.key !== 'Enter') return
-    if (threadMessageRef === null) return
-    if (threadMessageRef.current!.value === '') return
-
-    const focusElemet = document.activeElement
-    if (focusElemet !== threadMessageRef.current) return
-
-    sendMessage(thread.chatName, threadMessageRef.current!.value, thread.parentId)
-    threadMessageRef.current!.value = ''
-    threadEndRef.current!.scrollIntoView()
-  }
-
   useEffect(() => {
     if (typeof window === undefined) return
 
@@ -56,17 +44,20 @@ function Activitybar(props: IActivitybarProps) {
     if (value === null) return
 
     setUserId(value)
-
-    document.addEventListener('keypress', pressEnterHandler)
-    return () => {
-      document.removeEventListener('keypress', pressEnterHandler)
-    }
-  }, [thread])
+  }, [])
 
   return (
     <div className={classes.activitybar}>
       <Header thread={thread} setThread={setThread} />
-      <Content thread={thread} userId={userId} threadMessageRef={threadMessageRef} threadEndRef={threadEndRef} setThread={setThread} particiapntList={particiapntList} />
+      <Content
+        thread={thread}
+        userId={userId}
+        threadMessageRef={threadMessageRef}
+        threadEndRef={threadEndRef}
+        setThread={setThread}
+        particiapntList={particiapntList}
+        setMediaViewData={setMediaViewData}
+      />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { IItemDefautlProps, IInputProps } from '../../../types/item.types'
 const checkboxStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     wrapper: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontSize: '12px',
       display: 'flex',
       justifyContent: 'flex-end',

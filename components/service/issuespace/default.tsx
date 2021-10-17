@@ -1,33 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Search } from '@material-ui/icons'
-import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import Swal from 'sweetalert2'
 
 import { manageStyle } from '../../../styles/service/issuespace/issue'
-import { IKanban, IMilestone } from '../../../types/issue.types'
-import { useWs } from '../../context/websocket'
 import CustomButton from '../../items/button/button'
-import CreateMilestone from './create/milestone'
+import { IIssue, IKanban, IMilestone } from '../../../types/issue.types'
 import CreateKanban from './create/kanban'
-import Board from './board'
+import CreateMilestone from './create/milestone'
+import CreateIssue from './create/issue'
 import Milestone from './milestone'
+import Board from './board'
+import Issue from './issue'
+import { useWs } from '../../context/websocket'
+import Label from './label'
+import CreateLabel from './create/label'
 
-interface IManageSpaceProps {}
-
-export default function ManageSpace(props: IManageSpaceProps) {
+function DefaultIssue() {
   const classes = manageStyle()
-  const router = useRouter()
-  const manageMenu = ['Board', 'Milestone']
-  const [menu, setMenu] = useState<string>('Milestone')
+  const manageMenu = ['Issue', 'Board', 'Milestone', 'Label']
+  const [menu, setMenu] = useState<string>('Issue')
   const [modal, setModal] = useState<boolean>(false)
   const [kanbanList, setKanbanList] = useState<IKanban[]>([])
   const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
   const [mileList, setMileList] = useState<IMilestone[]>([])
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
+  const [issueList, setIssueList] = useState<IIssue[]>([])
+  const [modalIssue, setModalIssue] = useState<IIssue | null>(null)
   const ws: any = useWs()
-  const { workspaceId } = router.query
 
   const handleCreateButton = (event: React.MouseEvent<HTMLElement>) => {
     setModal(true)
@@ -40,6 +41,20 @@ export default function ManageSpace(props: IManageSpaceProps) {
           category: 'kanban',
           type: 'getKanban',
           data: {},
+        })
+      )
+    }
+  }
+
+  const getIssue = (kanbanUUID: string) => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'issue',
+          type: 'getIssue',
+          data: {
+            kanbanUUID,
+          },
         })
       )
     }
@@ -74,7 +89,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
           if (message.data.code / 100 === 2) {
             await Swal.fire({
               title: 'SUCCESS',
-              text: `DELETE ${workspaceId}`,
+              text: `DELETE ${'workspaceId'}`,
               icon: 'success',
               heightAuto: false,
             })
@@ -83,7 +98,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
             Swal.fire({
               title: 'ERROR',
               html: `
-                    ERROR in DELETE ${workspaceId}
+                    ERROR in DELETE ${'workspaceId'}
                     <br />
                     <span>${message.data.code}</span>
                     `,
@@ -114,7 +129,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
           if (message.data.code / 100 === 2) {
             await Swal.fire({
               title: 'SUCCESS',
-              text: `DELETE ${workspaceId}`,
+              text: `DELETE ${'workspaceId'}`,
               icon: 'success',
               heightAuto: false,
             })
@@ -123,7 +138,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
             Swal.fire({
               title: 'ERROR',
               html: `
-                    ERROR in DELETE ${workspaceId}
+                    ERROR in DELETE ${'workspaceId'}
                     <br />
                     <span>${message.data.code}</span>
                     `,
@@ -134,6 +149,17 @@ export default function ManageSpace(props: IManageSpaceProps) {
           break
 
         default:
+      }
+    } else if (message.category === 'issue') {
+      switch (message.type) {
+        case 'getIssue':
+          if (message.data.issues.length > 0) {
+            setIssueList([...issueList, ...message.data.issues])
+          }
+          break
+
+        default:
+          break
       }
     }
   }
@@ -147,7 +173,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
     return () => {
       ws.removeEventListener('message', issueWebSocketHandler)
     }
-  }, [ws?.readyState])
+  }, [ws?.readyState, issueList])
 
   const handleChangeMenu = (name: string) => () => {
     setMenu(name)
@@ -155,9 +181,13 @@ export default function ManageSpace(props: IManageSpaceProps) {
 
   useEffect(() => {
     setTimeout(() => {
-      setMenu('Board')
+      setMenu('Issue')
     }, 100)
   }, [])
+
+  useEffect(() => {
+    kanbanList.map((v) => getIssue(v.uuid))
+  }, [kanbanList])
 
   return (
     <div className={classes.manage}>
@@ -178,19 +208,19 @@ export default function ManageSpace(props: IManageSpaceProps) {
             ))}
           </div>
           <div className={classes.manageContent}>
-            {menu === 'Board' ? (
-              <Board kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />
-            ) : (
-              <Milestone milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />
-            )}
+            {menu === 'Issue' && <Issue issueList={issueList} setModal={setModal} setModalIssue={setModalIssue} />}
+            {menu === 'Board' && <Board kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />}
+            {menu === 'Milestone' && <Milestone milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />}
+            {menu === 'Label' && <Label />}
           </div>
         </div>
       </div>
-      {menu === 'Board' ? (
-        <CreateKanban modal={modal} setModal={setModal} modalKanban={modalKanban} workspaceId={workspaceId as string} />
-      ) : (
-        <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} workspaceId={workspaceId as string} />
-      )}
+      {menu === 'Issue' && <CreateIssue modal={modal} setModal={setModal} mileList={mileList} />}
+      {menu === 'Board' && <CreateKanban modal={modal} setModal={setModal} modalKanban={modalKanban} />}
+      {menu === 'Milestone' && <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} />}
+      {menu === 'Label' && <CreateLabel />}
     </div>
   )
 }
+
+export default DefaultIssue

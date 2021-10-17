@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { useWs } from '../../../context/websocket'
 import { fetchSet } from '../../../context/fetch'
 import { IUser } from '../../../../types/user.types'
+import MediaView from '../common/mediaView'
 
 interface IMessengerProps {
   userId: string
@@ -32,6 +33,7 @@ function Messenger(props: IMessengerProps) {
   const [userList, setUserList] = useState<IUser[]>([])
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [thread, setThread] = useState<IThread | null>(null)
+  const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const ws: any = useWs()
 
   const handleOpenMessenger = () => {
@@ -214,9 +216,21 @@ function Messenger(props: IMessengerProps) {
         {target === null ? (
           <Home channelList={channelList} setOpen={setOpen} setTarget={setTarget} />
         ) : (
-          <Room userId={userId} target={target} messageList={messageList} newMessage={newMessage} thread={thread} particiapntList={[]} setTarget={setTarget} setOpen={setOpen} setThread={setThread} />
+          <Room
+            userId={userId}
+            target={target}
+            messageList={messageList}
+            newMessage={newMessage}
+            thread={thread}
+            particiapntList={[]}
+            setTarget={setTarget}
+            setOpen={setOpen}
+            setThread={setThread}
+            setMediaViewData={setMediaViewData}
+          />
         )}
-        {thread !== null && <Thread userId={userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} />}
+        {thread !== null && <Thread userId={userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} setMediaViewData={setMediaViewData} />}
+        {mediaViewData !== null && <MediaView mediaViewData={mediaViewData} setMediaViewData={setMediaViewData} />}
       </React.Fragment>
     )
   }

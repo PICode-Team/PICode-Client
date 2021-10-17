@@ -40,10 +40,10 @@ const initialState: ICreateIssueState = {
 interface ICreateIssueProps {
   modal: boolean
   setModal: React.Dispatch<React.SetStateAction<boolean>>
-  kanbanUUID: string
+  kanbanUUID?: string
   mileList: IMilestone[]
-  column: string
-  workspaceId: string
+  column?: string
+  workspaceId?: string
 }
 
 interface IMilestoneSelect {
@@ -96,7 +96,14 @@ function CreateIssue(props: ICreateIssueProps) {
         JSON.stringify({
           category: 'issue',
           type: 'createIssue',
-          data: { kanbanUUID, issueData: payload },
+          data: {
+            kanbanUUID,
+            issueData: {
+              ...payload,
+              startDate: payload.startDate.slice(2),
+              dueDate: payload.dueDate.slice(2),
+            },
+          },
         })
       )
 

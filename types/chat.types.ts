@@ -27,4 +27,5 @@ export interface IThread {
   messageList: IChat[]
   parentId: string
   parentTime: string
+  parentChatParticipant: string[]
 }

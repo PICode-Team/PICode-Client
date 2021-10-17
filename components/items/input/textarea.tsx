@@ -11,7 +11,8 @@ const textareaStyle = makeStyles((theme: IThemeStyle) =>
     },
     textarea: {
       width: '100%',
-      background: '#3b434c',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: 'brightness(1.2)',
       padding: '6px 12px',
       border: 'none',
       borderRadius: '2px',

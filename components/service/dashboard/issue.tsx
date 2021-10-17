@@ -46,7 +46,7 @@ function IssueView(props: IIssueViewProps) {
         case 'getKanban':
           const kanbans: string[] = []
           message.data.kanbans.forEach((v: any) => {
-            kanbans.push(v.uuid)
+            kanbans.push(v)
           })
           setKanbanList(kanbans)
           break

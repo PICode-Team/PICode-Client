@@ -10,13 +10,14 @@ import { fetchSet } from '../../../context/fetch'
 import CreateChannel from '../common/createChannel'
 import ResponsiveChat from './responsive/resposiveChat'
 import { useWs } from '../../../context/websocket'
+import MediaView from '../common/mediaView'
 
 interface IChatProps {
   toggle: boolean
 }
 
-function Chat(ctx: IChatProps) {
-  const { toggle } = ctx
+function Chat(props: IChatProps) {
+  const { toggle } = props
   const classes = chatStyle()
   const [messageList, setMessageList] = useState<IChat[]>([])
   const [channelList, setChannelList] = useState<IChannel[]>([])
@@ -26,7 +27,8 @@ function Chat(ctx: IChatProps) {
   const [target, setTarget] = useState<IChannel | null>(null)
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [modal, setModal] = useState<boolean>(false)
-  const [userId, setUserId] = useState<IUser | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const ws: any = useWs()
 
   const getUserList = async () => {
@@ -115,7 +117,19 @@ function Chat(ctx: IChatProps) {
           break
 
         case 'sendMessage':
-          getChat()
+          setChannelList(
+            channelList.map((v, i) => {
+              if (v.chatName === message.data.chatName) {
+                return {
+                  ...v,
+                  recentMessage: message.data.message,
+                  recentTime: message.data.time,
+                }
+              }
+
+              return v
+            })
+          )
 
           if (target!.chatName !== message.data.chatName) return
 
@@ -195,6 +209,15 @@ function Chat(ctx: IChatProps) {
   }, [])
 
   useEffect(() => {
+    if (typeof window === undefined) return
+
+    const value = window.localStorage.getItem('userId')
+    if (value === null) return
+
+    setUserId(value)
+  }, [])
+
+  useEffect(() => {
     ws.addEventListener('message', chatWebSocketHandler)
     if (channelList.length === 0) {
       getChat()
@@ -210,11 +233,11 @@ function Chat(ctx: IChatProps) {
       <div className={classes.chat}>
         <Sidebar channelList={channelList} setTarget={setTarget} setModal={setModal} />
         {target !== null ? (
-          <Content target={target} messageList={messageList} typingUserList={typingUserList} setThread={setThread} particiapntList={userList} />
+          <Content target={target} messageList={messageList} typingUserList={typingUserList} setThread={setThread} particiapntList={userList} setMediaViewData={setMediaViewData} />
         ) : (
           <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
         )}
-        {thread !== null && <Activitybar thread={thread} setThread={setThread} particiapntList={userList} />}
+        {thread !== null && <Activitybar thread={thread} setThread={setThread} particiapntList={userList} setMediaViewData={setMediaViewData} />}
         <ResponsiveChat
           messageList={messageList}
           newMessage={newMessage}
@@ -226,8 +249,10 @@ function Chat(ctx: IChatProps) {
           setTarget={setTarget}
           setModal={setModal}
           setThread={setThread}
+          setMediaViewData={setMediaViewData}
         />
         <CreateChannel modal={modal} setModal={setModal} />
+        {mediaViewData !== null && <MediaView mediaViewData={mediaViewData} setMediaViewData={setMediaViewData} />}
       </div>
     </React.Fragment>
   )

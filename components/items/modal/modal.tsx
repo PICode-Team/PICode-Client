@@ -12,7 +12,7 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     modal: {
       position: 'fixed',
-      backgroundColor: '#2c3239',
+      backgroundColor: theme.backgroundColor.step1,
       zIndex: 99999,
       top: 0,
       left: 0,

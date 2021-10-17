@@ -3,7 +3,6 @@ import { contentStyle } from '../../../../../styles/service/chatspace/chat'
 
 import { IChannel, IChat, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
-import { useWs } from '../../../../context/websocket'
 import Boundary from '../../common/boundary'
 import ChatInput from '../../common/chatInput'
 import MessageBox from '../../common/messageBox'
@@ -15,7 +14,8 @@ export const renderMessage = (
   isThread: boolean,
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>,
   target: IChannel | null,
-  particiapntList: IUser[]
+  particiapntList: IUser[],
+  setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 ) => {
   const renderElementList = []
 
@@ -27,7 +27,15 @@ export const renderMessage = (
     }
 
     renderElementList.push(
-      <MessageBox messageInfo={messageList[i]} key={`messagebox-${i}`} reverse={messageList[i].user === userId} target={target} particiapntList={particiapntList} setThread={setThread} />
+      <MessageBox
+        messageInfo={messageList[i]}
+        key={`messagebox-${i}`}
+        reverse={messageList[i].user === userId}
+        target={target}
+        particiapntList={particiapntList}
+        setThread={setThread}
+        setMediaViewData={setMediaViewData}
+      />
     )
   }
 
@@ -40,10 +48,11 @@ interface IContentProps {
   typingUserList: IUser[]
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   particiapntList: IUser[]
+  setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 }
 
 function Content(props: IContentProps) {
-  const { target, messageList, typingUserList, particiapntList, setThread } = props
+  const { target, messageList, typingUserList, particiapntList, setThread, setMediaViewData } = props
   const classes = contentStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
@@ -63,7 +72,7 @@ function Content(props: IContentProps) {
       <Header target={target} />
       <div className={classes.content}>
         <div className={classes.contentBox}>
-          {renderMessage(messageList, userId, false, setThread, target, particiapntList)}
+          {renderMessage(messageList, userId, false, setThread, target, particiapntList, setMediaViewData)}
           <div ref={endRef} />
         </div>
       </div>

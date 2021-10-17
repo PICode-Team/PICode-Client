@@ -13,10 +13,11 @@ interface IContentProps {
   threadEndRef: React.RefObject<HTMLDivElement>
   particiapntList: IUser[]
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
+  setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 }
 
 function Content(props: IContentProps) {
-  const { thread, userId, threadEndRef, threadMessageRef, particiapntList, setThread } = props
+  const { thread, userId, threadEndRef, threadMessageRef, particiapntList, setThread, setMediaViewData } = props
   const classes = activitybarContentStyle()
 
   const messageInfo = {
@@ -40,9 +41,9 @@ function Content(props: IContentProps) {
   return (
     <div className={classes.activitybarContent}>
       <div className={classes.contentBox}>
-        <MessageBox messageInfo={messageInfo} reverse={thread.parentUser === userId} setThread={setThread} particiapntList={particiapntList} target={null} />
+        <MessageBox messageInfo={messageInfo} reverse={thread.parentUser === userId} setThread={setThread} particiapntList={particiapntList} target={null} setMediaViewData={setMediaViewData} />
         {thread.messageList.length > 0 && <Boundary text={`${thread.messageList.length} replies`} />}
-        {renderMessage(thread.messageList, userId, true, setThread, null, particiapntList)}
+        {renderMessage(thread.messageList, userId, true, setThread, null, particiapntList, setMediaViewData)}
         <div ref={threadEndRef} />
       </div>
       <ChatInput messageRef={threadMessageRef} endRef={threadEndRef} typingUserList={[]} target={threadTarget} parentChatId={thread.parentId} />

@@ -26,7 +26,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       },
     },
     messenger: {
-      backgroundColor: '#3B434D',
+      backgroundColor: theme.backgroundColor.step2,
       width: '360px',
       height: '720px',
       position: 'fixed',
@@ -35,6 +35,19 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '8px',
       boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 10px',
       zIndex: 9,
+      '& *::-webkit-scrollbar': {
+        height: '10px',
+        width: '8px',
+        backgroundColor: theme.scroll.bar,
+      },
+      '& *::-webkit-scrollbar-thumb': {
+        borderRadius: '10px',
+        backgroundColor: theme.scroll.thumb,
+      },
+      '& *::-webkit-scrollbar-track': {
+        borderRadius: '10px',
+        backgroundColor: theme.scroll.track,
+      },
     },
 
     wrapper: {
@@ -55,14 +68,14 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       '&>svg': {
         width: '28px',
         height: '28px',
-        color: '#ffffff',
+        color: theme.font.high.color,
       },
     },
     opponent: {
       width: '90%',
     },
     name: {
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     text: {
       marginRight: '4px',
@@ -73,7 +86,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
     online: {
       display: 'flex',
       fontSize: '11px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>svg': {
         width: '12px',
         height: '12px',
@@ -87,12 +100,12 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
         height: '15px',
         transform: 'rotate(0.5turn)',
         marginRight: '4px',
-        color: '#ffffff',
+        color: theme.font.high.color,
       },
     },
     cancel: {
       cursor: 'pointer',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
 
     body: {
@@ -139,7 +152,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       fontWeight: 'bold',
       padding: '0px 12px',
       borderRadius: '8px',
-      backgroundColor: '#3B434D',
+      backgroundColor: theme.backgroundColor.step2,
     },
 
     messageBox: {
@@ -163,9 +176,9 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
     time: {
       fontSize: '10px',
       margin: '0px 5px',
-      width: 'fit-content',
+      width: '46px',
       whiteSpace: 'nowrap',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     textWrapper: {
       marginLeft: '6px',
@@ -178,7 +191,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       backgroundColor: 'rgba(255, 255, 255, 0.25)',
       borderRadius: '3px',
       padding: '4px 10px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
 
     footer: {
@@ -200,6 +213,8 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
           color: 'rgba(255, 255, 255, 0.7)',
         },
       },
+      display: 'flex',
+      alignItems: 'center',
     },
     imoji: {
       cursor: 'pointer',
@@ -212,6 +227,8 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
           color: 'rgba(255, 255, 255 0.7)',
         },
       },
+      display: 'flex',
+      alignItems: 'center',
     },
     input: {
       width: '100%',
@@ -220,7 +237,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       padding: '8px 12px',
       paddingTop: '2px',
       backgroundColor: 'inherit',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     send: {
       cursor: 'pointer',
@@ -232,6 +249,8 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
           color: 'rgba(255, 255, 255, 0.7)',
         },
       },
+      display: 'flex',
+      alignItems: 'center',
     },
 
     homeHeader: {
@@ -245,15 +264,6 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       overflow: 'auto',
       display: 'flex',
       flexDirection: 'column',
-      '&::-webkit-scrollbar': {
-        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
-      },
-      '&::-webkit-scrollbar-thumb': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      },
-      '&::-webkit-scrollbar-track': {
-        backgroundColor: 'rgba(230, 230, 230, 0.3) !important',
-      },
     },
     homeFooter: {
       display: 'flex',
@@ -290,7 +300,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       },
     },
     add: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       width: '30px !important',
       height: '30px !important',
     },
@@ -298,7 +308,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
     users: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '8px',
       marginRight: '12px',
     },
@@ -308,17 +318,17 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
     },
     title: {
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     titleText: {
       fontSize: '11px',
       fontWeight: 'bold',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     participant: {
       fontSize: '11px',
       marginLeft: '4px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     etc: {},
     thumbnail: {
@@ -333,12 +343,12 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
     lastTime: {
       fontSize: '10px',
       color: 'rgba(255, 255, 255, 0.3)',
-      width: '44px',
+      width: '55px',
     },
     count: {
       fontSize: '10px',
       backgroundColor: 'red',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontWeight: 'bold',
       padding: '2px 6px',
       borderRadius: '10px',
@@ -379,7 +389,7 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       },
       '&:hover': {
         '&>svg': {
-          color: '#ffffff',
+          color: theme.font.high.color,
         },
       },
     },
@@ -387,6 +397,47 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       display: 'none',
       backgroundColor: '#667485',
       borderRadius: '4px',
+    },
+
+    customInput: {
+      height: '38px',
+      width: '100%',
+      backgroundColor: 'inherit',
+      outline: 'none',
+      border: 'none',
+      padding: '8px',
+      fontSize: '16px',
+      overflow: 'auto',
+      color: theme.font.high.color,
+    },
+
+    mentionHelper: {
+      position: 'absolute',
+      width: '200px',
+      bottom: '40px',
+      backgroundColor: theme.backgroundColor.step3,
+      marginLeft: '80px',
+      color: theme.font.high.color,
+    },
+
+    mentionTarget: {
+      height: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      borderBottom: `1px solid ${theme.font.high.color}`,
+      lineHeight: '26px',
+      padding: '0px 8px',
+      cursor: 'pointer',
+      '&:nth-last-child(1)': {
+        borderBottom: 'none',
+      },
+      '&:hover': {
+        backgroundColor: theme.backgroundColor.step4,
+      },
+    },
+
+    active: {
+      backgroundColor: '#525252',
     },
   })
 )
