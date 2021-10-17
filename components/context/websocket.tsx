@@ -10,7 +10,7 @@ export function WsProvider({ children }: any) {
   let value: any
 
   if (typeof window !== 'undefined') {
-    const ws = new WebSocket(`ws://localhost:${process.env.NEXT_PUBLIC_WS_PORT ?? 3001}`)
+    const ws = new WebSocket(`ws://${process.env.NEXT_PUBLIC_WS_URL}:${process.env.NEXT_PUBLIC_WS_PORT ?? 3001}`)
 
     ws.onopen = () => {
       if (ws!.readyState === WebSocket.OPEN) {
