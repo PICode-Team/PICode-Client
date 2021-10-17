@@ -86,7 +86,7 @@ const userInfoStyle = makeStyles((theme: IThemeStyle) =>
     editIcon: {
       width: '20px',
       height: '20px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     defaultThumbnail: {
       width: '100%',

@@ -19,7 +19,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      backgroundColor: '#2c3239',
+      backgroundColor: theme.backgroundColor.step1,
       padding: '30px',
       height: 'calc(100% - 75px)',
     },
@@ -36,7 +36,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       width: '24px',
       height: '24px',
       borderRadius: '15px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -100,7 +100,8 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       flexDirection: 'column',
       padding: '70px 30px',
       color: theme.font.medium.color,
-      background: '#3b434c',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: 'brightness(1.2)',
       '&:hover': {
         background: '#4d5763',
         transition: 'all 0.3s',
@@ -132,7 +133,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
     },
 
     subTitle: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       marginBottom: '10px',
       fontSize: '16px',
     },
@@ -169,7 +170,8 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       flex: 1,
       '&>textarea': {
         width: '100%',
-        background: '#3b434c',
+        backgroundColor: theme.backgroundColor.step1,
+        filter: 'brightness(1.2)',
         padding: '6px 12px',
         border: 'none',
         borderRadius: '2px',
@@ -199,7 +201,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       height: '30px',
     },
     radioLabel: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       marginRight: '20px',
       marginLeft: '-5px',
     },
@@ -223,7 +225,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
 
     isExtract: {
       display: 'inline-block',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontSize: '12px',
       float: 'right',
     },

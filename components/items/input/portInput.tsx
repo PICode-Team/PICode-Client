@@ -14,7 +14,8 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
     },
     input: {
       width: '100%',
-      background: '#3b434c',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: 'brightness(1.2)',
       padding: '4px 8px',
       border: 'none',
       borderRadius: '2px',
@@ -50,7 +51,7 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
     addPort: {
       marginLeft: '8px',
       border: 'none',
-      color: '#ffffff',
+      color: theme.font.high.color,
       cursor: 'pointer',
       background: '#4078b8',
       display: 'flex',
@@ -64,7 +65,7 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
     },
     portWrapper: {
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontSize: '10px',
       marginRight: '12px',
     },

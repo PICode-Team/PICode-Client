@@ -73,10 +73,10 @@ function Sidebar({ toggle }: { toggle: boolean }) {
 
   return (
     <div id="sidebar" className={`${classes.sideBar} ${toggle ? classes.toggle : classes.show}`}>
-      <div className={`${classes.logo} ${toggle ? classes.toggleLogo : ''}`}>
+      <a className={`${classes.logo} ${toggle ? classes.toggleLogo : ''}`} href="/">
         <img className={classes.logoImage} src="/images/picode-7.svg" alt="logo" />
         <span className={classes.logoText}>PICode</span>
-      </div>
+      </a>
       <div className={classes.rowWrapper}>
         {Object.keys(sidebarData).map((v: string, idx: number) => (
           <Row data={(sidebarData as any)[v]} toggle={toggle} key={idx} />

@@ -26,7 +26,7 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
       gridTemplateRows: 'repeat(4, 195px)',
     },
     item: {
-      backgroundColor: '#2c3239',
+      backgroundColor: theme.backgroundColor.step1,
       cursor: 'pointer',
       borderRadius: '6px',
       padding: '20px',
@@ -55,7 +55,7 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
         marginLeft: '4px',
         color: '#b6c1cf',
         '&:hover': {
-          color: '#ffffff',
+          color: theme.font.high.color,
         },
       },
     },

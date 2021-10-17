@@ -37,7 +37,7 @@ export const colStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     column: {
       height: '100%',
-      color: '#ffffff',
+      color: theme.font.high.color,
       width: '330px',
     },
     header: {
@@ -81,7 +81,7 @@ export const colStyle = makeStyles((theme: IThemeStyle) =>
       height: '22px',
     },
     issueWrapper: {
-      backgroundColor: '#3B434D',
+      backgroundColor: theme.backgroundColor.step2,
       height: 'calc(100% - 60px)',
       padding: '15px',
       borderBottomLeftRadius: '8px',
@@ -93,7 +93,7 @@ export const colStyle = makeStyles((theme: IThemeStyle) =>
 export const cardStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     card: {
-      backgroundColor: '#2C3239',
+      backgroundColor: theme.backgroundColor.step1,
       padding: '15px',
       borderRadius: '6px',
       height: '120px',
@@ -103,7 +103,7 @@ export const cardStyle = makeStyles((theme: IThemeStyle) =>
       width: '32px',
       height: '32px',
       borderRadius: '16px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       marginRight: '8px',
     },
     header: {
@@ -143,7 +143,7 @@ export const boardStyle = makeStyles((theme: IThemeStyle) =>
     content: {
       width: '100%',
       height: '100%',
-      background: '#3b434d',
+      background: theme.backgroundColor.step2,
       color: theme.font.high.color,
       display: 'grid',
       gridTemplateRows: 'repeat(4, 155px)',
@@ -151,7 +151,7 @@ export const boardStyle = makeStyles((theme: IThemeStyle) =>
       gap: '28px 28px',
     },
     item: {
-      backgroundColor: '#2c3239',
+      backgroundColor: theme.backgroundColor.step1,
       cursor: 'pointer',
       borderRadius: '6px',
       padding: '20px',
@@ -163,7 +163,7 @@ export const boardStyle = makeStyles((theme: IThemeStyle) =>
       '&>svg': {
         color: '#b6c1cf',
         '&:hover': {
-          color: '#ffffff',
+          color: theme.font.high.color,
         },
       },
     },
@@ -271,13 +271,14 @@ export const manageStyle = makeStyles((theme: IThemeStyle) =>
     search: {
       width: '30%',
       height: '28px',
-      backgroundColor: '#434D59',
+      backgroundColor: theme.backgroundColor.step2,
+      filter: 'brightness(0.85)',
       borderRadius: '20px',
       display: 'flex',
       padding: '0px 12px',
       alignItems: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         marginRight: '6px',
         width: '16px',
         height: '16px',
@@ -287,7 +288,7 @@ export const manageStyle = makeStyles((theme: IThemeStyle) =>
         backgroundColor: 'inherit',
         outline: 'none',
         border: 'none',
-        color: '#ffffff',
+        color: theme.font.high.color,
         marginTop: '2px',
         '&::placeholder': {
           color: 'rgba(183, 183, 183, 0.42)',

@@ -5,7 +5,7 @@ import { IThemeStyle } from '../../theme'
 export const chatStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     chat: {
-      backgroundColor: '#2c3239',
+      backgroundColor: theme.backgroundColor.step1,
       width: '100%',
       height: 'calc(100% - 90px)',
       display: 'flex',
@@ -46,7 +46,7 @@ export const activitybarHeaderStyle = makeStyles((theme: IThemeStyle) =>
       height: '60px',
       width: '100%',
       borderBottom: '1px solid #505050',
-      color: '#ffffff',
+      color: theme.font.high.color,
       display: 'flex',
       alignItems: 'center',
       padding: '0px 20px',
@@ -90,7 +90,7 @@ export const contentStyle = makeStyles((theme: IThemeStyle) =>
     contentWrapper: {
       height: '100%',
       flex: 1,
-      backgroundColor: '#2C3239',
+      backgroundColor: theme.backgroundColor.step1,
       '@media screen and (max-width: 1280px)': {
         display: 'none',
       },
@@ -166,7 +166,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       },
     },
     thumbnail: {
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       width: '22px',
       height: '22px',
       borderRadius: '11px',
@@ -217,7 +217,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       },
       '&:hover': {
         '&>svg': {
-          color: '#ffffff',
+          color: theme.font.high.color,
         },
       },
     },
@@ -244,17 +244,17 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
         width: '18px',
         height: '18px',
         borderRadius: '9px',
-        backgroundColor: '#ffffff',
+        backgroundColor: theme.font.high.color,
         marginRight: '4px',
       },
     },
     threadCount: {
       marginRight: '6px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontSize: '12px',
     },
     lastThread: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontSize: '12px',
     },
     reversedMessageBox: {
@@ -386,10 +386,10 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
         alignItems: 'center',
       },
       '&>div>div>svg': {
-        color: '#515C60',
+        color: theme.backgroundColor.step3,
         cursor: 'pointer',
         '&:hover': {
-          color: '#ffffff',
+          color: theme.font.high.color,
         },
       },
     },
@@ -458,7 +458,7 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
     sidebar: {
       width: '350px',
       height: '100%',
-      backgroundColor: '#3b434d',
+      backgroundColor: theme.backgroundColor.step2,
       padding: '20px',
       '@media screen and (max-width: 600px)': {
         display: 'none',
@@ -473,20 +473,21 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
     search: {
       width: '100%',
       height: '40px',
-      backgroundColor: '#434D59',
+      backgroundColor: theme.backgroundColor.step2,
+      filter: 'brightness(0.85)',
       borderRadius: '20px',
       display: 'flex',
       padding: '0px 12px',
       alignItems: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         marginRight: '6px',
       },
       '&>input': {
         backgroundColor: 'inherit',
         outline: 'none',
         border: 'none',
-        color: '#ffffff',
+        color: theme.font.high.color,
         marginTop: '4px',
         '&::placeholder': {
           color: 'rgba(183, 183, 183, 0.42)',
@@ -502,18 +503,19 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       width: 'calc(100% + 30px)',
       height: '60px',
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
       padding: '10px 26px',
       borderRadius: '10px',
       cursor: 'pointer',
       '&:hover': {
-        backgroundColor: '#505866',
+        backgroundColor: theme.backgroundColor.step2,
+        filter: 'brightness(1.1)',
       },
     },
     channelThumbnail: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
       backgroundImage: "url('/images/picode-7.svg')",
@@ -550,19 +552,20 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
       width: 'calc(100% + 30px)',
       height: '60px',
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
       padding: '10px 26px',
       borderRadius: '10px',
       justifyContent: 'center',
       alignItems: 'center',
       cursor: 'pointer',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         width: '40px',
         height: '40px',
       },
       '&:hover': {
-        backgroundColor: '#505866',
+        backgroundColor: theme.backgroundColor.step2,
+        filter: 'brightness(1.1)',
       },
     },
   })
@@ -582,7 +585,7 @@ export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
     targetThumbnail: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
       backgroundImage: "url('/images/picode-7.svg')",
@@ -591,7 +594,7 @@ export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
       backgroundRepeat: 'no-repeat',
     },
     targetInfo: {
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     targetName: {
       fontWeight: 'bold',
@@ -652,7 +655,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     },
     channel: { width: '90%' },
     name: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>span': {
         marginRight: '4px',
         fontSize: '18px',
@@ -662,7 +665,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     online: {
       display: 'flex',
       fontSize: '11px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>svg': {
         width: '12px',
         height: '12px',
@@ -707,7 +710,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       justifyContent: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         width: '30px',
         height: '30px',
       },
@@ -715,7 +718,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     users: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
     },
@@ -724,17 +727,17 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     },
     title: {
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     titleText: {
       fontSize: '11px',
       fontWeight: 'bold',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     participant: {
       fontSize: '11px',
       marginLeft: '4px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     etc: {},
     thumbnail: {
@@ -757,7 +760,7 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     count: {
       fontSize: '10px',
       backgroundColor: 'red',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontWeight: 'bold',
       padding: '2px 6px',
       borderRadius: '10px',
@@ -773,9 +776,12 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       width: '100%',
       height: 'calc(100% - 90px)',
       position: 'absolute',
-      backgroundColor: '#2C3239',
+      backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
         width: 'calc(100% - 550px)',
+      },
+      '@media screen and (min-width: 960px)': {
+        width: 'calc(100% - 414px) !important',
       },
     },
     toggleContent: {
@@ -794,7 +800,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     },
     channel: { width: '90%' },
     name: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>span': {
         marginRight: '4px',
         fontSize: '18px',
@@ -804,7 +810,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     online: {
       display: 'flex',
       fontSize: '11px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>svg': {
         width: '12px',
         height: '12px',
@@ -839,7 +845,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       justifyContent: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         width: '30px',
         height: '30px',
       },
@@ -847,7 +853,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     users: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
     },
@@ -856,17 +862,17 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     },
     title: {
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     titleText: {
       fontSize: '11px',
       fontWeight: 'bold',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     participant: {
       fontSize: '11px',
       marginLeft: '4px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     etc: {},
     thumbnail: {
@@ -889,7 +895,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     count: {
       fontSize: '10px',
       backgroundColor: 'red',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontWeight: 'bold',
       padding: '2px 6px',
       borderRadius: '10px',
@@ -902,7 +908,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       '&>svg': {
         width: '28px',
         height: '28px',
-        color: '#ffffff',
+        color: theme.font.high.color,
       },
     },
     attachFile: {
@@ -937,7 +943,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       padding: '8px 12px',
       paddingTop: '2px',
       backgroundColor: 'inherit',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     send: {
       cursor: 'pointer',
@@ -1010,9 +1016,12 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       width: '100%',
       height: 'calc(100% - 90px)',
       position: 'absolute',
-      backgroundColor: '#2C3239',
+      backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
         width: 'calc(100% - 550px)',
+      },
+      '@media screen and (min-width: 960px)': {
+        width: 'calc(100% - 414px) !important',
       },
     },
     toggleThread: {
@@ -1031,7 +1040,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     },
     channel: { width: '90%' },
     name: {
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>span': {
         marginRight: '4px',
         fontSize: '18px',
@@ -1041,7 +1050,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     online: {
       display: 'flex',
       fontSize: '11px',
-      color: '#ffffff',
+      color: theme.font.high.color,
       '&>svg': {
         width: '12px',
         height: '12px',
@@ -1086,7 +1095,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       justifyContent: 'center',
       '&>svg': {
-        color: '#ffffff',
+        color: theme.font.high.color,
         width: '30px',
         height: '30px',
       },
@@ -1094,7 +1103,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     users: {
       width: '40px',
       height: '40px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       borderRadius: '20px',
       marginRight: '12px',
     },
@@ -1103,17 +1112,17 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     },
     title: {
       display: 'flex',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     titleText: {
       fontSize: '11px',
       fontWeight: 'bold',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     participant: {
       fontSize: '11px',
       marginLeft: '4px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     etc: {},
     thumbnail: {
@@ -1136,7 +1145,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     count: {
       fontSize: '10px',
       backgroundColor: 'red',
-      color: '#ffffff',
+      color: theme.font.high.color,
       fontWeight: 'bold',
       padding: '2px 6px',
       borderRadius: '10px',
@@ -1149,7 +1158,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       '&>svg': {
         width: '28px',
         height: '28px',
-        color: '#ffffff',
+        color: theme.font.high.color,
       },
     },
     attachFile: {
@@ -1184,7 +1193,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       padding: '8px 12px',
       paddingTop: '2px',
       backgroundColor: 'inherit',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     send: {
       cursor: 'pointer',

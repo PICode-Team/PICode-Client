@@ -15,7 +15,7 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
       width: '300px',
       height: '100%',
       display: 'inline-block',
-      background: '#3b434d',
+      background: theme.backgroundColor.step2,
       color: theme.font.high.color,
     },
     content: {

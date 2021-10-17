@@ -61,7 +61,7 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
       width: '32px',
       height: '32px',
       borderRadius: '16px',
-      backgroundColor: '#ffffff',
+      backgroundColor: theme.font.high.color,
       marginRight: '8px',
     },
 
@@ -98,7 +98,7 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
       marginRight: '6px',
       borderRadius: '6px',
       padding: '3px 0px',
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
   })
 )
@@ -277,12 +277,12 @@ export const recentWorkStyle = makeStyles((theme: IThemeStyle) =>
       textAlign: 'center',
     },
     add: {
-      color: '#ffffff',
+      color: theme.font.high.color,
     },
     createWorkspaceText: {
       display: 'block',
       textAlign: 'center',
-      color: '#fff',
+      color: theme.font.high.color,
     },
     tableContent: {
       display: 'inline-block',
