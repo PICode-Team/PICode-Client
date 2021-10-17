@@ -4,6 +4,7 @@
     // Other rules
     "@next/next/no-img-element": "off",
     "react-hooks/rules-of-hooks":0,
-    "jsx-a11y/img-has-alt": [0]
+    "jsx-a11y/img-has-alt": [0],
+    "@next/next/no-html-link-for-pages":"off"
   }
 }

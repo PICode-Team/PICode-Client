@@ -6,22 +6,22 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
     createStyles({
         note: {
             width: "100%",
-            height: "calc(100% - 90px)",
+            minHeight: "calc(100% - 90px)",
             position: "relative",
             display: "flex",
             background: theme.backgroundColor.step1,
         },
         fileView: {
             width: "300px",
-            height: "100%",
+            minHeight: "100%",
             display: "inline-block",
-            background: theme.backgroundColor.step2,
+            background: "#3b434d",
             color: theme.font.high.color,
         },
         content: {
             width: "calc(100% - 300px)",
             display: "inline-block",
-            height: "100%",
+            minHeight: "100%",
         },
         leftTool: {
             width: "60px",
@@ -232,6 +232,13 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
         },
         contextIcon: {
             height: "20px",
+        },
+        addFile: {
+            position: "absolute",
+            right: 0,
+            top: 0,
+            padding: 0,
+            paddingRight: "12px",
         },
 
         contentWrapper: {
