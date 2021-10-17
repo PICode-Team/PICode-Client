@@ -515,7 +515,7 @@ function Note(props: INoteProps) {
               <input id="createTime" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="creation" onChange={handleSelectFileChange} value={selectFile.createTime} />
             </div>
           </div>
-          {selectFile.path.split('\\').some((v) => v.includes(".io")) ?
+          {selectFile.path.split('/').some((v) => v.includes(".io")) ?
             <div className={classes.drawRoot} >
               <DrawDiagram selectFile={selectFile} />
             </div>

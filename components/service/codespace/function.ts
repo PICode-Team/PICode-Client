@@ -85,7 +85,7 @@ export const dropElement = (
     if (e.currentTarget === null) return;
     drageventer.style.background = "none";
     let getPosition = e.currentTarget.getBoundingClientRect();
-    let fileName = dragId.split("\\");
+    let fileName = dragId.split("/");
     if (viewState === undefined) {
         setViewState({
             width: "100%",
@@ -267,12 +267,12 @@ export const dragFileToFolder = throttle(
             if (rootPath === undefined) {
                 return;
             } else {
-                let fileRealPath = file.path.split("\\");
-                console.log(fileRealPath.length - rootPath.split("\\").length);
-                if (fileRealPath.length - rootPath.split("\\").length > 0) {
+                let fileRealPath = file.path.split("/");
+                console.log(fileRealPath.length - rootPath.split("/").length);
+                if (fileRealPath.length - rootPath.split("/").length > 0) {
                     let realPath = fileRealPath
                         .splice(0, fileRealPath.length - 1)
-                        .join("\\");
+                        .join("/");
                     let container = document.getElementById(
                         `${realPath}scontent`
                     );
@@ -310,11 +310,11 @@ export const dragFileToFolderOut = (
         if (rootPath === undefined) {
             return;
         } else {
-            let fileRealPath = file.path.split("\\");
-            if (fileRealPath.length - rootPath.split("\\").length > 0) {
+            let fileRealPath = file.path.split("/");
+            if (fileRealPath.length - rootPath.split("/").length > 0) {
                 let realPath = fileRealPath
                     .splice(0, fileRealPath.length - 1)
-                    .join("\\");
+                    .join("/");
                 let container = document.getElementById(`${realPath}scontent`);
                 let rootFolder = document.getElementById(`${realPath}`);
                 if (container !== null && rootFolder !== null) {
@@ -350,7 +350,7 @@ export const moveFile = (ws: any, filePath: string, newPath: ISidebarItem) => {
         tmpQuery[tmpKey[0]] = tmpKey[1];
     }
     let tmpWorkSpaceId = tmpQuery?.workspaceId;
-    let fileName = filePath.split("\\");
+    let fileName = filePath.split("/");
     if (tmpWorkSpaceId === undefined) return;
     if (newPath.children !== undefined) {
         ws.send(
@@ -360,15 +360,14 @@ export const moveFile = (ws: any, filePath: string, newPath: ISidebarItem) => {
                 data: {
                     workspaceId: tmpWorkSpaceId,
                     oldPath: filePath,
-                    newPath:
-                        newPath.path + "\\" + fileName[fileName.length - 1],
+                    newPath: newPath.path + "/" + fileName[fileName.length - 1],
                 },
             })
         );
     } else {
-        let parentPathSplit = newPath.path.split("\\");
+        let parentPathSplit = newPath.path.split("/");
         parentPathSplit = parentPathSplit.splice(0, parentPathSplit.length - 1);
-        let parentPath = parentPathSplit.join("\\");
+        let parentPath = parentPathSplit.join("/");
         ws.send(
             JSON.stringify({
                 category: "code",
@@ -376,7 +375,7 @@ export const moveFile = (ws: any, filePath: string, newPath: ISidebarItem) => {
                 data: {
                     workspaceId: tmpWorkSpaceId,
                     oldPath: filePath,
-                    newPath: parentPath + "\\" + fileName[fileName.length - 1],
+                    newPath: parentPath + "/" + fileName[fileName.length - 1],
                 },
             })
         );

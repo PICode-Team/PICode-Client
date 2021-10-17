@@ -62,7 +62,7 @@ export const expandCollapseMenu = (
             return -1;
         }
     }).map((file) => {
-        let fileName = file.path.split("\\");
+        let fileName = file.path.split("/");
         if (file.path === renameCheck) {
             return <>
                 <input autoFocus style={{ width: `100%` }}
@@ -75,7 +75,7 @@ export const expandCollapseMenu = (
                                 let workspaceId = getQuery();
                                 let newFileName = cloneDeep(fileName);
                                 newFileName[newFileName.length - 1] = e.currentTarget.value;
-                                let resultName = newFileName.join("\\");
+                                let resultName = newFileName.join("/");
                                 ws.send(
                                     JSON.stringify({
                                         category: "code",
@@ -223,11 +223,11 @@ export const expandCollapseMenu = (
                 onBlur={(e) => {
                     if (e.currentTarget.value !== "") {
                         if (file.children === undefined) {
-                            let realFileName = file.path.split("\\");
+                            let realFileName = file.path.split("/");
                             realFileName[realFileName.length - 1] = e.currentTarget.value;
-                            createFileOrDir(ws, realFileName.join("\\"), createFile)
+                            createFileOrDir(ws, realFileName.join("/"), createFile)
                         } else {
-                            let realFileName = file.path + "\\" + e.currentTarget.value;
+                            let realFileName = file.path + "/" + e.currentTarget.value;
                             createFileOrDir(ws, realFileName, createFile)
                         }
                     }
@@ -239,11 +239,11 @@ export const expandCollapseMenu = (
                             setCreateFile(undefined)
                         } else {
                             if (file.children === undefined) {
-                                let realFileName = file.path.split("\\");
+                                let realFileName = file.path.split("/");
                                 realFileName[realFileName.length - 1] = e.currentTarget.value;
-                                createFileOrDir(ws, realFileName.join("\\"), createFile)
+                                createFileOrDir(ws, realFileName.join("/"), createFile)
                             } else {
-                                let realFileName = file.path + "\\" + e.currentTarget.value;
+                                let realFileName = file.path + "/" + e.currentTarget.value;
                                 createFileOrDir(ws, realFileName, createFile)
                             }
                         }
@@ -257,11 +257,11 @@ export const expandCollapseMenu = (
                 onBlur={(e) => {
                     if (e.currentTarget.value !== "") {
                         if (file.children === undefined) {
-                            let realFileName = file.path.split("\\");
+                            let realFileName = file.path.split("/");
                             realFileName[realFileName.length - 1] = e.currentTarget.value;
-                            createFileOrDir(ws, realFileName.join("\\"), createFile)
+                            createFileOrDir(ws, realFileName.join("/"), createFile)
                         } else {
-                            let realFileName = file.path + "\\" + e.currentTarget.value;
+                            let realFileName = file.path + "/" + e.currentTarget.value;
                             createFileOrDir(ws, realFileName, createFile)
                         }
                     }
@@ -273,11 +273,11 @@ export const expandCollapseMenu = (
                             setCreateFile(undefined)
                         } else {
                             if (file.children === undefined) {
-                                let realFileName = file.path.split("\\");
+                                let realFileName = file.path.split("/");
                                 realFileName[realFileName.length - 1] = e.currentTarget.value;
-                                createFileOrDir(ws, realFileName.join("\\"), createFile)
+                                createFileOrDir(ws, realFileName.join("/"), createFile)
                             } else {
-                                let realFileName = file.path + "\\" + e.currentTarget.value;
+                                let realFileName = file.path + "/" + e.currentTarget.value;
                                 createFileOrDir(ws, realFileName, createFile)
                             }
                         }

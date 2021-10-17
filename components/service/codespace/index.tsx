@@ -9,7 +9,7 @@ import ViewSpace from "./viewspace";
 import CodeContent from "./codecontent";
 import wrapper from "../../../stores";
 import WebAssetIcon from "@material-ui/icons/WebAsset";
-import { cloneDeep, method } from "lodash";
+import { cloneDeep, first, method } from "lodash";
 import { useRouter } from "next/router";
 import { useWs } from "../../context/websocket";
 import { fetchSet } from "../../context/fetch";
@@ -35,6 +35,7 @@ export default function CodeSpace() {
     const [openTerminalCount, setOpenTerminalCount] = React.useState<number>(0);
     const [terminalContent, setTerminalContent] = React.useState<{ [key: string]: string[] }>({});
     const router = useRouter();
+    const [firstSocket, setFirstSocket] = React.useState<boolean>(false);
     const [moveCheck, setMoveCheck] = React.useState<boolean>(false);
     const [workspaceId, setWorkspaceId] = React.useState<string>();
     const tmpTerminalTest = React.useRef(terminalContent);
@@ -63,7 +64,7 @@ export default function CodeSpace() {
 
     useEffect(() => {
         if (openId === undefined) return;
-        let name = openId.split("\\");
+        let name = openId.split("/");
         if (viewState === undefined) {
             setViewState({
                 width: "100%",
@@ -174,21 +175,13 @@ export default function CodeSpace() {
         }
     };
 
-    useEffect(() => {
-        if (ws === undefined || openTerminalCount === 0) return;
+    setTimeout(() => {
+        if (workspaceId === undefined) return;
+        if (!firstSocket) return;
         if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-            ws.send(
-                JSON.stringify({
-                    category: "terminal",
-                    type: "createTerminal",
-                    data: {
-                        workspaceId: workspaceId,
-                        size: { cols: 790, rows: 300 },
-                    },
-                })
-            );
+            ws.addEventListener("message", fileWebsocketHanlder);
         }
-    }, [ws?.readyState, openTerminalCount]);
+    }, 1500)
 
     useEffect(() => {
         if (workspaceId === undefined) return;

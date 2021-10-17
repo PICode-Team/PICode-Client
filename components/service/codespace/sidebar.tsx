@@ -45,14 +45,14 @@ export default function CodeSideBar({ setDragId, setOpenId, projectName, fileLis
 
     useEffect(() => {
         if (focusId !== undefined) {
-            let path = focusId.split("\\");
+            let path = focusId.split("/");
             path = path.splice(0, path.length - 1)
             let tmpOpenCheck = cloneDeep(openCheck);
             let tmpCheck = "";
             if (path.length > 1) {
                 for (let i of path) {
                     if (i !== "") {
-                        tmpCheck += ("\\" + i);
+                        tmpCheck += ("/" + i);
                         if (!tmpOpenCheck.some((v) => v === tmpCheck)) {
                             tmpOpenCheck.push(tmpCheck);
                         }

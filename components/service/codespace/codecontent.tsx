@@ -4,12 +4,12 @@
 import { IconButton } from "@material-ui/core";
 import { CloseOutlined } from "@material-ui/icons";
 import Editor from "@monaco-editor/react";
-import { cloneDeep } from "lodash";
+import { cloneDeep, debounce, throttle } from "lodash";
 import React, { useEffect } from "react"
 import { codeStyle } from "../../../styles/service/codespace/code";
 import { ICodeContent, IWraper } from "./types";
 import clsx from "clsx"
-import { checkPointerEvent, dragTopFile } from "./function";
+import { checkPointerEvent, dragTopFile, getQuery } from "./function";
 import { returnFile } from "./sidebarItem";
 import { useWs } from "../../context/websocket";
 import { useRouter } from "next/router";
@@ -27,7 +27,11 @@ export default function CodeContent(props: {
     const classes = codeStyle();
     const router = useRouter();
     const [selectFile, setSelectFile] = React.useState<ICodeContent | undefined>();
+    const [originData, setOriginData] = React.useState<string>();
     const [fileData, setFileData] = React.useState<string>();
+    const [firstRender, setFirstRender] = React.useState<boolean>(true);
+    const [onlyChange, setOnlyChange] = React.useState<boolean>(false);
+    const [changeValue, setChangeValue] = React.useState<boolean>(false);
 
     useEffect(() => {
         let target = props.viewState!.children!.length;
@@ -40,7 +44,9 @@ export default function CodeContent(props: {
             switch (message.type) {
                 case "getCode": {
                     if (selectFile?.path === message.data.filePath) {
-                        setFileData(message.data.fileContent)
+                        if (originData !== message.data.fileContent) {
+                            setOriginData(message.data.fileContent)
+                        }
                     }
                     break;
                 }
@@ -69,7 +75,131 @@ export default function CodeContent(props: {
         props.setFocusId(selectFile?.path)
     }, [selectFile])
 
+    setInterval(() => {
+        const tmpWorkSpaceId = router.query.workspaceId;
+        if (selectFile === undefined) return;
+        if (tmpWorkSpaceId === undefined) return;
+        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+            console.log(1)
+            ws.send(
+                JSON.stringify({
+                    category: 'code',
+                    type: 'getCode',
+                    data: {
+                        workspaceId: tmpWorkSpaceId,
+                        filePath: selectFile.path
+                    }
+                })
+            );
+        }
+    }, 1000)
+
     useEffect(() => {
+        if (fileData === undefined) {
+            setFileData(originData);
+        } else {
+            if (fileData !== originData) {
+                setFileData(originData)
+            }
+        }
+    }, [originData])
+
+    const diffBeforeCode = setTimeout(() => {
+        if (onlyChange && selectFile !== undefined && originData !== undefined) {
+            if (originData !== fileData && fileData !== undefined) {
+                let divideOriginContent: string[] = originData?.split("\n");
+                let divideNewContent: string[] | undefined = fileData?.split("\n");
+                let updateContent = [];
+                let workspaceId = getQuery();
+                if (divideOriginContent !== undefined && divideNewContent !== undefined) {
+                    for (let i = 0; i < divideOriginContent.length; i++) {
+                        if (divideOriginContent[i] !== divideNewContent[i]) {
+                            if (divideNewContent.length <= divideOriginContent.length && i === divideOriginContent.length - 1) {
+                                updateContent.push({
+                                    line: i + 1,
+                                    updateContent: (divideNewContent[i])
+                                })
+                            } else {
+                                updateContent.push({
+                                    line: i + 1,
+                                    updateContent: (divideNewContent[i])
+                                })
+                            }
+                        }
+                    }
+                    if (divideNewContent.length > divideOriginContent.length) {
+                        for (let i = divideOriginContent.length; i < divideNewContent.length; i++) {
+                            if (i === divideNewContent.length - 1) {
+                                updateContent.push({
+                                    line: i + 1,
+                                    updateContent: (divideNewContent[i])
+                                })
+                            } else {
+                                updateContent.push({
+                                    line: i + 1,
+                                    updateContent: (divideNewContent[i])
+                                })
+                            }
+                        }
+                    }
+                    if (divideOriginContent.length > divideNewContent.length) {
+                        for (let i = divideNewContent.length; i < divideOriginContent.length; i++) {
+                            updateContent.push({
+                                line: i + 1,
+                                updateContent: undefined
+                            })
+                        }
+                    }
+
+                    let payload = {
+                        category: "code",
+                        type: "updateCode",
+                        data: {
+                            workspaceId: workspaceId,
+                            updateContent: {
+                                path: selectFile.path,
+                                content: updateContent
+                            }
+                        }
+                    }
+
+                    ws.send(JSON.stringify(payload))
+                    setChangeValue(true);
+                }
+            }
+        }
+    }, 1000)
+
+    useEffect(() => {
+        if (changeValue) {
+            const tmpWorkSpaceId = router.query.workspaceId;
+            if (selectFile === undefined) {
+                return;
+            }
+            ws.send(
+                JSON.stringify({
+                    category: 'code',
+                    type: 'getCode',
+                    data: {
+                        workspaceId: tmpWorkSpaceId,
+                        filePath: selectFile.path
+                    }
+                })
+            );
+            setOnlyChange(false);
+            setChangeValue(false);
+        }
+    }, [changeValue])
+
+    useEffect(() => {
+        if (fileData === undefined) {
+            return;
+        }
+        if (originData !== fileData) {
+            setOnlyChange(true);
+        } else {
+            setOnlyChange(false)
+        }
     }, [fileData])
 
     if (selectFile === undefined) {
@@ -116,7 +246,7 @@ export default function CodeContent(props: {
                     if (props.dragId === undefined) {
                         return;
                     }
-                    let tmpPath = props.dragId.split("\\");
+                    let tmpPath = props.dragId.split("/");
                     tmpViewState?.children.push({
                         data: "",
                         name: tmpPath[tmpPath.length - 1],
@@ -127,7 +257,7 @@ export default function CodeContent(props: {
                 }
             }}>
             {props.viewState?.children?.map((v, idx) => {
-                let fileType = v.path.split("\\");
+                let fileType = v.path.split("/");
                 return <div key={v.path}
                     draggable
                     className={clsx(classes.topFile, selectFile.name === v.name && classes.activeTopFile)}
@@ -187,9 +317,9 @@ export default function CodeContent(props: {
                 path={selectFile.path}
                 defaultValue={fileData === undefined ? "" : fileData}
                 value={fileData === undefined ? "" : fileData}
-                onChange={(v, e) => {
+                onChange={debounce((v, e) => {
                     setFileData(v);
-                }}
+                }, 500)}
             />
         </div>
     </div>
