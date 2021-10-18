@@ -40,11 +40,13 @@ export interface IModalProps {
   modal: boolean
   title: string
   setModal: React.Dispatch<React.SetStateAction<boolean>>
-  onSubmit: () => void
+  onSubmit: any
+  hidden?: boolean
 }
 
 export interface IModalChildProps {
   title?: string
   handleCloseModal: (event: React.MouseEvent<HTMLElement>) => void
   onSubmit?: () => void
+  hidden?: boolean
 }

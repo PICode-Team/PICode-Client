@@ -17,12 +17,12 @@ const footerStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function ModalFooter(props: IModalChildProps) {
-  const { handleCloseModal, onSubmit } = props
+  const { hidden, handleCloseModal, onSubmit } = props
   const classes = footerStyle()
   return (
     <div className={classes.modalFooter}>
       <CustomButton text="cancel" onClick={handleCloseModal} color="primary" />
-      <CustomButton text="ok" onClick={onSubmit} color="secondary" />
+      {hidden !== true && <CustomButton text="ok" onClick={onSubmit} color="secondary" />}
     </div>
   )
 }

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react'
 
 import { recentWorkStyle } from '../../../styles/service/dashboard/dashboard'
-import { Add, ArrowBackIos, DeleteForever, Settings, CloudDownload } from '@material-ui/icons'
+import { Add, ArrowBackIos, DeleteForever, Settings, CloudDownload, ArrowForwardIos } from '@material-ui/icons'
 import { IconButton } from '@material-ui/core'
 import { Carousel } from 'react-responsive-carousel'
-import Swal from 'sweetalert2'
 import * as d3 from 'd3'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 import { IWorkspaceSpec } from '../../../types/workspace.types'
 import { uuidv4 } from '../../context/uuidv4'
 import { fetchSet } from '../../context/fetch'
+import DeleteModal from '../../items/modal/detail/delete'
+import ExportWorkspace from '../../items/modal/detail/export'
+import RequsetResult from '../../items/modal/detail/result'
 
 interface IRecentWorkProps {}
 
@@ -18,49 +20,17 @@ function RecentWork(props: IRecentWorkProps) {
   const {} = props
   const classes = recentWorkStyle()
   const [workspaceData, setWorkspaceData] = useState<IWorkspaceSpec[]>([])
-  const [state, setState] = useState<boolean>(true)
-  const [sliderNum, setSliderNum] = useState<number | number[]>(3)
   const [itemNum, setItemNum] = useState<number>(0)
-
-  const handleChange = () => {
-    setState(!state)
-  }
-
-  useEffect(() => {}, [sliderNum])
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [openExport, setOpenExport] = useState<boolean>(false)
+  const [name, setName] = useState<string>('')
+  const [uuid, setUuid] = useState<string>('')
+  const [modalInfo, setModalInfo] = useState<IWorkspaceSpec | null>(null)
+  const [openResult, setOpenResult] = useState<boolean>(false)
+  const [resultStatus, setResultStatus] = useState<boolean>(true)
 
   const handleLinkCreateWorkspace = () => {
     window.location.href = '/workspace/create'
-  }
-
-  const drawTableView = () => {
-    let width = (d3.select('#view')?.node() as any)?.getBoundingClientRect().width
-    let col = width / Number(sliderNum) - 20
-    let tmpContent = [
-      <div key={`workspace-table-${uuidv4()}`} className={classes.carouse} style={{ width: col + 'px' }}>
-        <div className={classes.carouselContent}>
-          <div className={classes.alignCenter}>
-            <div onClick={handleLinkCreateWorkspace}>
-              <Add className={classes.add} />
-            </div>
-            <span className={classes.createWorkspaceText}>Create Workspace</span>
-          </div>
-        </div>
-      </div>,
-    ]
-    for (let i of workspaceData) {
-      tmpContent.push(
-        <div key={`workspace-table-${uuidv4()}`} className={classes.carouse} style={{ width: col + 'px' }}>
-          <div className={classes.carouselContent}>
-            <div className={classes.alignCenter}>
-              <span className={classes.tableContent}>{i.description}</span>
-              <span className={classes.tableContent}>{i.name}</span>
-              <span className={classes.tableContent}>{i.creator}</span>
-            </div>
-          </div>
-        </div>
-      )
-    }
-    return tmpContent
   }
 
   const getWorkspaceData = async () => {
@@ -76,81 +46,12 @@ function RecentWork(props: IRecentWorkProps) {
     getWorkspaceData()
   }, [])
 
-  const handleExportWorkspace = (workspaceInfo: IWorkspaceSpec) => async (event: React.MouseEvent) => {
+  const handleExportWorkspace = (workspaceInfo: IWorkspaceSpec) => (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
 
-    const result = await Swal.fire({
-      title: 'Export Workspace',
-      text: `Choose between Codespace files and Container itself.`,
-      icon: 'info',
-      heightAuto: false,
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: 'Codespace files',
-      denyButtonText: `Container itself`,
-    })
-
-    if (result.isConfirmed) {
-      const extension = await Swal.fire({
-        title: 'Submit file extension \n(e.g. zip, tar, tar.gz, etc)',
-        input: 'text',
-        inputAttributes: {
-          autocapitalize: 'off',
-        },
-        showCancelButton: true,
-        heightAuto: false,
-      })
-
-      if (extension.value === undefined) return
-
-      const payload = {
-        option: {
-          workspaceOption: {
-            workspaceId: workspaceInfo.workspaceId,
-            extension: extension.value,
-          },
-        },
-      }
-
-      await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
-    } else if (result.isDenied) {
-      const imageName = await Swal.fire({
-        title: 'Submit image name',
-        input: 'text',
-        inputAttributes: {
-          autocapitalize: 'off',
-        },
-        showCancelButton: true,
-        heightAuto: false,
-      })
-
-      if (imageName.value === undefined) return
-
-      const tagName = await Swal.fire({
-        title: 'Submit tag name',
-        input: 'text',
-        inputAttributes: {
-          autocapitalize: 'off',
-        },
-        showCancelButton: true,
-        heightAuto: false,
-      })
-
-      if (tagName.value === undefined) return
-
-      const payload = {
-        option: {
-          dockerOption: {
-            containerId: workspaceInfo.containerId,
-            imageName: imageName.value,
-            tagName: tagName.value,
-          },
-        },
-      }
-
-      await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
-    }
+    setOpenExport(true)
+    setModalInfo(workspaceInfo)
   }
 
   const handleLinkEditPage = (workspaceId: string) => (event: React.MouseEvent) => {
@@ -159,44 +60,43 @@ function RecentWork(props: IRecentWorkProps) {
     window.location.href = `/workspace/edit?workspaceId=${workspaceId}`
   }
 
+  const handleDeleteSubmit = async (workspaceId: string) => {
+    const response = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true)
+    const { code } = await response.json()
+
+    if (code / 2 === 100) {
+      setOpenDelete(false)
+      setOpenResult(true)
+      setResultStatus(true)
+    } else {
+      setOpenDelete(false)
+      setOpenResult(true)
+      setResultStatus(false)
+    }
+  }
+
   const handleClickDelete = (workspaceId: string, name: string) => async (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    const result = await Swal.fire({
-      title: 'Delete Workspace',
-      text: `Are you sure delete ${name} Workspace?`,
-      icon: 'warning',
-      heightAuto: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-    })
 
-    if (result.isConfirmed) {
-      const response = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true)
-      const { code } = await response.json()
+    setOpenDelete(true)
+    setName(name)
+    setUuid(workspaceId)
+  }
 
-      if (code / 100 === 2) {
-        Swal.fire({
-          title: 'SUCCESS',
-          text: `DELETE ${name}`,
-          icon: 'success',
-          heightAuto: false,
-        }).then(() => {
-          window.location.reload()
-        })
-      } else {
-        Swal.fire({
-          title: 'ERROR',
-          html: `
-                ERROR in DELETE ${name}
-                <br />
-                <span>${code}</span>
-                `,
-          icon: 'error',
-          heightAuto: false,
-        })
-      }
+  const handlePreviousClick = () => {
+    if (itemNum - 1 < 0) {
+      setItemNum(workspaceData.length)
+    } else {
+      setItemNum(itemNum - 1)
+    }
+  }
+
+  const handleNextClick = () => {
+    if (itemNum + 1 > workspaceData.length) {
+      setItemNum(0)
+    } else {
+      setItemNum(itemNum + 1)
     }
   }
 
@@ -294,65 +194,37 @@ function RecentWork(props: IRecentWorkProps) {
     d3.select('.carousel-root').style('max-width', `${width}px`)
   }, [workspaceData])
 
-  useEffect(() => {
-    if (state) {
-      d3.select('#view').style('overflow-y', 'hidden')
-    } else {
-      d3.select('#view').style('overflow-y', 'auto')
-    }
-  }, [state])
-
   return (
     <div className={classes.recentWork}>
       <div className={classes.title}>Recent Work</div>
       <div className={classes.content}>
         <div className={classes.view} id="view">
-          {state && (
-            <>
-              <IconButton
-                className={classes.leftButton}
-                onClick={() => {
-                  if (itemNum - 1 < 0) {
-                    setItemNum(workspaceData.length)
-                  } else {
-                    setItemNum(itemNum - 1)
-                  }
-                }}
-              >
-                <ArrowBackIos />
-              </IconButton>
-              <IconButton
-                className={classes.rightButton}
-                onClick={() => {
-                  if (itemNum + 1 > workspaceData.length) {
-                    setItemNum(0)
-                  } else {
-                    setItemNum(itemNum + 1)
-                  }
-                }}
-              >
-                <ArrowBackIos style={{ transform: 'rotate(-180deg)' }} />
-              </IconButton>
-              <Carousel
-                showArrows={false}
-                selectedItem={itemNum as number}
-                showStatus={false}
-                showThumbs={false}
-                showIndicators={false}
-                centerSlidePercentage={50}
-                centerMode={true}
-                autoPlay={false}
-                dynamicHeight={true}
-                infiniteLoop
-                useKeyboardArrows={true}
-              >
-                {drawCarouselView().map((v: any) => v)}
-              </Carousel>
-            </>
-          )}
-          {!state && drawTableView().map((v: any) => v)}
+          <IconButton className={classes.leftButton} onClick={handlePreviousClick}>
+            <ArrowBackIos />
+          </IconButton>
+          <IconButton className={classes.rightButton} onClick={handleNextClick}>
+            <ArrowForwardIos />
+          </IconButton>
+          <Carousel
+            showArrows={false}
+            selectedItem={itemNum as number}
+            showStatus={false}
+            showThumbs={false}
+            showIndicators={false}
+            centerSlidePercentage={50}
+            centerMode={true}
+            autoPlay={false}
+            dynamicHeight={true}
+            infiniteLoop
+            useKeyboardArrows={true}
+          >
+            {drawCarouselView().map((v: any) => v)}
+          </Carousel>
         </div>
       </div>
+      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" />}
+      {openExport && modalInfo !== null && <ExportWorkspace modal={openExport} setModal={setOpenExport} workspaceInfo={modalInfo} />}
+      {openResult && <RequsetResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} />}
     </div>
   )
 }
