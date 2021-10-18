@@ -25,7 +25,7 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
     input: {
       width: '100%',
       backgroundColor: theme.backgroundColor.step1,
-      filter: 'brightness(1.2)',
+      filter: theme.brightness.step0,
       padding: '4px 8px',
       border: 'none',
       borderRadius: '2px',
@@ -74,7 +74,7 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
     },
     userList: {
       backgroundColor: theme.backgroundColor.step1,
-      filter: 'brightness(1.2)',
+      filter: theme.brightness.step0,
       width: 'calc(100% - 174px)',
       marginLeft: '114px',
       marginTop: '1px',
@@ -87,7 +87,7 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
     thumbnail: {
       width: '18px',
       height: '18px',
-      backgroundColor: theme.font.high.color,
+      backgroundColor: '#ffffff',
       borderRadius: '12px',
       marginRight: '6px',
     },

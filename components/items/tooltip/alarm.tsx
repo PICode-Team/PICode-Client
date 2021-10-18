@@ -53,7 +53,7 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
     thumbnail: {
       width: '32px',
       height: '32px',
-      backgroundColor: theme.font.high.color,
+      backgroundColor: '#ffffff',
       borderRadius: '16px',
       marginRight: '6px',
     },

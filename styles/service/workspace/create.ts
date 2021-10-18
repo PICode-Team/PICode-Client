@@ -101,7 +101,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       padding: '70px 30px',
       color: theme.font.medium.color,
       backgroundColor: theme.backgroundColor.step1,
-      filter: 'brightness(1.2)',
+      filter: theme.brightness.step0,
       '&:hover': {
         background: '#4d5763',
         transition: 'all 0.3s',
@@ -171,7 +171,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       '&>textarea': {
         width: '100%',
         backgroundColor: theme.backgroundColor.step1,
-        filter: 'brightness(1.2)',
+        filter: theme.brightness.step0,
         padding: '6px 12px',
         border: 'none',
         borderRadius: '2px',

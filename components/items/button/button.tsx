@@ -9,7 +9,7 @@ const buttonStyle = makeStyles((theme: IThemeStyle) =>
       width: '100px',
       marginLeft: '12px',
       height: '28px',
-      color: theme.font.high.color,
+      color: '#ffffff',
       fontSize: '15px',
       borderRadius: '2px',
       border: 'none',

@@ -15,7 +15,7 @@ function Header(props: IHeaderProps) {
       <div className={classes.targetThumbnail}></div>
       <div className={classes.targetInfo}>
         <div className={classes.targetName}>{target.chatName ?? (target.userId as string)}</div>
-        <div className={classes.targetLast}>{target.recentTime}</div>
+        <div className={classes.targetLast}>{target.recentTime.split(' ')[0]}</div>
       </div>
       <div className={classes.targetParticipant}></div>
     </div>
