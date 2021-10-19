@@ -6,3 +6,5 @@ export const mentionRegex = /<(\/picode-mention|picode-mention)([^>]*)>/gi
 export const imageRegex = /<img((\n|\r|.)*?)>/gim
 export const trimRegex = /(src=|")/gi
 export const allTagRegex = /(<([^>]+)>)/gi
+
+export const fontTagRegex = /<(\/font|font)([^>]*)>/gi

@@ -8,8 +8,6 @@ import { ICreateType, ISource, IWorkspace } from '../../../../types/workspace.ty
 import CustomTextInput from '../../../items/input/text'
 import CustomTextarea from '../../../items/input/textarea'
 import CustomUserInput from '../../../items/input/userInput'
-import CustomFileInput from '../../../items/input/fileInput'
-import CustomThumbnailInput from '../../../items/input/thumbnailInput'
 import { fetchSet } from '../../../context/fetch'
 
 interface IWorkspaceInfoProps {
