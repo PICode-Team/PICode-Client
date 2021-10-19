@@ -123,7 +123,7 @@ function MessageBox(props: IMessageBoxProps) {
   return (
     <div className={`${classes.messageBox} ${reverse && classes.reversedMessageBox}`}>
       {!reverse && <div className={classes.thumbnail} style={thumbnailUrl !== undefined ? { backgroundImage: `url('${API_SERVER}:8000/api/temp/${thumbnailUrl}`, backgroundSize: 'cover' } : {}} />}
-      <div className={`${target !== null && classes.messageInfo}`}>
+      <div className={`${target !== null && classes.messageInfo}`} style={{ alignItems: reverse ? 'flex-end' : 'flex-start' }}>
         {!reverse && <div className={classes.target}>{user}</div>}
         <div className={`${classes.textWrapper} ${reverse && classes.reversedTextWrapper}`}>
           {!empty && <span className={classes.messageText} ref={contentRef}></span>}
