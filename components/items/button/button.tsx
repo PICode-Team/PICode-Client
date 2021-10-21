@@ -23,6 +23,9 @@ const buttonStyle = makeStyles((theme: IThemeStyle) =>
         width: '60px',
         height: '24px',
       },
+      '&:nth-child(1)': {
+        marginLeft: '0px',
+      },
     },
     primary: {
       backgroundColor: '#566372',

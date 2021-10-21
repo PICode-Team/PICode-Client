@@ -149,7 +149,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       '@media screen and (max-width: 600px)': {
         flexDirection: 'initial',
         minWidth: '80%',
-        padding: '20px 10px',
+        padding: '20px 25px',
         '&>div': {
           paddingTop: '0px',
           paddingLeft: '20px',
