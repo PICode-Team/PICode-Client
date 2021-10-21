@@ -24,11 +24,11 @@ export const sidebarData = {
     ],
     subUrl: ['/code', '/codeview', '/container'],
   },
-  // issuespace: {
-  //   url: '/issuespace',
-  //   icon: <Description />,
-  //   title: 'Issuespace',
-  // },
+  issuespace: {
+    url: '/issuespace',
+    icon: <Description />,
+    title: 'Issuespace',
+  },
   notespace: {
     url: '/notespace',
     icon: <DescriptionOutlined />,
