@@ -110,7 +110,7 @@ function CreateProject() {
       <div className={classes.createWrapper}>
         <Stepper step={step} edit={false} />
 
-        <div className={classes.inputWrapper}>
+        <div className={classes.inputWrapper} style={{ width: step === 1 ? '100%' : '', height: step === 1 ? '100%' : '' }}>
           {step === 1 && <CreateType setStep={setStep} setType={setType} />}
           {step === 2 && <WorkspaceInfo workspaceInfo={workspaceInfo} setWorkspaceInfo={setWorkspaceInfo} type={type} source={source} setSource={setSource} edit={false} />}
           {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={false} />}

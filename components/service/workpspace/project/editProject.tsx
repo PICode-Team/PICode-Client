@@ -99,7 +99,7 @@ function EditProject() {
       <div className={classes.createWrapper}>
         <Stepper step={step} edit={true} />
 
-        <div className={classes.inputWrapper}>
+        <div className={classes.inputWrapper} style={{ width: step === 1 ? '100%' : '', height: step === 1 ? '100%' : '' }}>
           {step === 2 && <WorkspaceInfo workspaceInfo={workspaceInfo} setWorkspaceInfo={setWorkspaceInfo} type={type} source={source} setSource={setSource} edit={true} />}
           {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={true} workspaceId={workspaceId as string} />}
           <div className={classes.content}>

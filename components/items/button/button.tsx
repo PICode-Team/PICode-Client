@@ -18,6 +18,11 @@ const buttonStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'center',
       alignItems: 'center',
       cursor: 'pointer',
+      '@media screen and (max-width: 600px)': {
+        fontSize: '10px',
+        width: '60px',
+        height: '24px',
+      },
     },
     primary: {
       backgroundColor: '#566372',
