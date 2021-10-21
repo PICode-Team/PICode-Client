@@ -8,7 +8,7 @@ import CustomButton from '../../items/button/button'
 import { fetchSet } from '../../context/fetch'
 import DeleteModal from '../../items/modal/detail/delete'
 import ExportWorkspace from '../../items/modal/detail/export'
-import RequsetResult from '../../items/modal/detail/result'
+import RequestResult from '../../items/modal/detail/result'
 
 function DefaultCodeView() {
   const classes = defaultStyle()
@@ -124,15 +124,15 @@ function DefaultCodeView() {
               <div className={classes.infoValue}>{v.description === '' && 'no description'}</div>
             </div>
             <div className={classes.buttonGroup}>
-              <CustomButton text="To Code" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkCode(v.workspaceId)} />
-              <CustomButton text="To Issue" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkIssue(v.workspaceId)} />
+              <CustomButton text="To Code" className={classes.button} onClick={handleLinkCode(v.workspaceId)} />
+              <CustomButton text="To Issue" className={classes.button} onClick={handleLinkIssue(v.workspaceId)} />
             </div>
           </div>
         ))}
       </div>
       {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" />}
       {openExport && modalInfo !== null && <ExportWorkspace modal={openExport} setModal={setOpenExport} workspaceInfo={modalInfo} exportType="codespace" />}
-      {openResult && <RequsetResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} />}
+      {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
     </div>
   )
 }

@@ -12,7 +12,7 @@ import { uuidv4 } from '../../context/uuidv4'
 import { fetchSet } from '../../context/fetch'
 import DeleteModal from '../../items/modal/detail/delete'
 import ExportWorkspace from '../../items/modal/detail/export'
-import RequsetResult from '../../items/modal/detail/result'
+import RequestResult from '../../items/modal/detail/result'
 
 interface IRecentWorkProps {}
 
@@ -224,7 +224,7 @@ function RecentWork(props: IRecentWorkProps) {
       </div>
       {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" />}
       {openExport && modalInfo !== null && <ExportWorkspace modal={openExport} setModal={setOpenExport} workspaceInfo={modalInfo} />}
-      {openResult && <RequsetResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} />}
+      {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
     </div>
   )
 }
