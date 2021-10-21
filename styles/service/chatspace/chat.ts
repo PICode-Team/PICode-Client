@@ -310,6 +310,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
     imageWrapper: {
       display: 'flex',
       justifyContent: 'flex-end',
+      flexWrap: 'wrap',
     },
 
     contentImage: {
@@ -780,10 +781,10 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       position: 'absolute',
       backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
-        width: 'calc(100% - 550px)',
+        width: 'calc(100% - 414px) !important',
       },
       '@media screen and (min-width: 960px)': {
-        width: 'calc(100% - 414px) !important',
+        width: 'calc(100% - 550px) !important',
       },
     },
     toggleContent: {
@@ -1022,10 +1023,10 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       position: 'absolute',
       backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
-        width: 'calc(100% - 550px)',
+        width: 'calc(100% - 414px) !important',
       },
       '@media screen and (min-width: 960px)': {
-        width: 'calc(100% - 414px) !important',
+        width: 'calc(100% - 550px) !important',
       },
     },
     toggleThread: {
