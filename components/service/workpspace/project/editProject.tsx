@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/router'
-import Swal from 'sweetalert2'
 
 import { createWorkspaceStyle } from '../../../../styles/service/workspace/create'
 import { ICreateType, IDockerInfo, ISource, IWorkspace } from '../../../../types/workspace.types'
@@ -86,25 +85,7 @@ function EditProject() {
     const response = await fetchSet('/workspace', 'PUT', true, JSON.stringify(payload))
     const { code } = await response.json()
 
-    if (code === 200) {
-      Swal.fire({
-        title: 'SUCCESS',
-        text: `Edit ${originWorkspace.name}`,
-        icon: 'success',
-        heightAuto: false,
-      }).then(() => {
-        window.location.href = '/'
-      })
-    } else {
-      Swal.fire({
-        title: 'ERROR',
-        html: `ERROR Edit ${originWorkspace.name}
-                    <br />
-                    <span>${code}</span>`,
-        icon: 'error',
-        heightAuto: false,
-      })
-    }
+    window.location.href = '/'
   }
 
   useEffect(() => {
@@ -118,7 +99,7 @@ function EditProject() {
       <div className={classes.createWrapper}>
         <Stepper step={step} edit={true} />
 
-        <div className={classes.inputWrapper}>
+        <div className={classes.inputWrapper} style={{ width: step === 1 ? '100%' : '', height: step === 1 ? '100%' : '' }}>
           {step === 2 && <WorkspaceInfo workspaceInfo={workspaceInfo} setWorkspaceInfo={setWorkspaceInfo} type={type} source={source} setSource={setSource} edit={true} />}
           {step === 3 && <DockerInfo dockerInfo={dockerInfo} setDockerInfo={setDockerInfo} edit={true} workspaceId={workspaceId as string} />}
           <div className={classes.content}>

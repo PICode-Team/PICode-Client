@@ -15,7 +15,7 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
     input: {
       width: '100%',
       backgroundColor: theme.backgroundColor.step1,
-      filter: 'brightness(1.2)',
+      filter: theme.brightness.step0,
       padding: '4px 8px',
       border: 'none',
       borderRadius: '2px',

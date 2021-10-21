@@ -2,16 +2,14 @@ import React, { useEffect, useState } from 'react'
 
 import { makeStyles, createStyles } from '@material-ui/core'
 
-import { IThemeStyle } from '../../../../styles/theme'
 import CustomTextInput from '../../../items/input/text'
 import Modal from '../../../items/modal/modal'
 import CustomTextarea from '../../../items/input/textarea'
 import CustomUserInput from '../../../items/input/userInput'
 import CustomCheckbox from '../../../items/input/checkbox'
-import { useWs } from '../../../context/websocket'
 import CustomMonoUserInput from '../../../items/input/monoUserInput'
-import { IUser } from '../../../../types/user.types'
-import { fetchSet } from '../../../context/fetch'
+import { IThemeStyle } from '../../../../styles/theme'
+import { useWs } from '../../../context/websocket'
 
 const createChannelStyle = makeStyles((theme: IThemeStyle) => createStyles({}))
 

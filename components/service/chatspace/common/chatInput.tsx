@@ -18,7 +18,7 @@ import { chatInputStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
 import { fetchSet } from '../../../context/fetch'
-import { mentionRegex } from '../../../context/regex'
+import { fontTagRegex, mentionRegex } from '../../../context/regex'
 import { useWs } from '../../../context/websocket'
 import Entering from './entering'
 
@@ -136,15 +136,19 @@ function ChatInput(props: IChatInputProps) {
             sum += v.length
             if (sum + i > cursor) {
               const prev = result.pop()
-              result.push(`${prev}<picode-mention>@${target}</picode-mention>`)
+              result.push(`${prev}<picode-mention>@${target}</picode-mention> &nbsp`)
             } else {
               result.push(v)
             }
           })
 
-          console.log(result.join('@'))
-
           messageRef.current!.innerHTML = result.join('@')
+
+          messageRef.current!.focus()
+
+          const { focusNode } = window.getSelection()!
+
+          window.getSelection()?.setBaseAndExtent(focusNode!, 1, focusNode!, 1)
 
           return
         }
@@ -162,6 +166,18 @@ function ChatInput(props: IChatInputProps) {
       return
     }
     if (event.key === 'Shift') return
+
+    if (fontTagRegex.exec(messageRef.current!.innerHTML) !== null) {
+      messageRef.current!.innerHTML = messageRef.current!.innerHTML.replace(fontTagRegex, '')
+
+      const { focusNode } = window.getSelection()!
+
+      if (messageRef.current!.innerHTML.length === 0) {
+        window.getSelection()?.setBaseAndExtent(focusNode!, 0, focusNode!, 0)
+      } else {
+        window.getSelection()?.setBaseAndExtent(focusNode!, 1, focusNode!, 1)
+      }
+    }
 
     if (onMention === true) {
       const lastIndex = [...participantList.map((v) => v.userName), 'here', 'channel'].filter((v) => v.indexOf(messageContent) === 0).length - 1
@@ -182,7 +198,36 @@ function ChatInput(props: IChatInputProps) {
       }
     }
 
-    const splitedText = event.target.innerHTML.split('')
+    const mentionSplitedText = messageRef.current!.innerHTML.split('picode-mention')
+
+    let check = false
+    const tmp = []
+
+    for (let i = 0; i < mentionSplitedText.length; i++) {
+      if (mentionSplitedText[i].slice(-1) === '<' && i + 2 <= mentionSplitedText.length && mentionSplitedText[i + 1].slice(0, 2) === '>@') {
+        const innerText = mentionSplitedText[i + 1].slice(2).slice(0, mentionSplitedText[i + 1].length - 4)
+        const findTarget = [...participantList.map((v) => v.userName), 'here', 'channel'].find((v) => v === innerText)
+
+        if (findTarget === undefined) {
+          check = true
+          tmp.push(mentionSplitedText[i].slice(0, mentionSplitedText[i].length - 1))
+          tmp.push(innerText)
+          i += 2
+        } else {
+          tmp.push(mentionSplitedText[i])
+        }
+      }
+    }
+
+    if (check === true) {
+      if (messageRef.current === null) return
+
+      messageRef.current.innerHTML = tmp.join('')
+
+      window.getSelection()?.setBaseAndExtent(messageRef.current, 1, messageRef.current, 1)
+    }
+
+    const splitedText = messageRef.current!.innerHTML.split('')
     const cursor = document.getSelection()!.anchorOffset - 1
 
     if (onMention === true) {
@@ -237,6 +282,12 @@ function ChatInput(props: IChatInputProps) {
 
       messageRef.current.focus()
       messageRef.current.innerHTML = insertedText.join('')
+
+      const { focusNode } = window.getSelection()!
+
+      window.getSelection()?.setBaseAndExtent(focusNode!, focusNode?.textContent?.length ?? 0, focusNode!, focusNode?.textContent?.length ?? 0)
+
+      setOnMention(false)
     }
   }
 
@@ -247,6 +298,8 @@ function ChatInput(props: IChatInputProps) {
       }
     }
   }
+
+  const handleChatInputChange = (event: any) => {}
 
   useEffect(() => {
     document.addEventListener('click', clickHandler)
@@ -292,7 +345,15 @@ function ChatInput(props: IChatInputProps) {
       )}
       <div className={classes.input}>
         <div className={classes.inputBox}>
-          <div id="editor" className={classes.customInput} contentEditable={true} onKeyUp={handleChatInputKeyup} onKeyPress={handleChatInputKeypress} ref={messageRef}></div>
+          <div
+            id="editor"
+            className={classes.customInput}
+            contentEditable={true}
+            onKeyUp={handleChatInputKeyup}
+            onKeyPress={handleChatInputKeypress}
+            onChange={handleChatInputChange}
+            ref={messageRef}
+          ></div>
           <div className={classes.interaction}>
             <div>
               <div>

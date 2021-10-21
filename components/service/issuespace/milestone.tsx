@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { DeleteForever, Edit } from '@material-ui/icons'
-import Swal from 'sweetalert2'
 
 import { boardStyle } from '../../../styles/service/issuespace/issue'
 import { IMilestone } from '../../../types/issue.types'
 import { useWs } from '../../context/websocket'
+import DeleteModal from '../../items/modal/detail/delete'
 
 interface IMilestoneProps {
   milestoneList: IMilestone[] | null
@@ -38,6 +38,9 @@ export const getPercentage = (startDate: string, endDate: string) => {
 function Milestone(props: IMilestoneProps) {
   const { milestoneList, setModal, setModalMile } = props
   const classes = boardStyle()
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [name, setName] = useState<string>('')
+  const [uuid, setUuid] = useState<string>('')
   const ws: any = useWs()
 
   const deleteMilestone = (uuid: string) => {
@@ -66,23 +69,17 @@ function Milestone(props: IMilestoneProps) {
     setModal(true)
   }
 
+  const handleDeleteSubmit = async (uuid: string) => {
+    deleteMilestone(uuid)
+  }
+
   const handleDeleteMile = (uuid: string, name: string) => async (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
 
-    const result = await Swal.fire({
-      title: 'Delete Milestone',
-      text: `Are you sure delete ${name} Milestone?`,
-      icon: 'warning',
-      heightAuto: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-    })
-
-    if (result.isConfirmed) {
-      deleteMilestone(uuid)
-    }
+    setOpenDelete(true)
+    setName(name)
+    setUuid(uuid)
   }
 
   const handleClickMile = () => {}
@@ -123,6 +120,7 @@ function Milestone(props: IMilestoneProps) {
             )
           })}
       </div>
+      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" />}
     </div>
   )
 }

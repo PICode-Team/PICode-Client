@@ -9,7 +9,7 @@ const buttonStyle = makeStyles((theme: IThemeStyle) =>
       width: '100px',
       marginLeft: '12px',
       height: '28px',
-      color: theme.font.high.color,
+      color: '#ffffff',
       fontSize: '15px',
       borderRadius: '2px',
       border: 'none',
@@ -18,6 +18,14 @@ const buttonStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'center',
       alignItems: 'center',
       cursor: 'pointer',
+      '@media screen and (max-width: 600px)': {
+        fontSize: '10px',
+        width: '60px',
+        height: '24px',
+      },
+      '&:nth-child(1)': {
+        marginLeft: '0px',
+      },
     },
     primary: {
       backgroundColor: '#566372',

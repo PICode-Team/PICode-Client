@@ -49,7 +49,7 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function Modal(props: IModalProps) {
-  const { children, modal, size, setModal, onSubmit, title } = props
+  const { children, modal, size, setModal, onSubmit, title, hidden } = props
   const classes = modalStyle()
 
   const handleCloseModal = (event: React.MouseEvent<HTMLElement>) => {
@@ -65,7 +65,7 @@ function Modal(props: IModalProps) {
           <div className={`${classes.modal} ${classes[size ?? 'md']}`}>
             <ModalHeader handleCloseModal={handleCloseModal} title={title} />
             <ModalBody>{children}</ModalBody>
-            <ModalFooter handleCloseModal={handleCloseModal} onSubmit={onSubmit} />
+            <ModalFooter handleCloseModal={handleCloseModal} onSubmit={onSubmit} hidden={hidden} />
           </div>
           <div className={classes.overlay} onClick={handleCloseModal} />
         </React.Fragment>

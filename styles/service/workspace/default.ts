@@ -20,10 +20,24 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
       backgroundColor: theme.backgroundColor.step2,
       color: theme.font.high.color,
       display: 'grid',
-      gridTemplateColumns: 'repeat(3, calc(33% - 21px))',
+      gridTemplateColumns: 'repeat(3, calc(33% - 16px))',
       gap: '28px 28px',
       padding: '30px',
-      gridTemplateRows: 'repeat(4, 195px)',
+      gridTemplateRows: 'repeat(3, calc(33% - 16px))',
+      overflow: 'auto',
+      '@media screen and (max-width: 960px)': {
+        gridTemplateColumns: 'repeat(2, calc(50% - 14px))',
+      },
+      '@media screen and (max-width: 600px)': {
+        gridTemplateColumns: 'repeat(1, calc(100%))',
+      },
+    },
+    button: {
+      width: '45%',
+      height: '28px',
+      textAlign: 'center',
+      fontSize: '14px',
+      lineHeight: '28px',
     },
     item: {
       backgroundColor: theme.backgroundColor.step1,
@@ -60,18 +74,21 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
       },
     },
     infoWrapper: {
-      marginBottom: '3px',
+      marginBottom: '8px',
       display: 'flex',
     },
     infoKey: { width: '90px' },
-    infoValue: {},
+    infoValue: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+    },
 
     buttonGroup: {
       width: '100%',
       display: 'flex',
       justifyContent: 'space-between',
-      marginBottom: '20px',
-      marginTop: '8px',
+      marginTop: '30px',
     },
   })
 )
