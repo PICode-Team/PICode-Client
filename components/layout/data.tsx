@@ -39,9 +39,9 @@ export const sidebarData = {
     icon: <ChatOutlined />,
     title: 'Chatspace',
   },
-  setting: {
-    url: '/setting',
-    icon: <SettingsOutlined />,
-    title: 'Setting',
-  },
+  // setting: {
+  //   url: '/setting',
+  //   icon: <SettingsOutlined />,
+  //   title: 'Setting',
+  // },
 }
