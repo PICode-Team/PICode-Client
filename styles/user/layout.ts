@@ -35,6 +35,7 @@ export const layoutStyle = makeStyles((theme: IThemeStyle) =>
       verticalAlign: 'middle',
       position: 'relative',
       color: theme.font.high.color,
+      margin: '0px 30px',
     },
     signupContent: {
       backgroundColor: theme.loginBackground,
@@ -51,6 +52,7 @@ export const layoutStyle = makeStyles((theme: IThemeStyle) =>
       position: 'absolute',
       right: '20px',
       top: '20px',
+      zIndex: 9,
     },
     header: {
       width: '100%',
