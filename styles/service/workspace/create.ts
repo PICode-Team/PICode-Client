@@ -29,7 +29,7 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       margin: '30px 0px',
       marginBottom: '65px',
-      width: '120vh',
+      width: '100%',
       justifyContent: 'center',
     },
     step: {
@@ -67,12 +67,20 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
         width: '18px',
         height: '18px',
       },
+      '@media screen and (max-width: 600px)': {
+        paddingTop: '0px',
+      },
     },
     stepText: {
       whiteSpace: 'nowrap',
       fontSize: '14px',
       fontWeight: 'normal',
       color: 'rgba(255, 255, 255, 0.55)',
+      marginTop: '-4px',
+      '@media screen and (max-width: 600px)': {
+        fontSize: '10px',
+        marginTop: '-8px',
+      },
     },
 
     content: {
@@ -90,15 +98,25 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       gap: '30px',
       marginTop: '40px',
+      '@media screen and (max-width: 960px)': {
+        gap: '20px',
+      },
+      justifyContent: 'center',
+      '@media screen and (max-width: 600px)': {
+        flexDirection: 'column',
+        gap: '20px',
+        alignItems: 'center',
+      },
     },
     typeNode: {
       cursor: 'pointer',
-      width: '250px',
+      maxWidth: '250px',
+      width: '100%',
       display: 'flex',
-      minWidth: '242px',
+      minWidth: '180px',
       alignItems: 'center',
       flexDirection: 'column',
-      padding: '70px 30px',
+      padding: '40px 20px',
       color: theme.font.medium.color,
       backgroundColor: theme.backgroundColor.step1,
       filter: theme.brightness.step0,
@@ -112,15 +130,46 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
         height: '80px',
       },
       '&>div': {
-        fontSize: '22px',
+        fontSize: '19px',
         fontWeight: 'bold',
         paddingTop: '15px',
+      },
+      '@media screen and (max-width: 960px)': {
+        minWidth: '125px',
+        padding: '40px 10px',
+        '&>div': {
+          fontSize: '15px',
+          fontWeight: 300,
+        },
+        '&>svg': {
+          width: '60px',
+          height: '60px',
+        },
+      },
+      '@media screen and (max-width: 600px)': {
+        flexDirection: 'initial',
+        minWidth: '80%',
+        padding: '20px 10px',
+        '&>div': {
+          paddingTop: '0px',
+          paddingLeft: '20px',
+        },
+        '&>svg': {
+          width: '50px',
+          height: '50px',
+        },
       },
     },
 
     inputContent: {
-      minWidth: '500px',
+      minWidth: '550px',
       width: '100%',
+      '@media screen and (max-width: 960px)': {
+        minWidth: '430px',
+      },
+      '@media screen and (max-width: 600px)': {
+        minWidth: '100%',
+      },
     },
     buttonBox: {
       display: 'flex',
@@ -130,6 +179,9 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
     },
     inputWrapper: {
       overflow: 'auto',
+      '@media screen and (max-width: 600px)': {
+        width: '100%',
+      },
     },
 
     subTitle: {

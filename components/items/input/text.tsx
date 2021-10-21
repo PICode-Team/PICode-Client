@@ -22,6 +22,9 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
       lineHeight: '32px',
       flex: 1,
       outline: 'none',
+      '@media screen and (max-width: 600px)': {
+        fontSize: '10px',
+      },
     },
     label: {
       color: theme.font.high.color,
@@ -29,6 +32,10 @@ const textInputStyle = makeStyles((theme: IThemeStyle) =>
       marginRight: '8px',
       marginTop: '2px',
       width: '106px',
+      '@media screen and (max-width: 600px)': {
+        fontSize: '10px',
+        width: '90px',
+      },
     },
     required: {
       color: '#C33030',
