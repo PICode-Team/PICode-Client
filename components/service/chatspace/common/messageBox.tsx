@@ -1,6 +1,5 @@
 import { FavoriteBorderOutlined, SmsOutlined } from '@material-ui/icons'
 import React, { useEffect, useRef, useState } from 'react'
-import { API_SERVER } from '../../../../constants/serverUrl'
 import { messageBoxStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel, IChat, IThread } from '../../../../types/chat.types'
 import { IOpenGraph } from '../../../../types/openGraph.types'
@@ -122,8 +121,8 @@ function MessageBox(props: IMessageBoxProps) {
 
   return (
     <div className={`${classes.messageBox} ${reverse && classes.reversedMessageBox}`}>
-      {!reverse && <div className={classes.thumbnail} style={thumbnailUrl !== undefined ? { backgroundImage: `url('${API_SERVER}:8000/api/temp/${thumbnailUrl}`, backgroundSize: 'cover' } : {}} />}
-      <div className={`${target !== null && classes.messageInfo}`} style={{ alignItems: reverse ? 'flex-end' : 'flex-start' }}>
+      {!reverse && <div className={classes.thumbnail} style={thumbnailUrl !== undefined ? { backgroundImage: `url('${process.env.NEXT_FE_API_URL}/api/temp/${thumbnailUrl}`, backgroundSize: 'cover' } : {}} />}
+      <div className={`${target !== null && classes.messageInfo}`}>
         {!reverse && <div className={classes.target}>{user}</div>}
         <div className={`${classes.textWrapper} ${reverse && classes.reversedTextWrapper}`}>
           {!empty && <span className={classes.messageText} ref={contentRef}></span>}

@@ -14,7 +14,7 @@ const wsPort = process.env.NEXT_PUBLIC_WS_PORT || 3001;
 
 httpProxy
     .createServer({
-        target: process.env.FE_API_URL,
+        target: process.env.NEXT_FE_API_URL,
         changeOrigin: true,
         ws: true,
     })
@@ -28,7 +28,7 @@ httpProxy
         server.use(
             "/api",
             createProxyMiddleware({
-                target: process.env.FE_API_URL,
+                target: process.env.NEXT_FE_API_URL,
                 changeOrigin: true,
                 logLevel: "debug",
             })

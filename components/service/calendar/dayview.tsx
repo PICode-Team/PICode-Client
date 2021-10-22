@@ -11,7 +11,14 @@ export default function DayView(props: IDate) {
             return <div key={v.scheduleId} className={classes.dayContainer} draggable={true} onDragStart={() => {
 
             }}>
-                {v.title}
+                <div className={classes.titleName}>
+                    {v.title}
+                </div>
+                <div style={{ width: "100%", height: "calc(100% - 40px)" }}>
+                    <div style={{ width: "100%", height: "100%" }}>
+                        {v.content}
+                    </div>
+                </div>
             </div>
         })}
     </div>

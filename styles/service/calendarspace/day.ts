@@ -116,5 +116,14 @@ export const viewStyle = makeStyles((theme: IThemeStyle) =>
             background: theme.backgroundColor.step3,
             marginBottom: "4px",
         },
+        titleName:{ 
+            width: "100%", 
+            height: "40px", 
+            lineHeight: "26px", 
+            padding: "7px",
+            background:theme.backgroundColor.step1,
+            color:theme.font.high.color
+         },
+         
     })
 );
