@@ -23,15 +23,31 @@ export default function MonthView(props: IDate) {
                         tmpDay.setDate(tmpWeekData.startDate.getDate() + idx);
                         let scheduleDay: string = checkDate(tmpDay);
                         return <div key={tmpDay.getTime()}
+                            id={`time${tmpDay.getTime()}`}
                             className={clsx(classes.monthday, idx === 6 && classes.lastmonthday)}
                             onDragOver={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
+                                let node = document.getElementById(`time${tmpDay.getTime()}`)
+                                if (node !== null) {
+                                    node.style.background = "#1D2228"
+                                }
+                            }}
+                            onDragLeave={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                let node = document.getElementById(`time${tmpDay.getTime()}`)
+                                if (node !== null) {
+                                    node.style.background = "none"
+                                }
                             }}
                             onDrop={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                console.log(3)
+                                let node = document.getElementById(`time${tmpDay.getTime()}`)
+                                if (node !== null) {
+                                    node.style.background = "none"
+                                }
                             }}
                         >
                             <div className={classes.monthdayinfo} onClick={() => {

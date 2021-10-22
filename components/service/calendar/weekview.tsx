@@ -43,15 +43,33 @@ export default function WeekView(props: IDate) {
             let startDate = cloneDeep(weekData.startDate);
             startDate.setDate(weekData.startDate.getDate() + idx)
             let scheduleDay: string = checkDate(startDate);
-            return <div key={v} className={clsx(classes.weekday, idx === 6 && classes.weekdayend)}
+            let id = calDay[weekData.startDate.getDay() + idx];
+            return <div key={v}
+                id={id}
+                className={clsx(classes.weekday, idx === 6 && classes.weekdayend)}
                 onDragOver={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    let node = document.getElementById(`${id}`)
+                    if (node !== null) {
+                        node.style.background = "#1D2228"
+                    }
+                }}
+                onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    let node = document.getElementById(`${id}`)
+                    if (node !== null) {
+                        node.style.background = "none"
+                    }
                 }}
                 onDrop={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log(3)
+                    let node = document.getElementById(`${id}`)
+                    if (node !== null) {
+                        node.style.background = "none"
+                    }
                 }}
             >
                 <div className={clsx(classes.dayInfo, (idx === 6 || idx === 0) && classes.holiday)} onClick={() => {
@@ -70,7 +88,9 @@ export default function WeekView(props: IDate) {
                         return <div key={v.scheduleId} className={classes.dayContainer} draggable={true} onDragStart={() => {
 
                         }}>
-                            {v.title}
+                            <div className={classes.titleName}>
+                                {v.title}
+                            </div>
                         </div>
                     })}
                 </div>

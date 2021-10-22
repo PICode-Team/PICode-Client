@@ -4,7 +4,6 @@ import { chatSidebarStyle } from '../../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
 import { fetchSet } from '../../../../context/fetch'
-import { API_SERVER } from '../../../../../constants/serverUrl'
 import { allTagRegex, imageRegex } from '../../../../context/regex'
 
 interface ISidebarProps {
@@ -77,9 +76,9 @@ function Sidebar(props: ISidebarProps) {
                   style={
                     thumbnailUrl !== undefined
                       ? {
-                          backgroundImage: `url('${API_SERVER}:80/api/temp/${thumbnailUrl}')`,
-                          backgroundSize: 'cover',
-                        }
+                        backgroundImage: `url('${process.env.NEXT_FE_API_URL}/api/temp/${thumbnailUrl}')`,
+                        backgroundSize: 'cover',
+                      }
                       : {}
                   }
                 ></div>
