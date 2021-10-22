@@ -24,11 +24,11 @@ export const sidebarData = {
     ],
     subUrl: ['/code', '/codeview', '/container'],
   },
-  // issuespace: {
-  //   url: '/issuespace',
-  //   icon: <Description />,
-  //   title: 'Issuespace',
-  // },
+  issuespace: {
+    url: '/issuespace',
+    icon: <Description />,
+    title: 'Issuespace',
+  },
   notespace: {
     url: '/notespace',
     icon: <DescriptionOutlined />,
@@ -39,9 +39,9 @@ export const sidebarData = {
     icon: <ChatOutlined />,
     title: 'Chatspace',
   },
-  setting: {
-    url: '/setting',
-    icon: <SettingsOutlined />,
-    title: 'Setting',
-  },
+  // setting: {
+  //   url: '/setting',
+  //   icon: <SettingsOutlined />,
+  //   title: 'Setting',
+  // },
 }

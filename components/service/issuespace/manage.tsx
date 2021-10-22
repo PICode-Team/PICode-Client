@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Search } from '@material-ui/icons'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import Swal from 'sweetalert2'
 
 import { manageStyle } from '../../../styles/service/issuespace/issue'
 import { IKanban, IMilestone } from '../../../types/issue.types'
@@ -13,6 +12,7 @@ import CreateMilestone from './create/milestone'
 import CreateKanban from './create/kanban'
 import Board from './board'
 import Milestone from './milestone'
+import RequestResult from '../../items/modal/detail/result'
 
 interface IManageSpaceProps {}
 
@@ -26,6 +26,8 @@ export default function ManageSpace(props: IManageSpaceProps) {
   const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
   const [mileList, setMileList] = useState<IMilestone[]>([])
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
+  const [openResult, setOpenResult] = useState<boolean>(false)
+  const [resultStatus, setResultStatus] = useState<boolean>(false)
   const ws: any = useWs()
   const { workspaceId } = router.query
 
@@ -72,26 +74,11 @@ export default function ManageSpace(props: IManageSpaceProps) {
           break
         case 'deleteKanban':
           if (message.data.code / 100 === 2) {
-            await Swal.fire({
-              title: 'SUCCESS',
-              text: `DELETE ${workspaceId}`,
-              icon: 'success',
-              heightAuto: false,
-            })
+            setResultStatus(true)
             getKanbanList()
           } else {
-            Swal.fire({
-              title: 'ERROR',
-              html: `
-                    ERROR in DELETE ${workspaceId}
-                    <br />
-                    <span>${message.data.code}</span>
-                    `,
-              icon: 'error',
-              heightAuto: false,
-            })
+            setResultStatus(false)
           }
-
           break
         default:
       }
@@ -112,27 +99,12 @@ export default function ManageSpace(props: IManageSpaceProps) {
 
         case 'deleteMilestone':
           if (message.data.code / 100 === 2) {
-            await Swal.fire({
-              title: 'SUCCESS',
-              text: `DELETE ${workspaceId}`,
-              icon: 'success',
-              heightAuto: false,
-            })
+            setResultStatus(true)
             getMileList()
           } else {
-            Swal.fire({
-              title: 'ERROR',
-              html: `
-                    ERROR in DELETE ${workspaceId}
-                    <br />
-                    <span>${message.data.code}</span>
-                    `,
-              icon: 'error',
-              heightAuto: false,
-            })
+            setResultStatus(false)
           }
           break
-
         default:
       }
     }
@@ -191,6 +163,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
       ) : (
         <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} workspaceId={workspaceId as string} />
       )}
+      {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
     </div>
   )
 }

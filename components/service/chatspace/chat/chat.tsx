@@ -131,6 +131,7 @@ function Chat(props: IChatProps) {
             })
           )
 
+          if (target === null) return
           if (target!.chatName !== message.data.chatName) return
 
           if (message.data.parentChatId !== undefined) {
@@ -226,7 +227,7 @@ function Chat(props: IChatProps) {
     return () => {
       ws.removeEventListener('message', chatWebSocketHandler)
     }
-  }, [ws?.readyState, target, messageList])
+  }, [ws?.readyState, target, messageList, channelList])
 
   return (
     <React.Fragment>

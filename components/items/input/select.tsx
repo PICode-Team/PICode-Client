@@ -15,7 +15,7 @@ const selectStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '2px',
       color: theme.font.high.color,
       backgroundColor: theme.backgroundColor.step1,
-      filter: 'brightness(1.2)',
+      filter: theme.brightness.step0,
       padding: '4px 8px',
       width: '100%',
       height: '32px',

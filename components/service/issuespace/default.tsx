@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 
 import { Search } from '@material-ui/icons'
 import clsx from 'clsx'
-import Swal from 'sweetalert2'
 
 import { manageStyle } from '../../../styles/service/issuespace/issue'
 import CustomButton from '../../items/button/button'
@@ -28,6 +27,8 @@ function DefaultIssue() {
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
   const [issueList, setIssueList] = useState<IIssue[]>([])
   const [modalIssue, setModalIssue] = useState<IIssue | null>(null)
+  const [openResult, setOpenResult] = useState<boolean>(false)
+  const [resultStatus, setResultStatus] = useState<boolean>(false)
   const ws: any = useWs()
 
   const handleCreateButton = (event: React.MouseEvent<HTMLElement>) => {
@@ -87,24 +88,10 @@ function DefaultIssue() {
           break
         case 'deleteKanban':
           if (message.data.code / 100 === 2) {
-            await Swal.fire({
-              title: 'SUCCESS',
-              text: `DELETE ${'workspaceId'}`,
-              icon: 'success',
-              heightAuto: false,
-            })
+            setResultStatus(true)
             getKanbanList()
           } else {
-            Swal.fire({
-              title: 'ERROR',
-              html: `
-                    ERROR in DELETE ${'workspaceId'}
-                    <br />
-                    <span>${message.data.code}</span>
-                    `,
-              icon: 'error',
-              heightAuto: false,
-            })
+            setResultStatus(false)
           }
 
           break
@@ -127,24 +114,10 @@ function DefaultIssue() {
 
         case 'deleteMilestone':
           if (message.data.code / 100 === 2) {
-            await Swal.fire({
-              title: 'SUCCESS',
-              text: `DELETE ${'workspaceId'}`,
-              icon: 'success',
-              heightAuto: false,
-            })
+            setResultStatus(true)
             getMileList()
           } else {
-            Swal.fire({
-              title: 'ERROR',
-              html: `
-                    ERROR in DELETE ${'workspaceId'}
-                    <br />
-                    <span>${message.data.code}</span>
-                    `,
-              icon: 'error',
-              heightAuto: false,
-            })
+            setResultStatus(false)
           }
           break
 

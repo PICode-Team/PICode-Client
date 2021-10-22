@@ -130,6 +130,11 @@ export default function UserInfo(props: IUserInfoProps) {
     await fetchSet('/user/sign', 'DELETE', true)
     localStorage.removeItem('userId')
 
+    const date = new Date()
+    date.setDate(date.getDate() - 100)
+    const cookie = `authorization=; Expires=${date}`
+    document.cookie = cookie
+
     window.location.reload()
   }
 

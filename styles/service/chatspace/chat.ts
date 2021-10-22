@@ -166,7 +166,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       },
     },
     thumbnail: {
-      backgroundColor: theme.font.high.color,
+      backgroundColor: '#ffffff',
       width: '22px',
       height: '22px',
       borderRadius: '11px',
@@ -310,6 +310,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
     imageWrapper: {
       display: 'flex',
       justifyContent: 'flex-end',
+      flexWrap: 'wrap',
     },
 
     contentImage: {
@@ -515,7 +516,7 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
     channelThumbnail: {
       width: '40px',
       height: '40px',
-      backgroundColor: theme.font.high.color,
+      backgroundColor: '#ffffff',
       borderRadius: '20px',
       marginRight: '12px',
       backgroundImage: "url('/images/picode-7.svg')",
@@ -585,7 +586,7 @@ export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
     targetThumbnail: {
       width: '40px',
       height: '40px',
-      backgroundColor: theme.font.high.color,
+      backgroundColor: '#ffffff',
       borderRadius: '20px',
       marginRight: '12px',
       backgroundImage: "url('/images/picode-7.svg')",
@@ -741,7 +742,8 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     },
     etc: {},
     thumbnail: {
-      color: 'rgba(255, 255, 255, 0.4)',
+      color: theme.font.high.color,
+      opacity: '0.6',
       fontSize: '10px',
       fontWeight: 'bold',
       width: '200px',
@@ -754,8 +756,9 @@ export const responsiveHomeStyle = makeStyles((theme: IThemeStyle) =>
     },
     lastTime: {
       fontSize: '10px',
-      color: 'rgba(255, 255, 255, 0.3)',
-      width: '44px',
+      color: theme.font.high.color,
+      opacity: '0.6',
+      width: '55px',
     },
     count: {
       fontSize: '10px',
@@ -778,10 +781,10 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       position: 'absolute',
       backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
-        width: 'calc(100% - 550px)',
+        width: 'calc(100% - 414px) !important',
       },
       '@media screen and (min-width: 960px)': {
-        width: 'calc(100% - 414px) !important',
+        width: 'calc(100% - 550px) !important',
       },
     },
     toggleContent: {
@@ -876,7 +879,8 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     },
     etc: {},
     thumbnail: {
-      color: 'rgba(255, 255, 255, 0.4)',
+      color: theme.font.high.color,
+      opacity: '0.6',
       fontSize: '10px',
       fontWeight: 'bold',
       width: '200px',
@@ -889,8 +893,9 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
     },
     lastTime: {
       fontSize: '10px',
-      color: 'rgba(255, 255, 255, 0.3)',
-      width: '44px',
+      color: theme.font.high.color,
+      opacity: '0.6',
+      width: '55px',
     },
     count: {
       fontSize: '10px',
@@ -1018,10 +1023,10 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       position: 'absolute',
       backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
-        width: 'calc(100% - 550px)',
+        width: 'calc(100% - 414px) !important',
       },
       '@media screen and (min-width: 960px)': {
-        width: 'calc(100% - 414px) !important',
+        width: 'calc(100% - 550px) !important',
       },
     },
     toggleThread: {
@@ -1126,7 +1131,8 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     },
     etc: {},
     thumbnail: {
-      color: 'rgba(255, 255, 255, 0.4)',
+      color: theme.font.high.color,
+      opacity: '0.6',
       fontSize: '10px',
       fontWeight: 'bold',
       width: '200px',
@@ -1139,8 +1145,9 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
     },
     lastTime: {
       fontSize: '10px',
-      color: 'rgba(255, 255, 255, 0.3)',
-      width: '44px',
+      color: theme.font.high.color,
+      opacity: '0.6',
+      width: '55px',
     },
     count: {
       fontSize: '10px',

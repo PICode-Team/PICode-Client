@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from 'react'
 
 import { CloudDownload, DeleteForever, Settings } from '@material-ui/icons'
-import Swal from 'sweetalert2'
 
 import { defaultStyle } from '../../../styles/service/workspace/default'
 import { IWorkspaceSpec } from '../../../types/workspace.types'
 import CustomButton from '../../items/button/button'
 import { fetchSet } from '../../context/fetch'
+import DeleteModal from '../../items/modal/detail/delete'
+import ExportWorkspace from '../../items/modal/detail/export'
+import RequestResult from '../../items/modal/detail/result'
 
 function DefaultCodeView() {
   const classes = defaultStyle()
   const [projectData, setWorkspaceData] = useState<IWorkspaceSpec[]>([])
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [openExport, setOpenExport] = useState<boolean>(false)
+  const [name, setName] = useState<string>('')
+  const [uuid, setUuid] = useState<string>('')
+  const [modalInfo, setModalInfo] = useState<IWorkspaceSpec | null>(null)
+  const [openResult, setOpenResult] = useState<boolean>(false)
+  const [resultStatus, setResultStatus] = useState<boolean>(true)
 
   const getWorkspaceData = async () => {
     const response = await fetchSet('/workspace', 'GET', true)
@@ -21,42 +30,12 @@ function DefaultCodeView() {
     }
   }
 
-  const handleExportWorkspace = (workspaceInfo: IWorkspaceSpec) => async (event: React.MouseEvent) => {
+  const handleExportWorkspace = (workspaceInfo: IWorkspaceSpec) => (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
 
-    const result = await Swal.fire({
-      title: 'Export Workspace',
-      text: `Are you sure export Codespace files?`,
-      icon: 'info',
-      heightAuto: false,
-      showCancelButton: true,
-    })
-
-    if (result.isConfirmed !== true) return
-
-    const extension = await Swal.fire({
-      title: 'Submit file extension \n(e.g. zip, tar, tar.gz, etc)',
-      input: 'text',
-      inputAttributes: {
-        autocapitalize: 'off',
-      },
-      showCancelButton: true,
-      heightAuto: false,
-    })
-
-    if (extension.value === undefined) return
-
-    const payload = {
-      option: {
-        workspaceOption: {
-          workspaceId: workspaceInfo.workspaceId,
-          extension: extension.value,
-        },
-      },
-    }
-
-    await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
+    setOpenExport(true)
+    setModalInfo(workspaceInfo)
   }
 
   const handleLinkCode = (workspaceId: string) => () => {
@@ -73,44 +52,28 @@ function DefaultCodeView() {
     window.location.href = `/workspace/edit?workspaceId=${workspaceId}`
   }
 
-  const handleClickDelete = (workspaceId: string) => async (event: React.MouseEvent) => {
+  const handleDeleteSubmit = (workspaceId: string) => async () => {
+    const response = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true)
+    const { code } = await response.json()
+
+    if (code / 2 === 100) {
+      setOpenDelete(false)
+      setOpenResult(true)
+      setResultStatus(true)
+    } else {
+      setOpenDelete(false)
+      setOpenResult(true)
+      setResultStatus(false)
+    }
+  }
+
+  const handleClickDelete = (workspaceId: string, name: string) => async (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    let result = await Swal.fire({
-      title: 'Delete Workspace',
-      text: `Are you sure delete ${workspaceId} Workspace?`,
-      icon: 'warning',
-      heightAuto: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-    })
-    if (result.isConfirmed) {
-      const response = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true)
-      const { code } = await response.json()
 
-      if (code / 100 === 2) {
-        Swal.fire({
-          title: 'SUCCESS',
-          text: `DELETE ${workspaceId}`,
-          icon: 'success',
-          heightAuto: false,
-        }).then(() => {
-          window.location.reload()
-        })
-      } else {
-        Swal.fire({
-          title: 'ERROR',
-          html: `
-                ERROR in DELETE ${workspaceId}
-                <br />
-                <span>${code}</span>
-                `,
-          icon: 'error',
-          heightAuto: false,
-        })
-      }
-    }
+    setOpenDelete(true)
+    setName(name)
+    setUuid(workspaceId)
   }
 
   useEffect(() => {
@@ -139,7 +102,7 @@ function DefaultCodeView() {
                 <div className={classes.icon} onClick={handleLinkEdit(v.workspaceId)}>
                   <Settings />
                 </div>
-                <div className={classes.icon} onClick={handleClickDelete(v.workspaceId)}>
+                <div className={classes.icon} onClick={handleClickDelete(v.workspaceId, v.name)}>
                   <DeleteForever />
                 </div>
               </div>
@@ -161,12 +124,15 @@ function DefaultCodeView() {
               <div className={classes.infoValue}>{v.description === '' && 'no description'}</div>
             </div>
             <div className={classes.buttonGroup}>
-              <CustomButton text="To Code" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkCode(v.workspaceId)} />
-              <CustomButton text="To Issue" style={{ height: '28px', textAlign: 'center', fontSize: '14px', lineHeight: '28px' }} onClick={handleLinkIssue(v.workspaceId)} />
+              <CustomButton text="To Code" className={classes.button} onClick={handleLinkCode(v.workspaceId)} />
+              <CustomButton text="To Issue" className={classes.button} onClick={handleLinkIssue(v.workspaceId)} />
             </div>
           </div>
         ))}
       </div>
+      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" />}
+      {openExport && modalInfo !== null && <ExportWorkspace modal={openExport} setModal={setOpenExport} workspaceInfo={modalInfo} exportType="codespace" />}
+      {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
     </div>
   )
 }
