@@ -30,16 +30,17 @@ interface IDeleteWorkspaceProps {
   uuid: string
   modal: boolean
   type: string
+  title: string
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   handleSubmit: any
 }
 
 function DeleteModal(props: IDeleteWorkspaceProps) {
-  const { name, uuid, modal, setModal, handleSubmit, type } = props
+  const { name, uuid, modal, setModal, handleSubmit, type, title } = props
   const classes = deleteStyle()
 
   return (
-    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit(uuid)} title="Delete Workspace">
+    <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit(uuid)} title={title}>
       <div className={classes.wrapper}>
         <div className={classes.text}>
           Are you sure delete

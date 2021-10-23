@@ -22,7 +22,7 @@ export const sidebarData = {
         title: 'Container',
       },
     ],
-    subUrl: ['/code', '/codeview', '/container'],
+    subUrl: ['/codespace', '/codeview', '/container'],
   },
   issuespace: {
     url: '/issuespace',

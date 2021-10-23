@@ -60,7 +60,7 @@ function RecentWork(props: IRecentWorkProps) {
     window.location.href = `/workspace/edit?workspaceId=${workspaceId}`
   }
 
-  const handleDeleteSubmit = async (workspaceId: string) => {
+  const handleDeleteSubmit = (workspaceId: string) => async () => {
     const response = await fetchSet(`/workspace?workspaceId=${workspaceId}`, 'DELETE', true)
     const { code } = await response.json()
 
@@ -222,7 +222,7 @@ function RecentWork(props: IRecentWorkProps) {
           </Carousel>
         </div>
       </div>
-      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" />}
+      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" title="Delete Workspace" />}
       {openExport && modalInfo !== null && <ExportWorkspace modal={openExport} setModal={setOpenExport} workspaceInfo={modalInfo} />}
       {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
     </div>

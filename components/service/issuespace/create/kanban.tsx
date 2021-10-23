@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { IKanban } from '../../../../types/issue.types'
+import { IWorkspaceSpec } from '../../../../types/workspace.types'
+import { fetchSet } from '../../../context/fetch'
 import { useWs } from '../../../context/websocket'
+import CustomSelect from '../../../items/input/select'
 
 import CustomTextInput from '../../../items/input/text'
 import Modal from '../../../items/modal/modal'
@@ -23,10 +26,16 @@ const initialState: ICreateKanbanState = {
 function CreateKanban(props: ICreateKanbanProps) {
   const { modal, setModal, modalKanban, workspaceId } = props
   const [payload, setPayload] = useState<ICreateKanbanState>(initialState)
+  const [workspaceData, setWorkspaceData] = useState<IWorkspaceSpec[]>([])
+  const [tempWorkspaceId, setTempWorkspaceId] = useState<string>('')
   const ws: any = useWs()
 
   const handlePayload = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPayload({ ...payload, [event.target.id]: event.target.value })
+  }
+
+  const handleWorkspaceId = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTempWorkspaceId(event.target.value)
   }
 
   const createKanban = (payload: ICreateKanbanState, workspaceId: string) => {
@@ -53,6 +62,15 @@ function CreateKanban(props: ICreateKanbanProps) {
     }
   }
 
+  const getWorkspaceData = async () => {
+    const response = await fetchSet('/workspace', 'GET', true)
+    const { workspaceList, code } = await response.json()
+
+    if (code === 200) {
+      setWorkspaceData(workspaceList)
+    }
+  }
+
   const handleSubmit = (isCreate: boolean) => () => {
     if (isCreate === true) {
       createKanban(payload, workspaceId ?? '')
@@ -69,10 +87,28 @@ function CreateKanban(props: ICreateKanbanProps) {
     }
   }, [modalKanban])
 
+  useEffect(() => {
+    if (workspaceId !== undefined) return
+
+    getWorkspaceData()
+  }, [workspaceId])
+
   return (
     <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit(modalKanban === null)} title={modalKanban === null ? 'Create Kanban' : 'Edit Kanban'}>
       <React.Fragment>
         <CustomTextInput id="title" value={payload.title} label="title" placeholder="title" onChange={handlePayload} />
+        {console.log(workspaceData)}
+        {workspaceId === undefined && (
+          <CustomSelect
+            id="tempWorkspaceId"
+            value={tempWorkspaceId}
+            label="Workspace"
+            onChange={handleWorkspaceId}
+            optionList={workspaceData.reduce((a: { name: string; value: string }[], c) => {
+              return [...a, { name: c.name, value: c.workspaceId }]
+            }, [])}
+          />
+        )}
       </React.Fragment>
     </Modal>
   )

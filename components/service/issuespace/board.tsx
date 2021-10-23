@@ -21,6 +21,7 @@ function Board(props: IBoardProps) {
   const router = useRouter()
   const [kanbanIssue, setKanbanIssue] = useState<string>('')
   const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [resultStatus, setResultStatus] = useState<boolean>(true)
   const [name, setName] = useState<string>('')
   const [uuid, setUuid] = useState<string>('')
 
@@ -50,8 +51,9 @@ function Board(props: IBoardProps) {
     }
   }
 
-  const handleDeleteSubmit = (uuid: string) => {
+  const handleDeleteSubmit = (uuid: string) => () => {
     deleteKanban(uuid)
+    setOpenDelete(false)
   }
 
   const handleDeleteBoard = (uuid: string, name: string) => async (event: React.MouseEvent) => {
@@ -98,7 +100,7 @@ function Board(props: IBoardProps) {
             })}
         </div>
       )}
-      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type={'workspace'} />}
+      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type={'kanban board'} title="Delete Kanban Board" />}
     </div>
   )
 }

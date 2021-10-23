@@ -1,5 +1,5 @@
 import { useRouter } from 'next/dist/client/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { rowStyle, sidebarStyle } from '../../styles/layout/sidebar'
 import { sidebarData } from './data'
 import clsx from 'clsx'
@@ -68,8 +68,21 @@ const Row = (props: { data: { url?: string; icon: JSX.Element; title: string; ch
   )
 }
 
-function Sidebar({ toggle }: { toggle: boolean }) {
+function Sidebar({ toggle, setToggle }: { toggle: boolean; setToggle: React.Dispatch<React.SetStateAction<boolean>> }) {
   const classes = sidebarStyle()
+
+  const handleResize = (event: any) => {
+    if (toggle === false && window.innerWidth < 960) {
+      setToggle(true)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   return (
     <div id="sidebar" className={`${classes.sideBar} ${toggle ? classes.toggle : classes.show}`}>
