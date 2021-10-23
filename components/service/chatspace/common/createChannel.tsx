@@ -77,10 +77,10 @@ function CreateChannel(props: ICreateChannelProps) {
   return (
     <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title="Create Channel">
       <React.Fragment>
-        {isDM ? <CustomMonoUserInput setValue={setName} value={name} label="name" /> : <CustomTextInput onChange={handlePayload} id="name" value={payload.name} label="name" placeholder="name" />}
-        <CustomTextarea onChange={handlePayload} id="description" value={payload.description} label="description" placeholder="description" />
+        {isDM ? <CustomMonoUserInput setValue={setName} value={name} label="Name" /> : <CustomTextInput onChange={handlePayload} id="name" value={payload.name} label="Name" placeholder="name" />}
+        <CustomTextarea onChange={handlePayload} id="description" value={payload.description} label="Description" placeholder="description" />
         {!isDM && <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />}
-        <CustomCheckbox value={isDM} label="is direct message?" onClick={handleSetChannelType} />
+        <CustomCheckbox value={isDM} label="Is direct message?" onClick={handleSetChannelType} />
       </React.Fragment>
     </Modal>
   )

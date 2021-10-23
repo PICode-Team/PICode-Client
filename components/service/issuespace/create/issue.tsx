@@ -136,13 +136,13 @@ function CreateIssue(props: ICreateIssueProps) {
   return (
     <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title="Create Issue" size="lg">
       <React.Fragment>
-        <CustomTextInput id="title" value={payload.title} label="title" placeholder="title" onChange={handlePayload} />
-        <CustomTextarea id="content" value={payload.content} label="content" placeholder="content" onChange={handlePayload} />
+        <CustomTextInput id="title" value={payload.title} label="Title" placeholder="title" onChange={handlePayload} />
+        <CustomTextarea id="content" value={payload.content} label="Content" placeholder="content" onChange={handlePayload} />
         <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />
-        <CustomTextInput id="label" value={payload.label} label="label" placeholder="label" onChange={handlePayload} />
-        <CustomSelect id="milestone" value={payload.milestone} label="milestone" placeholder="select milestone" onChange={handlePayload} optionList={optionList} />
-        <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="StartDate" placeholder="StartDate" />
-        <CustomDate id="dueDate" onChange={handleDueDate} value={payload.dueDate} label="dueDate" placeholder="dueDate" />
+        <CustomTextInput id="label" value={payload.label} label="Label" placeholder="label" onChange={handlePayload} />
+        <CustomSelect id="milestone" value={payload.milestone} label="Milestone" placeholder="select milestone" onChange={handlePayload} optionList={optionList} />
+        <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="Start Date" placeholder="StartDate" />
+        <CustomDate id="dueDate" onChange={handleDueDate} value={payload.dueDate} label="Due Date" placeholder="dueDate" />
       </React.Fragment>
     </Modal>
   )

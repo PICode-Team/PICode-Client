@@ -87,10 +87,10 @@ function CreateMilestone(props: ICreateMilestoneProps) {
   return (
     <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit(modalMile === null)} title={modalMile === null ? 'Create Milestone' : 'Edit Milestone'} size="lg">
       <React.Fragment>
-        <CustomTextInput required={true} id="title" onChange={handlePayload} value={payload.title} label="title" placeholder="title" />
-        <CustomTextarea id="content" onChange={handlePayload} value={payload.content} label="content" placeholder="content" />
-        <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="StartDate" placeholder="StartDate" />
-        <CustomDate id="endDate" onChange={handleEndDate} value={payload.endDate} label="EndDate" placeholder="EndDate" />
+        <CustomTextInput required={true} id="title" onChange={handlePayload} value={payload.title} label="Title" placeholder="title" />
+        <CustomTextarea id="content" onChange={handlePayload} value={payload.content} label="Content" placeholder="content" />
+        <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="Start Date" placeholder="StartDate" />
+        <CustomDate id="endDate" onChange={handleEndDate} value={payload.endDate} label="End Date" placeholder="EndDate" />
       </React.Fragment>
     </Modal>
   )
