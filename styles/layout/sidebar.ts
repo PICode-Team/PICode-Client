@@ -110,6 +110,12 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
     text: {
       whiteSpace: 'nowrap',
       marginLeft: '15px',
+      '@media screen and (max-width: 960px)': {
+        display: 'none',
+      },
+      '@media screen and (max-width: 600px)': {
+        display: 'inline-block',
+      },
     },
     hidden: {
       visibility: 'hidden',

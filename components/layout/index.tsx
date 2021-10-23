@@ -30,7 +30,7 @@ function Layout(props: IPageProps) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      let checkId = localStorage.getItem("userId");
+      let checkId = localStorage.getItem('userId')
       if (checkId === null) {
         window.location.href = '/'
       }
@@ -68,7 +68,7 @@ function Layout(props: IPageProps) {
   return (
     <React.Fragment>
       <div className={classes.layout}>
-        <Sidebar toggle={toggle} />
+        <Sidebar toggle={toggle} setToggle={setToggle} />
         <div className={`${classes.contentWrapper} ${toggle && classes.toggle}`}>
           <Topbar toggle={toggle} setToggle={setToggle} />
           <div className={classes.pageName}>
