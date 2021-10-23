@@ -41,7 +41,6 @@ const userInfoStyle = makeStyles((theme: IThemeStyle) =>
     logout: {
       width: '100px',
       marginTop: '22px',
-      marginLeft: '12px',
       height: '32px',
       color: theme.font.high.color,
       fontSize: '15px',
@@ -115,7 +114,7 @@ export default function UserInfo(props: IUserInfoProps) {
     setOpen(false)
   }
 
-  const handleEditThumbnail = () => { }
+  const handleEditThumbnail = () => {}
 
   const getUserData = async () => {
     const response = await fetchSet('/user', 'GET', true)
@@ -151,7 +150,7 @@ export default function UserInfo(props: IUserInfoProps) {
           {userInfo?.userThumbnail === undefined && <div className={classes.defaultThumbnail}>{userInfo?.userName.slice(0, 1)}</div>}
         </div>
         <div className={classes.contentText}>Hello, {userInfo?.userName ?? ''}</div>
-        <div className={classes.lastIssue}>You had to {4} issues in 7 days</div>
+        {/* <div className={classes.lastIssue}>You had to {4} issues in 7 days</div> */}
         <button className={classes.logout} onClick={handleLogout}>
           logout
         </button>
