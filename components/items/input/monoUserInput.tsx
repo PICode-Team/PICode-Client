@@ -36,8 +36,12 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
+      color: '#757575',
       '&:hover': {
         filter: theme.brightness.step2,
+      },
+      '@media screen and (max-width: 600px)': {
+        fontSize: '10px',
       },
     },
     item: {
@@ -80,6 +84,8 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       marginLeft: '114px',
       marginTop: '1px',
       position: 'absolute',
+      boxShadow: 'rgba(0, 0, 0, 0.15) 0px 1px 15px',
+      zIndex: 99,
     },
     userInfo: {
       display: 'flex',
@@ -109,6 +115,14 @@ function CustomMonoUserInput(props: IUserInputProps) {
   const classes = userInputStyle()
   const [participantList, setParticipantList] = useState<IUser[]>([])
   const [visible, setVisible] = useState<boolean>(false)
+  const classList = [classes.input, classes.user, classes.userName, classes.thumbnail, classes.userInfo]
+
+  const focusOutHandler = (event: any) => {
+    const check = classList.some((v) => event.target.classList.contains(v))
+    if (visible === true) {
+      setVisible(check)
+    }
+  }
 
   const getParticipantList = async () => {
     const response = await fetchSet('/userList', 'GET', false)
@@ -133,6 +147,14 @@ function CustomMonoUserInput(props: IUserInputProps) {
   useEffect(() => {
     getParticipantList()
   }, [])
+
+  useEffect(() => {
+    window.addEventListener('click', focusOutHandler)
+
+    return () => {
+      window.removeEventListener('click', focusOutHandler)
+    }
+  }, [visible])
 
   useEffect(() => {
     if (value.length === participantList.length) {
