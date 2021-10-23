@@ -315,9 +315,11 @@ export const issueTableStyle = makeStyles((theme: IThemeStyle) =>
     },
     leftHeader: {
       display: 'flex',
+      alignItems: 'center',
     },
     rightHeader: {
       display: 'flex',
+      alignItems: 'center',
     },
 
     checkbox: {
@@ -326,17 +328,109 @@ export const issueTableStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
     },
     active: {},
-    inactive: {},
-    filterMenu: {},
+    filterMenu: {
+      marginLeft: '12px',
+      cursor: 'pointer',
+    },
 
     bodyWrapper: {
       backgroundColor: '#5a6473',
       display: 'flex',
-      height: '54px',
-      padding: '16px',
+      height: '60px',
+      padding: '8px 16px',
+      alignItems: 'center',
     },
-    activeStatus: {},
+    activeStatus: {
+      display: 'flex',
+      alignItems: 'center',
+      marginRight: '10px',
+    },
+    title: {
+      fontSize: '16px',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+    },
     content: {},
     assignee: {},
+    detail: {
+      display: 'flex',
+    },
+    creation: {
+      marginRight: '8px',
+    },
+    milestone: {},
+    tag: {
+      backgroundColor: 'red',
+      fontWeight: 'normal',
+      fontSize: '14px',
+      padding: '2px 8px',
+      borderRadius: '12px',
+      marginLeft: '8px',
+    },
+  })
+)
+
+export const issueDetailStyle = makeStyles((theme: IThemeStyle) =>
+  createStyles({
+    detail: {
+      width: '100%',
+      height: 'calc(100% - 90px)',
+      padding: '32px',
+    },
+    header: {
+      width: '100%',
+      fontSize: theme.font.high.size,
+      color: theme.font.high.color,
+      marginBottom: '20px',
+      height: '85px',
+    },
+    wrapper: {
+      backgroundColor: theme.backgroundColor.step1,
+      padding: '30px',
+      height: 'calc(100% - 105px)',
+    },
+
+    title: {},
+    issueNumber: {
+      opacity: 0.6,
+      fontWeight: 'normal',
+      marginLeft: '12px',
+    },
+    activeStatus: {
+      fontSize: theme.font.low.size,
+      backgroundColor: 'red',
+      padding: '4px 12px',
+      borderRadius: '16px',
+      marginRight: '12px',
+    },
+    creation: {
+      fontSize: '16px',
+      opacity: 0.9,
+    },
+
+    item: {
+      color: theme.font.high.color,
+      fontSize: '16px',
+      marginBottom: '15px',
+      display: 'flex',
+    },
+    key: {
+      width: '150px',
+    },
+    value: {
+      flex: 1,
+    },
+
+    divider: {
+      width: '100%',
+      height: '2px',
+      backgroundColor: theme.backgroundColor.step2,
+    },
+
+    description: {
+      paddingTop: '20px',
+      color: theme.font.high.color,
+      fontSize: '14px',
+    },
   })
 )

@@ -40,7 +40,7 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
       height: '42%',
     },
     lg: {
-      height: '52%',
+      height: '58%',
       width: '35%',
     },
     xl: {},

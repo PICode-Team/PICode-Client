@@ -19,6 +19,10 @@ function Issue(props: IIssueProps) {
     setActiveStatus(status)
   }
 
+  const handleLinkDetail = (issueUUID: string) => () => {
+    window.location.href = `/issuespace/detail?issueUUID=${issueUUID}`
+  }
+
   return (
     <div className={classes.issueTable}>
       <div className={classes.headerWrapper}>
@@ -26,10 +30,10 @@ function Issue(props: IIssueProps) {
           <div className={classes.checkbox}>
             <CustomCheckbox value={false} label="" />
           </div>
-          <div className={`${activeStatus ? classes.active : classes.inactive}`} onClick={handleActiveStatus(true)}>
+          <div style={{ marginLeft: '0px' }} className={`${classes.filterMenu} ${activeStatus ?? classes.active}`} onClick={handleActiveStatus(true)}>
             Open
           </div>
-          <div className={`${!activeStatus ? classes.active : classes.inactive}`} onClick={handleActiveStatus(false)}>
+          <div className={`${classes.filterMenu} ${activeStatus ?? classes.active}`} onClick={handleActiveStatus(false)}>
             Close
           </div>
         </div>
@@ -55,7 +59,20 @@ function Issue(props: IIssueProps) {
             }}
           />
         </div>
-        <div className={classes.content}></div>
+        <div className={classes.content}>
+          <div>
+            <span className={classes.title} onClick={handleLinkDetail('uuid')}>
+              Failing to connect web socket, nothing comes out.
+            </span>
+            <span className={classes.tag}>bug</span>
+          </div>
+
+          <div className={classes.detail}>
+            <div className={classes.creation}>{`#${17} opened 18 hours ago by ${'wlsrn0727'}`}</div>
+            <div className={classes.milestone}>{'milestone'}</div>
+          </div>
+        </div>
+
         <div className={classes.assignee}></div>
       </div>
     </div>

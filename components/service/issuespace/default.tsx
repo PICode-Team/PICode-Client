@@ -18,7 +18,7 @@ import CreateLabel from './create/label'
 
 function DefaultIssue() {
   const classes = manageStyle()
-  const manageMenu = ['Issue', 'Board', 'Milestone', 'Label']
+  const manageMenu = ['Issue', 'Board', 'Milestone']
   const [menu, setMenu] = useState<string>('Issue')
   const [modal, setModal] = useState<boolean>(false)
   const [kanbanList, setKanbanList] = useState<IKanban[]>([])
@@ -163,7 +163,6 @@ function DefaultIssue() {
   useEffect(() => {
     kanbanList.map((v) => getIssue(v.uuid))
   }, [kanbanList])
-  console.log(issueList)
 
   return (
     <div className={classes.manage}>
@@ -187,14 +186,14 @@ function DefaultIssue() {
             {menu === 'Issue' && <Issue issueList={issueList} setModal={setModal} setModalIssue={setModalIssue} />}
             {menu === 'Board' && <Board kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />}
             {menu === 'Milestone' && <Milestone milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />}
-            {menu === 'Label' && <Label />}
+            {/* {menu === 'Label' && <Label />} */}
           </div>
         </div>
       </div>
       {menu === 'Issue' && <CreateIssue modal={modal} setModal={setModal} mileList={mileList} />}
       {menu === 'Board' && <CreateKanban modal={modal} setModal={setModal} modalKanban={modalKanban} />}
       {menu === 'Milestone' && <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} />}
-      {menu === 'Label' && <CreateLabel />}
+      {/* {menu === 'Label' && <CreateLabel />} */}
     </div>
   )
 }

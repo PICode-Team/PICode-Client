@@ -70,7 +70,7 @@ function DockerInfo(props: IDockerInfoProps) {
     if (code !== 200) return
     if (dockerList.length === 0) return
 
-    // setContainerList(dockerList)
+    setContainerList(dockerList)
   }
 
   useEffect(() => {
