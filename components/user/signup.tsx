@@ -161,12 +161,10 @@ function SignUp() {
   const makeImageUuid = async () => {
     if (userImage === undefined) return
 
-    console.log(userImage)
     const formData = new FormData()
     formData.append('uploadFile', userImage)
     const response = await fetchSet('/data', 'POST', false, formData)
     const { code, uploadFileId } = await response.json()
-    console.log(response)
 
     if (code === 200) {
       setImageUUID(uploadFileId)
