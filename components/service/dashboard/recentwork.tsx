@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 
 import { recentWorkStyle } from '../../../styles/service/dashboard/dashboard'
 import { Add, ArrowBackIos, DeleteForever, Settings, CloudDownload, ArrowForwardIos } from '@material-ui/icons'
@@ -14,10 +14,10 @@ import DeleteModal from '../../items/modal/detail/delete'
 import ExportWorkspace from '../../items/modal/detail/export'
 import RequestResult from '../../items/modal/detail/result'
 
-interface IRecentWorkProps {}
+interface IRecentWorkProps { }
 
 function RecentWork(props: IRecentWorkProps) {
-  const {} = props
+  const { } = props
   const classes = recentWorkStyle()
   const [workspaceData, setWorkspaceData] = useState<IWorkspaceSpec[]>([])
   const [itemNum, setItemNum] = useState<number>(0)
@@ -188,11 +188,6 @@ function RecentWork(props: IRecentWorkProps) {
     }
     return tmpContent
   }
-
-  useEffect(() => {
-    let width = (d3.select('#view')?.node() as any)?.getBoundingClientRect().width
-    d3.select('.carousel-root').style('max-width', `${width}px`)
-  }, [workspaceData])
 
   return (
     <div className={classes.recentWork}>
