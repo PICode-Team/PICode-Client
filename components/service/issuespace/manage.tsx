@@ -79,6 +79,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
           } else {
             setResultStatus(false)
           }
+          setOpenResult(true)
           break
         default:
       }
@@ -113,8 +114,10 @@ export default function ManageSpace(props: IManageSpaceProps) {
   useEffect(() => {
     ws.addEventListener('message', issueWebSocketHandler)
 
-    getKanbanList()
-    getMileList()
+    if (kanbanList.length === 0 && mileList.length === 0) {
+      getKanbanList()
+      getMileList()
+    }
 
     return () => {
       ws.removeEventListener('message', issueWebSocketHandler)

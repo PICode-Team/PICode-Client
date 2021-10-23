@@ -140,8 +140,10 @@ function DefaultIssue() {
   useEffect(() => {
     ws.addEventListener('message', issueWebSocketHandler)
 
-    getKanbanList()
-    getMileList()
+    if (kanbanList.length === 0 && mileList.length === 0) {
+      getKanbanList()
+      getMileList()
+    }
 
     return () => {
       ws.removeEventListener('message', issueWebSocketHandler)
@@ -161,6 +163,7 @@ function DefaultIssue() {
   useEffect(() => {
     kanbanList.map((v) => getIssue(v.uuid))
   }, [kanbanList])
+  console.log(issueList)
 
   return (
     <div className={classes.manage}>

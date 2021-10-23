@@ -69,7 +69,7 @@ function Milestone(props: IMilestoneProps) {
     setModal(true)
   }
 
-  const handleDeleteSubmit = async (uuid: string) => {
+  const handleDeleteSubmit = (uuid: string) => () => {
     deleteMilestone(uuid)
   }
 
@@ -120,7 +120,7 @@ function Milestone(props: IMilestoneProps) {
             )
           })}
       </div>
-      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" />}
+      {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="milestone" title="Delete Milestone" />}
     </div>
   )
 }
