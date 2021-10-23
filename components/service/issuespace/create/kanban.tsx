@@ -73,9 +73,9 @@ function CreateKanban(props: ICreateKanbanProps) {
 
   const handleSubmit = (isCreate: boolean) => () => {
     if (isCreate === true) {
-      createKanban(payload, workspaceId ?? '')
+      createKanban(payload, workspaceId ?? tempWorkspaceId)
     } else {
-      updateKanban(payload, workspaceId ?? '')
+      updateKanban(payload, workspaceId ?? tempWorkspaceId)
     }
     setPayload(initialState)
     setModal(false)

@@ -277,6 +277,8 @@ export const manageStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       padding: '0px 12px',
       alignItems: 'center',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
       '&>svg': {
         color: theme.font.high.color,
         marginRight: '6px',

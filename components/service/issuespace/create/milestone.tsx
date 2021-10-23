@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { IMilestone } from '../../../../types/issue.types'
+import { IWorkspaceSpec } from '../../../../types/workspace.types'
+import { fetchSet } from '../../../context/fetch'
 import { useWs } from '../../../context/websocket'
 import CustomDate from '../../../items/input/date'
+import CustomSelect from '../../../items/input/select'
 import CustomTextInput from '../../../items/input/text'
 import CustomTextarea from '../../../items/input/textarea'
 import Modal from '../../../items/modal/modal'
@@ -30,10 +33,16 @@ const initialState: ICreateMileState = {
 function CreateMilestone(props: ICreateMilestoneProps) {
   const { modal, setModal, modalMile, workspaceId } = props
   const [payload, setPayload] = useState<ICreateMileState>(initialState)
+  const [workspaceData, setWorkspaceData] = useState<IWorkspaceSpec[]>([])
+  const [tempWorkspaceId, setTempWorkspaceId] = useState<string>('')
   const ws: any = useWs()
 
   const handlePayload = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPayload({ ...payload, [event.target.id]: event.target.value })
+  }
+
+  const handleWorkspaceId = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTempWorkspaceId(event.target.value)
   }
 
   const createMilestone = (payload: ICreateMileState, workspaceId: string) => {
@@ -62,12 +71,21 @@ function CreateMilestone(props: ICreateMilestoneProps) {
 
   const handleSubmit = (isCreate: boolean) => () => {
     if (isCreate) {
-      createMilestone(payload, workspaceId ?? '')
+      createMilestone(payload, workspaceId ?? tempWorkspaceId)
     } else {
-      updateMilestone(payload, workspaceId ?? '')
+      updateMilestone(payload, workspaceId ?? tempWorkspaceId)
     }
     setPayload(initialState)
     setModal(false)
+  }
+
+  const getWorkspaceData = async () => {
+    const response = await fetchSet('/workspace', 'GET', true)
+    const { workspaceList, code } = await response.json()
+
+    if (code === 200) {
+      setWorkspaceData(workspaceList)
+    }
   }
 
   const handleStartDate = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +102,12 @@ function CreateMilestone(props: ICreateMilestoneProps) {
     }
   }, [modalMile])
 
+  useEffect(() => {
+    if (workspaceId !== undefined) return
+
+    getWorkspaceData()
+  }, [workspaceId])
+
   return (
     <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit(modalMile === null)} title={modalMile === null ? 'Create Milestone' : 'Edit Milestone'} size="lg">
       <React.Fragment>
@@ -91,6 +115,17 @@ function CreateMilestone(props: ICreateMilestoneProps) {
         <CustomTextarea id="content" onChange={handlePayload} value={payload.content} label="Content" placeholder="content" />
         <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="Start Date" placeholder="StartDate" />
         <CustomDate id="endDate" onChange={handleEndDate} value={payload.endDate} label="End Date" placeholder="EndDate" />
+        {workspaceId === undefined && (
+          <CustomSelect
+            id="tempWorkspaceId"
+            value={tempWorkspaceId}
+            label="Workspace"
+            onChange={handleWorkspaceId}
+            optionList={workspaceData.reduce((a: { name: string; value: string }[], c) => {
+              return [...a, { name: c.name, value: c.workspaceId }]
+            }, [])}
+          />
+        )}
       </React.Fragment>
     </Modal>
   )
