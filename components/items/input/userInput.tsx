@@ -29,7 +29,6 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       padding: '4px 8px',
       border: 'none',
       borderRadius: '2px',
-      color: '#757575',
       height: '32px',
       flex: 1,
       outline: 'none',
@@ -37,14 +36,19 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
+      color: '#757575',
       '&:hover': {
-        backgroundColor: '#4f5a66',
+        filter: theme.brightness.step2,
+      },
+      '@media screen and (max-width: 600px)': {
+        fontSize: '10px',
       },
     },
     item: {
       height: '16px',
       padding: '2px 4px',
-      backgroundColor: '#5b6878',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: theme.brightness.step4,
       borderRadius: '4px',
       marginRight: '8px',
       color: theme.font.high.color,
@@ -69,7 +73,8 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       padding: '4px 12px',
       cursor: 'pointer',
       '&:hover': {
-        backgroundColor: '#3b4a4f',
+        backgroundColor: theme.backgroundColor.step1,
+        filter: theme.brightness,
       },
     },
     userList: {
@@ -80,6 +85,8 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       marginTop: '1px',
       position: 'absolute',
       maxWidth: '386px',
+      boxShadow: 'rgba(0, 0, 0, 0.15) 0px 1px 15px',
+      zIndex: 99,
     },
     userInfo: {
       display: 'flex',
@@ -109,6 +116,7 @@ function CustomUserInput(props: IUserInputProps) {
   const classes = userInputStyle()
   const [participantList, setParticipantList] = useState<IUser[]>([])
   const [visible, setVisible] = useState<boolean>(false)
+  const classList = [classes.input, classes.user, classes.userName, classes.thumbnail, classes.userInfo]
 
   const getParticipantList = async () => {
     const response = await fetchSet('/userList', 'GET', false)
@@ -116,6 +124,13 @@ function CustomUserInput(props: IUserInputProps) {
 
     if (code === 200) {
       setParticipantList(user)
+    }
+  }
+
+  const focusOutHandler = (event: any) => {
+    const check = classList.some((v) => event.target.classList.contains(v))
+    if (visible === true) {
+      setVisible(check)
     }
   }
 
@@ -133,6 +148,14 @@ function CustomUserInput(props: IUserInputProps) {
   useEffect(() => {
     getParticipantList()
   }, [])
+
+  useEffect(() => {
+    window.addEventListener('click', focusOutHandler)
+
+    return () => {
+      window.removeEventListener('click', focusOutHandler)
+    }
+  }, [visible])
 
   useEffect(() => {
     if (value.length === participantList.length) {
