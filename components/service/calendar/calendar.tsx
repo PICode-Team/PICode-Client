@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, IconButton, MenuItem, Select } from "@material-ui/core";
 import { ArrowBackIosOutlined, ArrowForwardIosOutlined, CalendarViewDayOutlined } from "@material-ui/icons";
+import clsx from "clsx";
 import { cloneDeep } from "lodash";
 import React, { useEffect, useState } from "react";
 import 'react-calendar/dist/Calendar.css';
@@ -8,7 +9,7 @@ import { calendarStyle } from "../../../styles/service/calendarspace/calendar";
 import { useWs } from "../../context/websocket";
 import CustomSelect from "../../items/input/select";
 import { viewData } from "./constant";
-import data from "./data.json";
+import CreateSchedule from "./createschedule";
 import DayView from "./dayview";
 import MonthView from "./monthview";
 import WeekView, { getWeek } from "./weekview";
@@ -39,6 +40,7 @@ export interface IDate {
     schedule: ICalendarType | undefined,
     setTmpViewDay: React.Dispatch<React.SetStateAction<Date>>,
     setView: React.Dispatch<React.SetStateAction<string>>
+    setModal: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export const calDay = ["Sun", "Mon", "Tue", "Wen", "Tur", "Fri", "Sat"]
@@ -64,39 +66,55 @@ export default function CalanderSpace(props: any) {
     const [calendarData, setCalendarData] = useState<ICalendarType>();
     const ws: any = useWs();
     const classes = calendarStyle();
-    const [view, setView] = React.useState<string>("day");
+    const [view, setView] = React.useState<string>("month");
     const [today, setToday] = React.useState<Date>(new Date())
+    const [modal, setModal] = React.useState<boolean>(false);
+    const [kanbanList, setKanbanList] = React.useState();
     const [tmpViewDay, setTmpViewDay] = React.useState<Date>(new Date());
+    const [openNum, setOpenNum] = React.useState<number>(0);
+    const [scheduleDay, setScheduleDay] = React.useState<Date>();
 
     const calendarWebsocketHanlder = (msg: any) => {
         const message = JSON.parse(msg.data);
         if (message.category === "calendar") {
             switch (message.type) {
                 case "getCalendar": {
-                    console.log(message)
                     setCalendarData(message.data.schedules);
                     break;
+                }
+            }
+        } else if (message.type === "kanban") {
+            switch (message.type) {
+                case "getKanban": {
+                    setKanbanList(message.data.kanbans)
                 }
             }
         }
     };
 
     useEffect(() => {
-        setCalendarData(data)
-    }, [])
+        if (openNum < 0) return;
 
-    useEffect(() => {
         if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-            console.log(ws)
             ws.addEventListener("message", calendarWebsocketHanlder);
             let payload = {
                 category: "calendar",
                 type: "getCalendar",
                 data: {}
             }
+            let getKanbanPayload = {
+                category: "kanban",
+                type: "getKanban",
+                data: {}
+            }
             ws.send(JSON.stringify(payload))
+            ws.send(JSON.stringify(getKanbanPayload))
+            setOpenNum(-1);
+        } else {
+            setOpenNum(openNum + 1);
         }
-    }, [ws?.readyState])
+
+    }, [ws?.readyState, openNum])
 
     useEffect(() => {
         if (view === "month") {
@@ -118,13 +136,16 @@ export default function CalanderSpace(props: any) {
             tmpViewDay={tmpViewDay}
             schedule={calendarData}
             setTmpViewDay={setTmpViewDay}
-            setView={setView} />,
+            setView={setView}
+            setModal={setModal}
+        />,
         week: <WeekView
             today={today}
             tmpViewDay={tmpViewDay}
             schedule={calendarData}
             setTmpViewDay={setTmpViewDay}
             setView={setView}
+            setModal={setModal}
         />,
         month: <MonthView
             today={today}
@@ -132,6 +153,7 @@ export default function CalanderSpace(props: any) {
             schedule={calendarData}
             setTmpViewDay={setTmpViewDay}
             setView={setView}
+            setModal={setModal}
         />
     }
 
@@ -158,7 +180,7 @@ export default function CalanderSpace(props: any) {
                     </IconButton>
                 </div>
                 <div className={classes.today}>
-                    <div className={classes.todaytext} onClick={() => {
+                    <div className={clsx(classes.todaytext, getToday(today, "day") === getToday(tmpViewDay, "day") && classes.highlightTodayText)} onClick={() => {
                         setTmpViewDay(today);
                     }}>
                         {getToday(tmpViewDay, view)}
@@ -201,5 +223,6 @@ export default function CalanderSpace(props: any) {
                 {calendarData !== undefined && returnValue[view]}
             </div>
         </div>
+        <CreateSchedule modal={modal} setModal={setModal} kanbanList={kanbanList} tmpDay={tmpViewDay} />
     </div>
 }

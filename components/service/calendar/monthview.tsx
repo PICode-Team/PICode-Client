@@ -2,14 +2,17 @@ import clsx from "clsx";
 import { cloneDeep } from "lodash";
 import React from "react";
 import { viewStyle } from "../../../styles/service/calendarspace/day";
-import { calDay, checkDate, IDate } from "./calendar";
+import { calDay, checkDate, getToday, IDate } from "./calendar";
+import CreateSchedule from "./createschedule";
 import { getWeek } from "./weekview";
 
 
 export default function MonthView(props: IDate) {
     const classes = viewStyle();
     const [dragId, setDragId] = React.useState<string>();
-    let weekNum = [0, 1, 2, 3, 4]
+    let weekNum = [0, 1, 2, 3, 4, 5]
+    let today = new Date();
+    console.log()
 
     return <div className={classes.monthview}>
         {
@@ -17,14 +20,20 @@ export default function MonthView(props: IDate) {
                 let tmpStartDate = cloneDeep(props.tmpViewDay);
                 tmpStartDate.setDate(props.tmpViewDay.getDate() + 6 * v)
                 let tmpWeekData = getWeek(tmpStartDate)
-                return <div key={v} className={clsx(classes.monthweek, v === 4 && classes.lastmonthweek)}>
+                return <div key={v} className={clsx(classes.monthweek, v === 5 && classes.lastmonthweek)}>
                     {calDay.map((day, idx) => {
                         let tmpDay = cloneDeep(tmpWeekData.startDate);
                         tmpDay.setDate(tmpWeekData.startDate.getDate() + idx);
                         let scheduleDay: string = checkDate(tmpDay);
+                        let tmpMonth = tmpDay.getMonth();
+                        let realMonth = props.tmpViewDay.getMonth();
+                        let checkToday = false;
+                        if (getToday(today, "day") === getToday(tmpDay, "day")) {
+                            checkToday = true;
+                        }
                         return <div key={tmpDay.getTime()}
                             id={`time${tmpDay.getTime()}`}
-                            className={clsx(classes.monthday, idx === 6 && classes.lastmonthday)}
+                            className={clsx(classes.monthday, idx === 6 && classes.lastmonthday, tmpMonth !== realMonth && classes.anothermonth)}
                             onDragOver={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -49,8 +58,13 @@ export default function MonthView(props: IDate) {
                                     node.style.background = "none"
                                 }
                             }}
+                            onClick={() => {
+                                props.setModal(true)
+                            }}
                         >
-                            <div className={classes.monthdayinfo} onClick={() => {
+                            <div className={clsx(classes.monthdayinfo, checkToday && classes.today)} onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
                                 props.setTmpViewDay(tmpDay)
                                 props.setView("day")
                             }}>

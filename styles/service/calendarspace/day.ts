@@ -41,7 +41,7 @@ export const viewStyle = makeStyles((theme: IThemeStyle) =>
             borderBottom: `2px solid ${theme.backgroundColor.step3}`,
         },
         holiday: {
-            // color: "red",
+            color: "red",
         },
         daydateinfo: {
             height: "32px",
@@ -135,6 +135,11 @@ export const viewStyle = makeStyles((theme: IThemeStyle) =>
             background:theme.backgroundColor.step1,
             color:theme.font.high.color
          },
-         
+         anothermonth:{
+             backdropFilter:"brightness(70%)"
+         },
+         today:{
+             background:"#4078B8"
+         }
     })
 );

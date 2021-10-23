@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { cloneDeep } from "lodash";
 import React from "react";
 import { viewStyle } from "../../../styles/service/calendarspace/day";
-import { calDay, checkDate, IDate } from "./calendar";
+import { calDay, checkDate, getToday, IDate } from "./calendar";
 
 export const getWeek = (date: Date) => {
     let today = cloneDeep(date).getDay();
@@ -37,6 +37,7 @@ export default function WeekView(props: IDate) {
     const classes = viewStyle();
 
     const weekData = getWeek(props.tmpViewDay);
+    let today = new Date();
 
     return <div className={classes.week}>
         {calDay.map((v, idx) => {
@@ -44,6 +45,7 @@ export default function WeekView(props: IDate) {
             startDate.setDate(weekData.startDate.getDate() + idx)
             let scheduleDay: string = checkDate(startDate);
             let id = calDay[weekData.startDate.getDay() + idx];
+            let checkToday = false;
             return <div key={v}
                 id={id}
                 className={clsx(classes.weekday, idx === 6 && classes.weekdayend)}
@@ -72,11 +74,11 @@ export default function WeekView(props: IDate) {
                     }
                 }}
             >
-                <div className={clsx(classes.dayInfo, (idx === 6 || idx === 0) && classes.holiday)} onClick={() => {
+                <div className={clsx(classes.dayInfo, (idx === 6 || idx === 0) && classes.holiday, getToday(props.today, "day") === getToday(startDate, "day") && classes.today)} onClick={() => {
                     props.setTmpViewDay(startDate)
                     props.setView("day")
                 }}>
-                    <div className={clsx(classes.daydateinfo, props.today.getTime() === startDate.getTime() && classes.highlightDate)}>
+                    <div className={clsx(classes.daydateinfo)}>
                         {startDate.getDate()}
                     </div>
                     <div>
@@ -96,5 +98,5 @@ export default function WeekView(props: IDate) {
                 </div>
             </div>
         })}
-    </div>
+    </div >
 }

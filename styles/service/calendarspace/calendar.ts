@@ -52,6 +52,17 @@ export const calendarStyle = makeStyles((theme: IThemeStyle) =>
                 color: theme.backgroundColor.step3,
             },
         },
+        highlightTodayText: {
+            fontSize: theme.font.high.size,
+            color: "#4078B8",
+            textOverflow:"ellipsis",
+            whiteSpace:"nowrap",
+            
+            cursor: "pointer",
+            "&:hover": {
+                color: theme.backgroundColor.step3,
+            },
+        },
         changeview: {
             paddingLeft: "16px",
         },
