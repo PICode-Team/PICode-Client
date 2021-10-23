@@ -14,15 +14,16 @@ export const sidebarData = {
         url: '/workspace/codespace',
         icon: <DnsOutlined />,
         title: 'Codespace',
-        subUrl: ['/code'],
+        subUrl: ['/codespace'],
       },
       {
         url: '/workspace/container',
         icon: <ComputerOutlined />,
         title: 'Container',
+        subUrl: ["/workspace/visualization"],
       },
     ],
-    subUrl: ['/codespace', '/codeview', '/container'],
+    subUrl: ['/workspace/container', '/workspace/codespace', '/workspace/visualization', '/codespace', '/codeview', '/container'],
   },
   issuespace: {
     url: '/issuespace',

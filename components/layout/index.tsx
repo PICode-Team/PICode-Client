@@ -51,7 +51,14 @@ function Layout(props: IPageProps) {
       } else {
         if (pageData[i].subUrl !== undefined && pageData[i].subUrl.some((v: any) => route.route.includes(v))) {
           if (pageData[i].children !== undefined) {
-            let realTile = pageData[i].children.find((v1: any) => v1.url === route.route || v1.subUrl.some((v2: any) => v2 === route.route))
+            let realTile = pageData[i].children.find((v1: any) => {
+              let tmpResult = v1.url === route.route;
+              let tmpResult2 = false;
+              if (v1.subUrl !== undefined) {
+                tmpResult2 = v1.subUrl.some((v2: any) => v2 === route.route)
+              }
+              return tmpResult || tmpResult2;
+            })
             setPageInfo({
               name: realTile.title,
               icon: realTile.icon,
