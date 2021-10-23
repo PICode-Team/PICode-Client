@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { darkTheme, whiteTheme } from '../styles/theme'
 import wrapper from '../stores'
@@ -9,6 +9,12 @@ import { useWs, WsProvider } from '../components/context/websocket'
 
 function App({ Component, pageProps }: AppProps) {
   const theme = useSelector((state: any) => state.theme)
+
+  useEffect(() => {
+    if (pageProps.cookie === undefined) {
+      localStorage.removeItem("userId")
+    }
+  }, [pageProps.cookie])
 
   return (
     <React.Fragment>
@@ -32,7 +38,7 @@ App.getInitialProps = async ({ Component, ctx }: any): Promise<AppInitialProps> 
     pageProps = await Component.getInitialProps(ctx)
   }
 
-  pageProps = { ...pageProps, path: ctx.pathname }
+  pageProps = { ...pageProps, path: ctx.pathname, cookie: ctx.req.headers.cookie }
 
   return { pageProps }
 }

@@ -28,7 +28,6 @@ export const calendarStyle = makeStyles((theme: IThemeStyle) =>
         },
         today: {
             width: "50%",
-            minWidth: "320px",
             height: "48px",
             display: "flex",
             justifyContent: "center",
@@ -45,6 +44,9 @@ export const calendarStyle = makeStyles((theme: IThemeStyle) =>
         todaytext: {
             fontSize: theme.font.high.size,
             color: theme.font.high.color,
+            textOverflow:"ellipsis",
+            whiteSpace:"nowrap",
+            
             cursor: "pointer",
             "&:hover": {
                 color: theme.backgroundColor.step3,
