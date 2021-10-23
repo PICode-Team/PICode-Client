@@ -178,9 +178,10 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
             },
         },
         fileEdit: {
-            height: "22px",
+            height: "28px",
             width: "100%",
             position: "relative",
+            borderBottom:`2px solid #c6c6c6`
         },
         buttonColor: {
             color: theme.font.low.color,

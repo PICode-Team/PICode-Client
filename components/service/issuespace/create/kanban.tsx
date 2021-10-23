@@ -97,7 +97,6 @@ function CreateKanban(props: ICreateKanbanProps) {
     <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit(modalKanban === null)} title={modalKanban === null ? 'Create Kanban' : 'Edit Kanban'}>
       <React.Fragment>
         <CustomTextInput id="title" value={payload.title} label="title" placeholder="title" onChange={handlePayload} />
-        {console.log(workspaceData)}
         {workspaceId === undefined && (
           <CustomSelect
             id="tempWorkspaceId"

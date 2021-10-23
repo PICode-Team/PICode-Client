@@ -44,6 +44,7 @@ function Note(props: INoteProps) {
   const [dragEnd, setDragEnd] = useState<boolean>(false)
   const [addFile, setAddFile] = useState<boolean>(false)
   const [openContext, setOpenContext] = useState<boolean>(false)
+  const [openNum, setOpenNum] = React.useState<number>(0);
   const ws: any = useWs()
   const output: any = {}
 
@@ -367,16 +368,17 @@ function Note(props: INoteProps) {
   }
 
   useEffect(() => {
-    if (fileViewList === null) return
+    if (fileViewList === null) return;
+    if (openNum < 0) return;
 
-    ws.addEventListener('message', noteWebSocketHandler)
-    if (fileViewList.length === 0) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', noteWebSocketHandler)
       getNote()
+      setOpenNum(-1);
+    } else {
+      setOpenNum(openNum + 1);
     }
-    return () => {
-      ws.removeEventListener('message', noteWebSocketHandler)
-    }
-  }, [ws?.readyState, fileViewList, output])
+  }, [ws?.readyState, openNum])
 
   useEffect(() => {
     setTimeout(() => {

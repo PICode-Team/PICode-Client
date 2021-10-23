@@ -32,6 +32,14 @@ function Context(props: INoteContextProps) {
           },
         })
       )
+      ws.send(
+        JSON.stringify({
+          category: 'note',
+          type: 'getNote',
+          data: {
+          },
+        })
+      )
     }
   }
 

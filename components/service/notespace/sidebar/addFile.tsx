@@ -33,6 +33,13 @@ function AddFile(props: IAddInput) {
           },
         })
       )
+      ws.send(
+        JSON.stringify({
+          category: 'note',
+          type: 'getNote',
+          data: {},
+        })
+      )
     }
   }
 
