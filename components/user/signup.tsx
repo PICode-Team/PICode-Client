@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { Step, StepLabel, Stepper } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
@@ -157,6 +157,22 @@ function SignUp() {
     }
     setActiveStep(activeStep + 1)
   }
+
+  const makeImageUuid = async () => {
+    if (userImage === undefined) return
+
+    const formData = new FormData()
+    formData.append('uploadFile', userImage)
+    const response = await fetchSet('data', 'POST', false, formData)
+    const { code, uploadFileId } = await response.json()
+    if (code === 200) {
+      setImageUUID(uploadFileId)
+    }
+  }
+
+  useEffect(() => {
+    makeImageUuid()
+  }, [userImage])
 
   return (
     <Layout isLogin={false}>
