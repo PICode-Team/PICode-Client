@@ -11,7 +11,7 @@ import Sidebar from './sidebar'
 import Topbar from './topbar'
 
 function Layout(props: IPageProps) {
-  const { children, path, cookie } = props
+  const { children, path } = props
   const classes = layoutStyle()
   const [toggle, setToggle] = useState<boolean>(false)
   const [userId, setUserId] = useState<string>('')
@@ -30,7 +30,8 @@ function Layout(props: IPageProps) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      if (cookie === undefined) {
+      let checkId = localStorage.getItem("userId");
+      if (checkId === null) {
         window.location.href = '/'
       }
     }
@@ -76,7 +77,6 @@ function Layout(props: IPageProps) {
           </div>
           {React.cloneElement(children, {
             path: path,
-            cookie: cookie,
             toggle: toggle,
           })}
         </div>
