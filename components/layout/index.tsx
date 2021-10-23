@@ -38,27 +38,36 @@ function Layout(props: IPageProps) {
   }, [])
 
   useEffect(() => {
-    if (pageInfo === null) {
-      for (let i in pageData) {
-        if (pageData[i].url === route.route) {
-          setPageInfo({
-            name: pageData[i].title,
-            icon: pageData[i].icon,
-          })
+    if (pageInfo !== null) return
+
+    const splitedPath = route.route.split('/')
+
+    for (let i in pageData) {
+      if (pageData[i].url === route.route) {
+        setPageInfo({
+          name: pageData[i].title,
+          icon: pageData[i].icon,
+        })
+      } else {
+        if (pageData[i].subUrl !== undefined && pageData[i].subUrl.some((v: any) => route.route.includes(v))) {
+          if (pageData[i].children !== undefined) {
+            let realTile = pageData[i].children.find((v1: any) => v1.url === route.route || v1.subUrl.some((v2: any) => v2 === route.route))
+            setPageInfo({
+              name: realTile.title,
+              icon: realTile.icon,
+            })
+          } else {
+            setPageInfo({
+              name: pageData[i].title,
+              icon: pageData[i].icon,
+            })
+          }
         } else {
-          if (pageData[i].subUrl !== undefined && pageData[i].subUrl.some((v: any) => v === route.route)) {
-            if (pageData[i].children !== undefined) {
-              let realTile = pageData[i].children.find((v1: any) => v1.url === route.route || v1.subUrl.some((v2: any) => v2 === route.route))
-              setPageInfo({
-                name: realTile.title,
-                icon: realTile.icon,
-              })
-            } else {
-              setPageInfo({
-                name: pageData[i].title,
-                icon: pageData[i].icon,
-              })
-            }
+          if (route.route.includes(i)) {
+            setPageInfo({
+              name: pageData[i].title,
+              icon: pageData[i].icon,
+            })
           }
         }
       }
