@@ -73,7 +73,8 @@ export default function CalanderSpace(props: any) {
         if (message.category === "calendar") {
             switch (message.type) {
                 case "getCalendar": {
-                    setCalendarData(message.data.schedule);
+                    console.log(message)
+                    setCalendarData(message.data.schedules);
                     break;
                 }
             }
@@ -87,13 +88,13 @@ export default function CalanderSpace(props: any) {
     useEffect(() => {
         if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
             console.log(ws)
-            // ws.addEventListener("message", calendarWebsocketHanlder);
-            // let payload = {
-            //     category: "calendar",
-            //     type: "getCalendar",
-            //     data: {}
-            // }
-            // ws.send(JSON.stringify(payload))
+            ws.addEventListener("message", calendarWebsocketHanlder);
+            let payload = {
+                category: "calendar",
+                type: "getCalendar",
+                data: {}
+            }
+            ws.send(JSON.stringify(payload))
         }
     }, [ws?.readyState])
 

@@ -1,4 +1,4 @@
-import { DashboardOutlined, DescriptionOutlined, ChatOutlined, SettingsOutlined, DnsOutlined, ComputerOutlined, WorkOutlineOutlined, Description } from '@material-ui/icons'
+import { DashboardOutlined, DescriptionOutlined, ChatOutlined, SettingsOutlined, DnsOutlined, ComputerOutlined, WorkOutlineOutlined, Description, CalendarViewDayOutlined, CalendarTodayOutlined } from '@material-ui/icons'
 
 export const sidebarData = {
   dashboard: {
@@ -28,6 +28,11 @@ export const sidebarData = {
     url: '/issuespace',
     icon: <Description />,
     title: 'Issuespace',
+  },
+  calendarspace: {
+    url: '/calendarspace',
+    icon: <CalendarTodayOutlined />,
+    title: 'CalendarSpace',
   },
   notespace: {
     url: '/notespace',

@@ -80,7 +80,6 @@ export default function CodeContent(props: {
         if (selectFile === undefined) return;
         if (tmpWorkSpaceId === undefined) return;
         if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-            console.log(1)
             ws.send(
                 JSON.stringify({
                     category: 'code',

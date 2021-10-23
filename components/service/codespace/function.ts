@@ -268,8 +268,7 @@ export const dragFileToFolder = throttle(
                 return;
             } else {
                 let fileRealPath = file.path.split("/");
-                console.log(fileRealPath.length - rootPath.split("/").length);
-                if (fileRealPath.length - rootPath.split("/").length > 0) {
+                                if (fileRealPath.length - rootPath.split("/").length > 0) {
                     let realPath = fileRealPath
                         .splice(0, fileRealPath.length - 1)
                         .join("/");
