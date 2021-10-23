@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { IMilestone } from '../../../../types/issue.types'
+import { IKanban, IMilestone } from '../../../../types/issue.types'
 import { IUser } from '../../../../types/user.types'
 import { fetchSet } from '../../../context/fetch'
 import { useWs } from '../../../context/websocket'
@@ -54,9 +54,11 @@ interface IMilestoneSelect {
 function CreateIssue(props: ICreateIssueProps) {
   const { modal, setModal, kanbanUUID, mileList, column, workspaceId } = props
   const [payload, setPayload] = useState<ICreateIssueState>(initialState)
+  const [tempUUID, setTempUUID] = useState<string>('')
   const [userList, setUserList] = useState<string[]>([])
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const [optionList, setOptionList] = useState<IMilestoneSelect[]>([])
+  const [kanbanList, setKanbanList] = useState<IKanban[]>([])
   const ws: any = useWs()
 
   const getUserData = async () => {
@@ -90,6 +92,18 @@ function CreateIssue(props: ICreateIssueProps) {
     setPayload({ ...payload, [event.target.id]: event.target.value })
   }
 
+  const getKanban = () => {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'kanban',
+          type: 'getKanban',
+          data: {},
+        })
+      )
+    }
+  }
+
   const handleSubmit = () => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
@@ -97,17 +111,30 @@ function CreateIssue(props: ICreateIssueProps) {
           category: 'issue',
           type: 'createIssue',
           data: {
-            kanbanUUID,
             issueData: {
               ...payload,
               startDate: payload.startDate.slice(2),
               dueDate: payload.dueDate.slice(2),
             },
+            kanbanUUID: kanbanUUID ?? '',
           },
         })
       )
 
       setModal(false)
+    }
+  }
+
+  const issueWebSocketHandler = (msg: any) => {
+    const message = JSON.parse(msg.data)
+
+    if (message.category === 'kanban') {
+      switch (message.type) {
+        case 'getKanban':
+          setKanbanList(message.data.kanbans)
+          break
+        default:
+      }
     }
   }
 
@@ -125,6 +152,16 @@ function CreateIssue(props: ICreateIssueProps) {
     getUserData()
   }, [])
 
+  useEffect(() => {
+    ws.addEventListener('message', issueWebSocketHandler)
+    if (kanbanList.length === 0) {
+      getKanban()
+    }
+    return () => {
+      ws.removeEventListener('message', issueWebSocketHandler)
+    }
+  }, [ws?.readyState])
+
   const handleStartDate = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPayload({ ...payload, startDate: event.target.value })
   }
@@ -133,16 +170,31 @@ function CreateIssue(props: ICreateIssueProps) {
     setPayload({ ...payload, dueDate: event.target.value })
   }
 
+  const handleTempUUID = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTempUUID(event.target.value)
+  }
+
   return (
     <Modal modal={modal} setModal={setModal} onSubmit={handleSubmit} title="Create Issue" size="lg">
       <React.Fragment>
-        <CustomTextInput id="title" value={payload.title} label="title" placeholder="title" onChange={handlePayload} />
-        <CustomTextarea id="content" value={payload.content} label="content" placeholder="content" onChange={handlePayload} />
+        <CustomTextInput id="title" value={payload.title} label="Title" placeholder="title" onChange={handlePayload} />
+        <CustomTextarea id="content" value={payload.content} label="Content" placeholder="content" onChange={handlePayload} />
         <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />
-        <CustomTextInput id="label" value={payload.label} label="label" placeholder="label" onChange={handlePayload} />
-        <CustomSelect id="milestone" value={payload.milestone} label="milestone" placeholder="select milestone" onChange={handlePayload} optionList={optionList} />
-        <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="StartDate" placeholder="StartDate" />
-        <CustomDate id="dueDate" onChange={handleDueDate} value={payload.dueDate} label="dueDate" placeholder="dueDate" />
+        <CustomTextInput id="label" value={payload.label} label="Label" placeholder="label" onChange={handlePayload} />
+        {kanbanUUID === undefined && (
+          <CustomSelect
+            id="tempWorkspaceId"
+            value={tempUUID}
+            label="Kanban"
+            onChange={handleTempUUID}
+            optionList={kanbanList.reduce((a: { name: string; value: string }[], c) => {
+              return [...a, { name: c.title, value: c.uuid }]
+            }, [])}
+          />
+        )}
+        <CustomSelect id="milestone" value={payload.milestone} label="Milestone" placeholder="select milestone" onChange={handlePayload} optionList={optionList} />
+        <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="Start Date" placeholder="StartDate" />
+        <CustomDate id="dueDate" onChange={handleDueDate} value={payload.dueDate} label="Due Date" placeholder="dueDate" />
       </React.Fragment>
     </Modal>
   )

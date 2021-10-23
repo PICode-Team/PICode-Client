@@ -19,7 +19,7 @@ interface IManageSpaceProps {}
 export default function ManageSpace(props: IManageSpaceProps) {
   const classes = manageStyle()
   const router = useRouter()
-  const manageMenu = ['Board', 'Milestone']
+  const manageMenu = ['Kanban', 'Milestone']
   const [menu, setMenu] = useState<string>('Milestone')
   const [modal, setModal] = useState<boolean>(false)
   const [kanbanList, setKanbanList] = useState<IKanban[]>([])
@@ -130,7 +130,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
 
   useEffect(() => {
     setTimeout(() => {
-      setMenu('Board')
+      setMenu('Kanban')
     }, 100)
   }, [])
 
@@ -153,7 +153,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
             ))}
           </div>
           <div className={classes.manageContent}>
-            {menu === 'Board' ? (
+            {menu === 'Kanban' ? (
               <Board kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />
             ) : (
               <Milestone milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />
@@ -161,7 +161,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
           </div>
         </div>
       </div>
-      {menu === 'Board' ? (
+      {menu === 'Kanban' ? (
         <CreateKanban modal={modal} setModal={setModal} modalKanban={modalKanban} workspaceId={workspaceId as string} />
       ) : (
         <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} workspaceId={workspaceId as string} />
