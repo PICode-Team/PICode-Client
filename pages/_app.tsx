@@ -6,14 +6,21 @@ import { darkTheme, whiteTheme } from '../styles/theme'
 import wrapper from '../stores'
 import { useSelector, useStore } from 'react-redux'
 import { useWs, WsProvider } from '../components/context/websocket'
+import { fetchSet } from '../components/context/fetch'
 
 function App({ Component, pageProps }: AppProps) {
   const theme = useSelector((state: any) => state.theme)
 
-  useEffect(() => {
-    if (pageProps.cookie === undefined) {
+  let checkCookie = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { user, code } = await response.json()
+    if (code !== 200) {
       localStorage.removeItem("userId")
     }
+  }
+
+  useEffect(() => {
+    checkCookie();
   }, [pageProps.cookie])
 
   return (
