@@ -25,7 +25,7 @@ function DefaultIssue() {
   const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
   const [mileList, setMileList] = useState<IMilestone[]>([])
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
-  const [issueList, setIssueList] = useState<IIssue[]>([])
+  const [issueList, setIssueList] = useState<IIssue[] | null>(null)
   const [modalIssue, setModalIssue] = useState<IIssue | null>(null)
   const [openResult, setOpenResult] = useState<boolean>(false)
   const [resultStatus, setResultStatus] = useState<boolean>(false)
@@ -79,7 +79,12 @@ function DefaultIssue() {
     if (message.category === 'kanban') {
       switch (message.type) {
         case 'getKanban':
-          setKanbanList(message.data.kanbans)
+          if (message.data.kanbans.length > 0) {
+            setKanbanList(message.data.kanbans)
+            message.data.kanbans.forEach((v: any) => {
+              getIssue(v.uuid)
+            })
+          }
           break
 
         case 'createKanban':
@@ -127,10 +132,14 @@ function DefaultIssue() {
       switch (message.type) {
         case 'getIssue':
           if (message.data.issues.length > 0) {
-            setIssueList([...issueList, ...message.data.issues])
+            setIssueList([...(issueList ?? []), ...message.data.issues])
           }
           break
-
+        case 'createIssue':
+          if (message.data.code === 200) {
+            setIssueList([...(issueList ?? []), message.data.issue])
+          }
+          break
         default:
           break
       }
@@ -156,13 +165,11 @@ function DefaultIssue() {
 
   useEffect(() => {
     setTimeout(() => {
-      setMenu('Issue')
+      if (issueList === null) {
+        setIssueList([])
+      }
     }, 100)
   }, [])
-
-  useEffect(() => {
-    kanbanList.map((v) => getIssue(v.uuid))
-  }, [kanbanList])
 
   return (
     <div className={classes.manage}>
@@ -190,7 +197,7 @@ function DefaultIssue() {
           </div>
         </div>
       </div>
-      {menu === 'Issue' && <CreateIssue modal={modal} setModal={setModal} mileList={mileList} />}
+      {menu === 'Issue' && <CreateIssue modal={modal} setModal={setModal} mileList={mileList} kanbanList={kanbanList} column={'backlog'} />}
       {menu === 'Kanban' && <CreateKanban modal={modal} setModal={setModal} modalKanban={modalKanban} />}
       {menu === 'Milestone' && <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} />}
       {/* {menu === 'Label' && <CreateLabel />} */}

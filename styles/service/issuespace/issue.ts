@@ -309,7 +309,8 @@ export const issueTableStyle = makeStyles((theme: IThemeStyle) =>
       color: theme.font.high.color,
     },
     headerWrapper: {
-      backgroundColor: '#49525e',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: theme.brightness.step4,
       display: 'flex',
       justifyContent: 'space-between',
       height: '54px',
@@ -335,12 +336,24 @@ export const issueTableStyle = makeStyles((theme: IThemeStyle) =>
       cursor: 'pointer',
     },
 
+    noneBorderTop: {
+      borderTop: 'none !important',
+    },
+
     bodyWrapper: {
-      backgroundColor: '#5a6473',
+      backgroundColor: theme.backgroundColor.step2,
+      filter: theme.brightness.step3,
       display: 'flex',
       height: '60px',
       padding: '8px 16px',
       alignItems: 'center',
+      borderTop: `1px solid ${theme.backgroundColor.step1}`,
+      '&:first-child': {
+        borderTop: 'none !important',
+      },
+      '&:hover': {
+        filter: theme.brightness.step2,
+      },
     },
     activeStatus: {
       display: 'flex',
@@ -362,7 +375,9 @@ export const issueTableStyle = makeStyles((theme: IThemeStyle) =>
     },
     milestone: {},
     tag: {
-      backgroundColor: 'red',
+      backgroundColor: theme.backgroundColor.step2,
+      filter: theme.brightness.step4,
+      color: theme.font.low.color,
       fontWeight: 'normal',
       fontSize: '14px',
       padding: '2px 8px',
@@ -398,9 +413,15 @@ export const issueDetailStyle = makeStyles((theme: IThemeStyle) =>
       fontWeight: 'normal',
       marginLeft: '12px',
     },
+
+    open: {
+      backgroundColor: '#549F69',
+    },
+    close: {
+      backgroundColor: '#CF222E',
+    },
     activeStatus: {
       fontSize: theme.font.low.size,
-      backgroundColor: 'red',
       padding: '4px 12px',
       borderRadius: '16px',
       marginRight: '12px',

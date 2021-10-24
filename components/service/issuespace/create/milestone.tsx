@@ -84,6 +84,9 @@ function CreateMilestone(props: ICreateMilestoneProps) {
     const { workspaceList, code } = await response.json()
 
     if (code === 200) {
+      if (workspaceList.length > 0) {
+        setTempWorkspaceId(workspaceList[0].workspaceId)
+      }
       setWorkspaceData(workspaceList)
     }
   }

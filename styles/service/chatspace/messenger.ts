@@ -409,6 +409,9 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       fontSize: '16px',
       overflow: 'auto',
       color: theme.font.high.color,
+      '& img': {
+        maxWidth: '300px',
+      },
     },
 
     mentionHelper: {
