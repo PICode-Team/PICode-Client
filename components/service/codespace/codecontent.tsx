@@ -14,6 +14,13 @@ import { returnFile } from "./sidebarItem";
 import { useWs } from "../../context/websocket";
 import { useRouter } from "next/router";
 
+
+interface TQueueItem {
+    line: number;
+    updateContent: string | undefined;
+}
+
+
 export default function CodeContent(props: {
     viewState: IWraper | undefined,
     dragId: string | undefined,
@@ -33,7 +40,12 @@ export default function CodeContent(props: {
     const [onlyChange, setOnlyChange] = React.useState<boolean>(false);
     const [openWs, setOpenWs] = React.useState<number>(0);
     const [changeValue, setChangeValue] = React.useState<boolean>(false);
+    const [editLine, setEditLine] = React.useState<number>(0);
+    const isRunning = React.useRef<boolean>(false);
 
+    const test = React.useRef<any>();
+
+    const tmpQueue = React.useRef<TQueueItem[]>([]);
 
     useEffect(() => {
         let target = props.viewState!.children!.length;
@@ -75,8 +87,49 @@ export default function CodeContent(props: {
                 );
             }
         }, 1000);
+        const changer = setInterval(() => {
+            if (isRunning.current) { return; };
+            isRunning.current = true;
+            const queue = tmpQueue.current;
+            if (queue.length === 0) {
+                isRunning.current = false;
+                return;
+            }
+
+            if (selectFile === undefined) return;
+
+            const updateContent: TQueueItem[] = []
+
+            while (queue.length > 0) {
+                const data = queue.shift()!;
+                const updateData = updateContent.find(v => v.line === data.line);
+
+                if (updateData === undefined) {
+                    updateContent.push(data);
+                } else {
+                    updateData.updateContent = data.updateContent;
+                }
+            }
+
+            const payload = {
+                category: "code",
+                type: "updateCode",
+                data: {
+                    workspaceId: getQuery(),
+                    updateContent: {
+                        path: selectFile.path,
+                        content: updateContent
+                    }
+                }
+            }
+            if (openWs < 0) {
+                ws.send(JSON.stringify(payload));
+            }
+            isRunning.current = false;
+        }, 1000)
         return () => {
             clearInterval(timer);
+            clearInterval(changer);
         };
     }, [selectFile])
 
@@ -117,76 +170,9 @@ export default function CodeContent(props: {
         if (originData === undefined) {
             return;
         }
-
         setFileData(originData)
 
     }, [originData])
-
-    const diffBeforeCode = setTimeout(() => {
-        if (onlyChange && selectFile !== undefined && originData !== undefined) {
-            if (originData !== fileData && fileData !== undefined) {
-                let divideOriginContent: string[] = originData?.split("\n");
-                let divideNewContent: string[] | undefined = fileData?.split("\n");
-                let updateContent = [];
-                let workspaceId = getQuery();
-                if (divideOriginContent !== undefined && divideNewContent !== undefined) {
-                    for (let i = 0; i < divideOriginContent.length; i++) {
-                        if (divideOriginContent[i] !== divideNewContent[i]) {
-                            if (divideNewContent.length <= divideOriginContent.length && i === divideOriginContent.length - 1) {
-                                updateContent.push({
-                                    line: i + 1,
-                                    updateContent: (divideNewContent[i])
-                                })
-                            } else {
-                                updateContent.push({
-                                    line: i + 1,
-                                    updateContent: (divideNewContent[i])
-                                })
-                            }
-                        }
-                    }
-                    if (divideNewContent.length > divideOriginContent.length) {
-                        for (let i = divideOriginContent.length; i < divideNewContent.length; i++) {
-                            if (i === divideNewContent.length - 1) {
-                                updateContent.push({
-                                    line: i + 1,
-                                    updateContent: (divideNewContent[i])
-                                })
-                            } else {
-                                updateContent.push({
-                                    line: i + 1,
-                                    updateContent: (divideNewContent[i])
-                                })
-                            }
-                        }
-                    }
-                    if (divideOriginContent.length > divideNewContent.length) {
-                        for (let i = divideNewContent.length; i < divideOriginContent.length; i++) {
-                            updateContent.push({
-                                line: i + 1,
-                                updateContent: undefined
-                            })
-                        }
-                    }
-
-                    let payload = {
-                        category: "code",
-                        type: "updateCode",
-                        data: {
-                            workspaceId: workspaceId,
-                            updateContent: {
-                                path: selectFile.path,
-                                content: updateContent
-                            }
-                        }
-                    }
-
-                    ws.send(JSON.stringify(payload))
-                    setChangeValue(true);
-                }
-            }
-        }
-    }, 1000)
 
     useEffect(() => {
         if (changeValue) {
@@ -336,14 +322,40 @@ export default function CodeContent(props: {
         <div className={classes.realCode} id="codeContent">
             <Editor
                 height="100%"
+                saveViewState={true}
                 defaultLanguage="typescript"
                 theme="vs-dark"
                 path={selectFile.path}
+                options={{ selectOnLineNumbers: true }}
                 defaultValue={fileData === undefined ? "" : fileData}
                 value={fileData === undefined ? "" : fileData}
-                onChange={debounce((v, e) => {
+                onChange={(v, e) => {
+                    let lineNum = 0;
+                    let isDel = false;
+                    if (originData !== undefined && v !== undefined) {
+                        let divideOriginContent: string[] = originData?.split("\n");
+                        let divideNewContent: string[] | undefined = v?.split("\n");
+                        for (let i = 0; i < Math.max(divideOriginContent.length, divideNewContent.length); i++) {
+                            if (divideOriginContent?.[i] !== divideNewContent?.[i]) {
+                                lineNum = i;
+
+                                if (divideNewContent.length < divideOriginContent.length) {
+                                    isDel = true;
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    setEditLine(lineNum)
+
+                    tmpQueue.current.push({
+                        line: lineNum + 1,
+                        updateContent: isDel ? undefined : (v?.split('\n')?.[lineNum] ?? '')
+                    });
+
                     setFileData(v);
-                }, 500)}
+                }}
             />
         </div>
     </div>

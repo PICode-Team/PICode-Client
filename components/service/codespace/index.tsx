@@ -129,6 +129,25 @@ export default function CodeSpace() {
         tmpTerminalTest.current = terminalContent;
     }, [terminalContent]);
 
+    useEffect(() => {
+        if (openTerminalCount > 0) {
+            if (test < 0) {
+                let payload = {
+                    category: "terminal",
+                    type: "createTerminal",
+                    data: {
+                        workspaceId: workspaceId,
+                        size: {
+                            cols: 150,
+                            rows: 100,
+                        }
+                    }
+                }
+                ws.send(JSON.stringify(payload))
+            }
+        }
+    }, [openTerminalCount])
+
     const fileWebsocketHanlder = (msg: any) => {
         const message = JSON.parse(msg.data);
         if (message.category === "code") {
@@ -198,6 +217,22 @@ export default function CodeSpace() {
                 })
             );
         }
+        const timer = setInterval(() => {
+            if (test < 0) {
+                ws.send(
+                    JSON.stringify({
+                        category: "code",
+                        type: "getAllFilePath",
+                        data: {
+                            workspaceId: workspaceId,
+                        },
+                    })
+                );
+            }
+        }, 5000);
+        return () => {
+            clearInterval(timer);
+        };
     }, [test])
 
     return (
