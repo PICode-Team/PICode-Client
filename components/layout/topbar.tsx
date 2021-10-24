@@ -10,6 +10,8 @@ import UserInfo from '../items/tooltip/userInfo'
 import { IUser } from '../../types/user.types'
 import { fetchSet } from '../context/fetch'
 import AlertDialog from '../items/tooltip/alarm'
+import { useRouter } from 'next/router'
+import { sidebarData } from './data'
 
 interface ITopbarProps {
   toggle: boolean
@@ -24,6 +26,26 @@ function Topbar(props: ITopbarProps) {
   const [openUserInfo, setOpenUserInfo] = useState<boolean>(false)
   const [openAlert, setOpenAlert] = useState<boolean>(false)
   const [userData, setUserData] = useState<IUser | null>(null)
+  const router = useRouter();
+  let endPoint = router.asPath.split("?")[0]
+
+  let path: string = "";
+
+  Object.keys(sidebarData).map((key) => {
+    if (sidebarData[key].url === endPoint) {
+      path = sidebarData[key].title
+    } else if (sidebarData[key].children !== undefined) {
+      sidebarData[key].children?.map((v) => {
+        if (v.url === endPoint) {
+          path = v.title
+        }
+      })
+    } else if (sidebarData[key].subUrl !== undefined) {
+      if (sidebarData[key].subUrl?.some((v) => v === endPoint)) {
+        path = sidebarData[key].title
+      }
+    }
+  })
 
   const getUserData = async () => {
     const response = await fetchSet('/user', 'GET', true)
@@ -55,6 +77,9 @@ function Topbar(props: ITopbarProps) {
       <div className={classes.toggle}>
         <div className={classes.toggleIcon} onClick={handleToggle}>
           <MenuRounded />
+        </div>
+        <div className={classes.titleName}>
+          {path ?? ""}
         </div>
       </div>
       <div className={classes.interaction}>

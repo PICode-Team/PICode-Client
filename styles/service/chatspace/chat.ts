@@ -459,7 +459,7 @@ export const chatSidebarStyle = makeStyles((theme: IThemeStyle) =>
     sidebar: {
       width: '350px',
       height: '100%',
-      backgroundColor: theme.backgroundColor.step2,
+      backgroundColor: theme.backgroundColor.step3,
       padding: '20px',
       '@media screen and (max-width: 600px)': {
         display: 'none',

@@ -130,7 +130,7 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
     },
     unactive: {
       '&:hover': {
-        background: theme.loginBackground,
+        background:  theme.backgroundColor.step0,
       },
     },
     collapseButton: {
@@ -142,7 +142,7 @@ export const rowStyle = makeStyles((theme: IThemeStyle) =>
       transition: 'all ease 0.3s 0s',
       height: '80px',
       width: '100%',
-      background: theme.backgroundColor.step2,
+      background:theme.loginBackground,
       overflow: 'hidden',
     },
     unOpenWrapper: {

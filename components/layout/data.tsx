@@ -1,6 +1,24 @@
 import { DashboardOutlined, DescriptionOutlined, ChatOutlined, SettingsOutlined, DnsOutlined, ComputerOutlined, WorkOutlineOutlined, Description, CalendarViewDayOutlined, CalendarTodayOutlined } from '@material-ui/icons'
 
-export const sidebarData = {
+interface ISidebarData {
+  [key: string]: {
+    url?: string,
+    icon: JSX.Element,
+    title: string,
+    children?: INodeData[],
+    subUrl?: string[]
+  }
+}
+
+interface INodeData {
+  url: string,
+  icon: JSX.Element,
+  title: string,
+  children?: ISidebarData[],
+  subUrl?: string[]
+}
+
+export const sidebarData: ISidebarData = {
   dashboard: {
     url: '/',
     icon: <DashboardOutlined />,

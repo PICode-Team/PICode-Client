@@ -12,7 +12,10 @@ export const topbarStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       justifyContent: 'space-between',
     },
-
+    titleName:{
+      color:theme.font.high.color,
+      fontSize:theme.font.medium.size
+    },
     toggleIcon: {
       color: theme.font.high.color,
       padding: '0px 6px',
