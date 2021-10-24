@@ -87,10 +87,6 @@ function Layout(props: IPageProps) {
         <Sidebar toggle={toggle} setToggle={setToggle} />
         <div className={`${classes.contentWrapper} ${toggle && classes.toggle}`}>
           <Topbar toggle={toggle} setToggle={setToggle} />
-          <div className={classes.pageName}>
-            {pageInfo !== null && pageInfo.icon}
-            {pageInfo !== null && pageInfo.name}
-          </div>
           {React.cloneElement(children, {
             path: path,
             toggle: toggle,

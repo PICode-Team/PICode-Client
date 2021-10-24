@@ -6,7 +6,7 @@ export const codeStyle = makeStyles((theme: IThemeStyle) =>
     createStyles({
         codeWrapper: {
             width: "100%",
-            height: "calc(100% - 90px)",
+            height: "calc(100% - 50px)",
             display: "flex",
             flexDirection: "column",
         },

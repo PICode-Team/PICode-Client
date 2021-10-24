@@ -6,7 +6,7 @@ export const containerStyle = makeStyles((theme: IThemeStyle) =>
     createStyles({
         root: {
             width: "100%",
-            height: "calc(100% - 90px)",
+            height: "calc(100% - 50px)",
             padding: "20px 24px",
         },
         content: {

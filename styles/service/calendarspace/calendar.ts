@@ -6,7 +6,7 @@ export const calendarStyle = makeStyles((theme: IThemeStyle) =>
     createStyles({
         wrapper: {
             width: "100%",
-            height: "calc(100% - 90px)",
+            height: "calc(100% - 50px)",
             padding: "24px",
         },
         calendarContent: {

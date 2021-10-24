@@ -7,7 +7,7 @@ export const chatStyle = makeStyles((theme: IThemeStyle) =>
     chat: {
       backgroundColor: theme.backgroundColor.step1,
       width: '100%',
-      height: 'calc(100% - 90px)',
+      height: 'calc(100% - 50px)',
       display: 'flex',
     },
     emptyWrapper: {
@@ -777,7 +777,7 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     content: {
       width: '100%',
-      height: 'calc(100% - 90px)',
+      height: 'calc(100% - 50px)',
       position: 'absolute',
       backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
@@ -1019,7 +1019,7 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     thread: {
       width: '100%',
-      height: 'calc(100% - 90px)',
+      height: 'calc(100% - 50px)',
       position: 'absolute',
       backgroundColor: theme.backgroundColor.step1,
       '@media screen and (min-width: 600px)': {
