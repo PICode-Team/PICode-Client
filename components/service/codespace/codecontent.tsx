@@ -29,13 +29,17 @@ export default function CodeContent(props: {
     const [selectFile, setSelectFile] = React.useState<ICodeContent | undefined>();
     const [originData, setOriginData] = React.useState<string>();
     const [fileData, setFileData] = React.useState<string>();
-    const [firstRender, setFirstRender] = React.useState<boolean>(true);
+    const [focusIdChange, setFocusIdChange] = React.useState<boolean>(false);
     const [onlyChange, setOnlyChange] = React.useState<boolean>(false);
+    const [openWs, setOpenWs] = React.useState<number>(0);
     const [changeValue, setChangeValue] = React.useState<boolean>(false);
+
 
     useEffect(() => {
         let target = props.viewState!.children!.length;
-        setSelectFile(props.viewState!.children![target - 1])
+        if (selectFile === undefined) {
+            setSelectFile(props.viewState!.children![target - 1])
+        }
     }, [props.viewState])
 
     const fileWebsocketHanlder = (msg: any) => {
@@ -43,11 +47,7 @@ export default function CodeContent(props: {
         if (message.category === 'code') {
             switch (message.type) {
                 case "getCode": {
-                    if (selectFile?.path === message.data.filePath) {
-                        if (originData !== message.data.fileContent) {
-                            setOriginData(message.data.fileContent)
-                        }
-                    }
+                    setOriginData(message.data.fileContent)
                     break;
                 }
             }
@@ -55,12 +55,46 @@ export default function CodeContent(props: {
     }
 
     useEffect(() => {
+        if (selectFile === undefined) {
+            return;
+        }
+        const timer = setInterval(() => {
+            const tmpWorkSpaceId = router.query.workspaceId;
+            if (selectFile === undefined) return;
+            if (tmpWorkSpaceId === undefined) return;
+            if (openWs < 0) {
+                ws.send(
+                    JSON.stringify({
+                        category: 'code',
+                        type: 'getCode',
+                        data: {
+                            workspaceId: tmpWorkSpaceId,
+                            filePath: selectFile.path
+                        }
+                    })
+                );
+            }
+        }, 1000);
+        return () => {
+            clearInterval(timer);
+        };
+    }, [selectFile])
+
+    useEffect(() => {
+        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+            ws.addEventListener("message", fileWebsocketHanlder)
+            setOpenWs(-1)
+        } else {
+            setOpenWs(openWs + 1)
+        }
+    }, [openWs, ws?.readyState])
+
+    useEffect(() => {
         const tmpWorkSpaceId = router.query.workspaceId;
         if (selectFile === undefined) {
             return;
         }
-        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-            ws.addEventListener("message", fileWebsocketHanlder)
+        if (openWs < 0) {
             ws.send(
                 JSON.stringify({
                     category: 'code',
@@ -73,34 +107,19 @@ export default function CodeContent(props: {
             );
         }
         props.setFocusId(selectFile?.path)
-    }, [selectFile])
-
-    setInterval(() => {
-        const tmpWorkSpaceId = router.query.workspaceId;
-        if (selectFile === undefined) return;
-        if (tmpWorkSpaceId === undefined) return;
-        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-            ws.send(
-                JSON.stringify({
-                    category: 'code',
-                    type: 'getCode',
-                    data: {
-                        workspaceId: tmpWorkSpaceId,
-                        filePath: selectFile.path
-                    }
-                })
-            );
-        }
-    }, 1000)
+    }, [selectFile, openWs])
 
     useEffect(() => {
-        if (fileData === undefined) {
-            setFileData(originData);
-        } else {
-            if (fileData !== originData) {
-                setFileData(originData)
-            }
+        setFocusIdChange(true);
+    }, [props.focusId])
+
+    useEffect(() => {
+        if (originData === undefined) {
+            return;
         }
+
+        setFileData(originData)
+
     }, [originData])
 
     const diffBeforeCode = setTimeout(() => {
@@ -194,12 +213,18 @@ export default function CodeContent(props: {
         if (fileData === undefined) {
             return;
         }
+        if (focusIdChange) {
+            setFocusIdChange(false);
+            return;
+        }
         if (originData !== fileData) {
             setOnlyChange(true);
         } else {
             setOnlyChange(false)
         }
     }, [fileData])
+
+
 
     if (selectFile === undefined) {
         return <></>

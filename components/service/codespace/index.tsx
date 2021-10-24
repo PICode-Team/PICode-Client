@@ -9,7 +9,7 @@ import ViewSpace from "./viewspace";
 import CodeContent from "./codecontent";
 import wrapper from "../../../stores";
 import WebAssetIcon from "@material-ui/icons/WebAsset";
-import { cloneDeep, first, method } from "lodash";
+import { cloneDeep, first, method, templateSettings } from "lodash";
 import { useRouter } from "next/router";
 import { useWs } from "../../context/websocket";
 import { fetchSet } from "../../context/fetch";
@@ -38,6 +38,7 @@ export default function CodeSpace() {
     const [firstSocket, setFirstSocket] = React.useState<boolean>(false);
     const [moveCheck, setMoveCheck] = React.useState<boolean>(false);
     const [workspaceId, setWorkspaceId] = React.useState<string>();
+    const [test, setTest] = React.useState<number>(0);
     const tmpTerminalTest = React.useRef(terminalContent);
 
     const clickToChildren = (viewState: any, name: string[]) => {
@@ -175,18 +176,18 @@ export default function CodeSpace() {
         }
     };
 
-    setTimeout(() => {
-        if (workspaceId === undefined) return;
-        if (!firstSocket) return;
-        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-            ws.addEventListener("message", fileWebsocketHanlder);
-        }
-    }, 1500)
-
     useEffect(() => {
         if (workspaceId === undefined) return;
         if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
             ws.addEventListener("message", fileWebsocketHanlder);
+            setTest(-1);
+        } else {
+            setTest(test + 1);
+        }
+    }, [workspaceId, test]);
+
+    useEffect(() => {
+        if (test < 0) {
             ws.send(
                 JSON.stringify({
                     category: "code",
@@ -197,7 +198,7 @@ export default function CodeSpace() {
                 })
             );
         }
-    }, [ws?.readyState, workspaceId]);
+    }, [test])
 
     return (
         <div className={classes.codeWrapper}>
