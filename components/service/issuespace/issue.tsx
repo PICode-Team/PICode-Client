@@ -48,33 +48,36 @@ function Issue(props: IIssueProps) {
         </div>
       </div>
 
-      <div className={classes.bodyWrapper}>
-        <div className={classes.checkbox}>
-          <CustomCheckbox value={false} label="" />
-        </div>
-        <div className={classes.activeStatus}>
-          <CheckCircleOutlineRounded
-            style={{
-              color: '#549F69',
-            }}
-          />
-        </div>
-        <div className={classes.content}>
-          <div>
-            <span className={classes.title} onClick={handleLinkDetail('uuid')}>
-              Failing to connect web socket, nothing comes out.
-            </span>
-            <span className={classes.tag}>bug</span>
-          </div>
+      {issueList !== null &&
+        issueList.map((v, i) => (
+          <div className={`${classes.bodyWrapper} ${i === 0 && classes.noneBorderTop}`} key={`issue-${i}`}>
+            <div className={classes.checkbox}>
+              <CustomCheckbox value={false} label="" />
+            </div>
+            <div className={classes.activeStatus}>
+              <CheckCircleOutlineRounded
+                style={{
+                  color: '#549F69',
+                }}
+              />
+            </div>
+            <div className={classes.content}>
+              <div>
+                <span className={classes.title} onClick={handleLinkDetail(v.uuid)}>
+                  {v.title}
+                </span>
+                <span className={classes.tag}>{v.label}</span>
+              </div>
 
-          <div className={classes.detail}>
-            <div className={classes.creation}>{`#${17} opened 18 hours ago by ${'wlsrn0727'}`}</div>
-            <div className={classes.milestone}>{'milestone'}</div>
-          </div>
-        </div>
+              <div className={classes.detail}>
+                <div className={classes.creation}>{`#${v.issueId} opened by ${v.creator}`}</div>
+                <div className={classes.milestone}>{v.assigner}</div>
+              </div>
+            </div>
 
-        <div className={classes.assignee}></div>
-      </div>
+            <div className={classes.assignee}></div>
+          </div>
+        ))}
     </div>
   )
 }

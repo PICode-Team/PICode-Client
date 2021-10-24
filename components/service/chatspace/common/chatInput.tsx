@@ -12,7 +12,9 @@ import {
   Code,
   Link,
 } from '@material-ui/icons'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+
+import { useDropzone } from 'react-dropzone'
 
 import { chatInputStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../types/chat.types'
@@ -119,7 +121,13 @@ function ChatInput(props: IChatInputProps) {
     }, 100)
   }
 
+  const handleChatInputPaste = (event: any) => {
+    console.log(event.clipboardData)
+  }
+
   const handleChatInputKeypress = (event: any) => {
+    if (event.target === null) return
+
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') return
 
     if (event.key === 'Enter' && event.shiftKey !== true) {
@@ -301,6 +309,8 @@ function ChatInput(props: IChatInputProps) {
 
   const handleChatInputChange = (event: any) => {}
 
+  const handleRichTextClick = (tag: string) => () => {}
+
   useEffect(() => {
     document.addEventListener('click', clickHandler)
     return () => {
@@ -352,6 +362,7 @@ function ChatInput(props: IChatInputProps) {
             onKeyUp={handleChatInputKeyup}
             onKeyPress={handleChatInputKeypress}
             onChange={handleChatInputChange}
+            onPaste={handleChatInputPaste}
             ref={messageRef}
           ></div>
           <div className={classes.interaction}>

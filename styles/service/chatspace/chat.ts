@@ -179,6 +179,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       color: theme.font.high.color,
       fontWeight: 'bold',
       marginLeft: '6px',
+      alignSelf: 'flex-start',
     },
     textWrapper: {
       marginLeft: '6px',
@@ -374,6 +375,9 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
       padding: '8px',
       fontSize: '16px',
       overflow: 'auto',
+      '& img': {
+        maxWidth: '300px',
+      },
     },
     interaction: {
       display: 'flex',

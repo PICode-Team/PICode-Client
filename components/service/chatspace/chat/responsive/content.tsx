@@ -8,7 +8,7 @@ import { renderMessage } from '../../chat/content/content'
 import { IUser } from '../../../../../types/user.types'
 import { useWs } from '../../../../context/websocket'
 import { fetchSet } from '../../../../context/fetch'
-import { mentionRegex } from '../../../../context/regex'
+import { fontTagRegex, mentionRegex } from '../../../../context/regex'
 
 interface IContentProps {
   target: IChannel
@@ -138,6 +138,12 @@ function Content(props: IContentProps) {
 
           messageRef.current!.innerHTML = result.join('@')
 
+          messageRef.current!.focus()
+
+          const { focusNode } = window.getSelection()!
+
+          window.getSelection()?.setBaseAndExtent(focusNode!, 1, focusNode!, 1)
+
           return
         }
       }
@@ -154,6 +160,18 @@ function Content(props: IContentProps) {
       return
     }
     if (event.key === 'Shift') return
+
+    if (fontTagRegex.exec(messageRef.current!.innerHTML) !== null) {
+      messageRef.current!.innerHTML = messageRef.current!.innerHTML.replace(fontTagRegex, '')
+
+      const { focusNode } = window.getSelection()!
+
+      if (messageRef.current!.innerHTML.length === 0) {
+        window.getSelection()?.setBaseAndExtent(focusNode!, 0, focusNode!, 0)
+      } else {
+        window.getSelection()?.setBaseAndExtent(focusNode!, 1, focusNode!, 1)
+      }
+    }
 
     if (onMention === true) {
       const lastIndex = [...participantList.map((v) => v.userName), 'here', 'channel'].filter((v) => v.indexOf(messageContent) === 0).length - 1
@@ -172,6 +190,35 @@ function Content(props: IContentProps) {
         }
         return
       }
+    }
+
+    const mentionSplitedText = messageRef.current!.innerHTML.split('picode-mention')
+
+    let check = false
+    const tmp = []
+
+    for (let i = 0; i < mentionSplitedText.length; i++) {
+      if (mentionSplitedText[i].slice(-1) === '<' && i + 2 <= mentionSplitedText.length && mentionSplitedText[i + 1].slice(0, 2) === '>@') {
+        const innerText = mentionSplitedText[i + 1].slice(2).slice(0, mentionSplitedText[i + 1].length - 4)
+        const findTarget = [...participantList.map((v) => v.userName), 'here', 'channel'].find((v) => v === innerText)
+
+        if (findTarget === undefined) {
+          check = true
+          tmp.push(mentionSplitedText[i].slice(0, mentionSplitedText[i].length - 1))
+          tmp.push(innerText)
+          i += 2
+        } else {
+          tmp.push(mentionSplitedText[i])
+        }
+      }
+    }
+
+    if (check === true) {
+      if (messageRef.current === null) return
+
+      messageRef.current.innerHTML = tmp.join('')
+
+      window.getSelection()?.setBaseAndExtent(messageRef.current, 1, messageRef.current, 1)
     }
 
     const splitedText = event.target.innerHTML.split('')
@@ -229,6 +276,12 @@ function Content(props: IContentProps) {
 
       messageRef.current.focus()
       messageRef.current.innerHTML = insertedText.join('')
+
+      const { focusNode } = window.getSelection()!
+
+      window.getSelection()?.setBaseAndExtent(focusNode!, focusNode?.textContent?.length ?? 0, focusNode!, focusNode?.textContent?.length ?? 0)
+
+      setOnMention(false)
     }
   }
 

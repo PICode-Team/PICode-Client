@@ -30,7 +30,7 @@ const initialState: ICreateIssueState = {
   creator: '',
   assigner: [],
   label: '',
-  column: '',
+  column: 'backlog',
   milestone: '',
   startDate: '',
   dueDate: '',
@@ -44,6 +44,7 @@ interface ICreateIssueProps {
   mileList: IMilestone[]
   column?: string
   workspaceId?: string
+  kanbanList?: IKanban[]
 }
 
 interface IMilestoneSelect {
@@ -52,13 +53,12 @@ interface IMilestoneSelect {
 }
 
 function CreateIssue(props: ICreateIssueProps) {
-  const { modal, setModal, kanbanUUID, mileList, column, workspaceId } = props
+  const { modal, setModal, kanbanUUID, mileList, column, workspaceId, kanbanList } = props
   const [payload, setPayload] = useState<ICreateIssueState>(initialState)
   const [tempUUID, setTempUUID] = useState<string>('')
   const [userList, setUserList] = useState<string[]>([])
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const [optionList, setOptionList] = useState<IMilestoneSelect[]>([])
-  const [kanbanList, setKanbanList] = useState<IKanban[]>([])
   const ws: any = useWs()
 
   const getUserData = async () => {
@@ -69,6 +69,12 @@ function CreateIssue(props: ICreateIssueProps) {
       setUserInfo(user)
     }
   }
+
+  useEffect(() => {
+    if (kanbanUUID === undefined && kanbanList !== undefined && kanbanList.length > 0) {
+      setTempUUID(kanbanList[0].uuid)
+    }
+  }, [kanbanUUID])
 
   useEffect(() => {
     if (column !== undefined) {
@@ -92,19 +98,9 @@ function CreateIssue(props: ICreateIssueProps) {
     setPayload({ ...payload, [event.target.id]: event.target.value })
   }
 
-  const getKanban = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-      ws.send(
-        JSON.stringify({
-          category: 'kanban',
-          type: 'getKanban',
-          data: {},
-        })
-      )
-    }
-  }
-
   const handleSubmit = () => {
+    console.log(payload)
+
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -116,25 +112,13 @@ function CreateIssue(props: ICreateIssueProps) {
               startDate: payload.startDate.slice(2),
               dueDate: payload.dueDate.slice(2),
             },
-            kanbanUUID: kanbanUUID ?? '',
+            kanbanUUID: kanbanUUID ?? tempUUID,
           },
         })
       )
 
+      setPayload(initialState)
       setModal(false)
-    }
-  }
-
-  const issueWebSocketHandler = (msg: any) => {
-    const message = JSON.parse(msg.data)
-
-    if (message.category === 'kanban') {
-      switch (message.type) {
-        case 'getKanban':
-          setKanbanList(message.data.kanbans)
-          break
-        default:
-      }
     }
   }
 
@@ -151,16 +135,6 @@ function CreateIssue(props: ICreateIssueProps) {
   useEffect(() => {
     getUserData()
   }, [])
-
-  useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
-    if (kanbanList.length === 0) {
-      getKanban()
-    }
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
-    }
-  }, [ws?.readyState])
 
   const handleStartDate = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPayload({ ...payload, startDate: event.target.value })
@@ -181,7 +155,7 @@ function CreateIssue(props: ICreateIssueProps) {
         <CustomTextarea id="content" value={payload.content} label="Content" placeholder="content" onChange={handlePayload} />
         <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />
         <CustomTextInput id="label" value={payload.label} label="Label" placeholder="label" onChange={handlePayload} />
-        {kanbanUUID === undefined && (
+        {kanbanUUID === undefined && kanbanList !== undefined && (
           <CustomSelect
             id="tempWorkspaceId"
             value={tempUUID}

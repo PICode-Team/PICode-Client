@@ -94,18 +94,19 @@ function Chat(props: IChatProps) {
           break
 
         case 'getChatLog':
-          const messages: IChat[] = []
-          message.data.forEach((v: any) => {
-            messages.push({
-              user: v.sender,
-              message: v.message,
-              time: v.time,
-              chatId: v.chatId,
-              threadList: v.threadList,
+          if (message.data !== undefined) {
+            const messages: IChat[] = message.data.map((v: any) => {
+              return {
+                user: v.sender,
+                message: v.message,
+                time: v.time,
+                chatId: v.chatId,
+                threadList: v.threadList,
+              }
             })
-          })
 
-          setMessageList([...messageList, ...messages])
+            setMessageList([...messageList, ...messages])
+          }
 
           break
 

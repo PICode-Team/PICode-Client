@@ -26,4 +26,5 @@ export interface IIssue {
   content: string
   label: string
   assigner: string[]
+  kanbanUUID: string
 }
