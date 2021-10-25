@@ -32,6 +32,12 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
     setWorkspaceInfo({ ...workspaceInfo, participants: userList })
   }, [userList])
 
+  useEffect(() => {
+    if (workspaceInfo.participants !== undefined) {
+      setUserList(workspaceInfo.participants)
+    }
+  }, [workspaceInfo])
+
   const dragOver = (e: any) => {
     e.preventDefault()
   }

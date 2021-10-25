@@ -46,6 +46,7 @@ function EditProject() {
     if (workspaceList.length === 0) return
 
     const [workspace] = workspaceList
+
     setOriginWorkspace(workspace)
     setWorkspaceInfo(workspace)
   }
@@ -57,8 +58,8 @@ function EditProject() {
     if (code !== 200) return
     if (dockerList.length === 0) return
 
-    // const [docker] = dockerList
-    // setDockerInfo(docker)
+    const [docker] = dockerList
+    setDockerInfo(docker)
   }
 
   const handlePreviousButton = () => {
