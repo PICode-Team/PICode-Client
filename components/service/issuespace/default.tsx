@@ -16,6 +16,7 @@ import { useWs } from '../../context/websocket'
 import Label from './label'
 import CreateLabel from './create/label'
 import { useRouter } from 'next/router'
+import Alert from '../../items/modal/alert'
 
 function DefaultIssue() {
   const classes = manageStyle()
@@ -29,6 +30,8 @@ function DefaultIssue() {
   const [issueList, setIssueList] = useState<IIssue[] | null>(null)
   const [modalIssue, setModalIssue] = useState<IIssue | null>(null)
   const [resultStatus, setResultStatus] = useState<boolean>(false)
+  const [openResult, setOpenResult] = useState<boolean>(false)
+  const [behaviorType, setBehaviorType] = useState<string>('')
   const [wsCheck, setWsCheck] = useState<number>(0)
   const router = useRouter()
   const ws: any = useWs()
@@ -92,13 +95,14 @@ function DefaultIssue() {
           getKanbanList()
           break
         case 'deleteKanban':
+          setBehaviorType('Kanban')
           if (message.data.code / 100 === 2) {
             setResultStatus(true)
             getKanbanList()
           } else {
             setResultStatus(false)
           }
-
+          setOpenResult(true)
           break
         default:
       }
@@ -118,12 +122,14 @@ function DefaultIssue() {
           break
 
         case 'deleteMilestone':
+          setBehaviorType('Milestone')
           if (message.data.code / 100 === 2) {
             setResultStatus(true)
             getMileList()
           } else {
             setResultStatus(false)
           }
+          setOpenResult(true)
           break
 
         default:
@@ -220,6 +226,8 @@ function DefaultIssue() {
       {menu === 'Kanban' && <CreateKanban modal={modal} setModal={setModal} modalKanban={modalKanban} />}
       {menu === 'Milestone' && <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} />}
       {/* {menu === 'Label' && <CreateLabel />} */}
+
+      {openResult && <Alert modal={openResult} setModal={setOpenResult} title={behaviorType} description={resultStatus ? `Success Deleting ${behaviorType}` : `Error in Deleting ${behaviorType}`} />}
     </div>
   )
 }
