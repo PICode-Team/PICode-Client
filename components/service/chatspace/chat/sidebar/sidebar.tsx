@@ -76,9 +76,9 @@ function Sidebar(props: ISidebarProps) {
                   style={
                     thumbnailUrl !== undefined
                       ? {
-                        backgroundImage: `url('${process.env.NEXT_FE_API_URL}/api/temp/${thumbnailUrl}')`,
-                        backgroundSize: 'cover',
-                      }
+                          backgroundImage: `url('${process.env.NEXT_FE_API_URL}/api/temp/${thumbnailUrl}')`,
+                          backgroundSize: 'cover',
+                        }
                       : {}
                   }
                 ></div>
@@ -91,7 +91,7 @@ function Sidebar(props: ISidebarProps) {
                 </div>
                 <div className={classes.channelTail}>
                   <div className={classes.unreadMessage}></div>
-                  <div className={classes.lastTime}>{v.recentTime !== undefined && v.recentTime.split(' ')[0]}</div>
+                  <div className={classes.lastTime}>{v.recentTime !== '' && v.recentTime !== undefined && v.recentTime.split(' ')[0]}</div>
                 </div>
               </div>
             )

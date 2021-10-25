@@ -25,7 +25,7 @@ function Row(props: IRowProps) {
         <div className={classes.thumbnail}>{target.recentMessage}</div>
       </div>
       <div className={classes.chatInfo}>
-        <div className={classes.lastTime}>{target.recentTime.split(' ')[0]}</div>
+        <div className={classes.lastTime}>{target.recentTime !== '' && target.recentTime !== undefined && target.recentTime.split(' ')[0]}</div>
         {/*<div className={classes.count}>231</div>*/}
       </div>
     </div>
