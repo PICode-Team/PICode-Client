@@ -147,12 +147,19 @@ export const boardStyle = makeStyles((theme: IThemeStyle) =>
     content: {
       width: '100%',
       height: '100%',
-      background: theme.backgroundColor.step2,
+      backgroundColor: theme.backgroundColor.step2,
       color: theme.font.high.color,
       display: 'grid',
       gridTemplateRows: 'repeat(4, 155px)',
       gridTemplateColumns: 'repeat(4, calc(25% - 21px))',
       gap: '28px 28px',
+      overflow: 'auto',
+      '@media screen and (max-width: 960px)': {
+        gridTemplateColumns: 'repeat(3, calc(33% - 16px))',
+      },
+      '@media screen and (max-width: 600px)': {
+        gridTemplateColumns: 'repeat(1, calc(100%))',
+      },
     },
     item: {
       backgroundColor: theme.backgroundColor.step1,
@@ -160,7 +167,7 @@ export const boardStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '6px',
       padding: '20px',
       '&:hover': {
-        backgroundColor: '#242c36',
+        filter: theme.brightness.step0,
       },
     },
     icon: {
@@ -320,10 +327,14 @@ export const issueTableStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'space-between',
       height: '54px',
       padding: '16px',
+      overflow: 'hidden',
     },
     leftHeader: {
       display: 'flex',
       alignItems: 'center',
+      '@media screen and (max-width: 700px)': {
+        display: 'none',
+      },
     },
     rightHeader: {
       display: 'flex',
