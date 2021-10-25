@@ -4,6 +4,7 @@ import { createWorkspaceStyle } from '../../../../styles/service/workspace/creat
 import { ICreateInfo, ICreateType, IDockerInfo, ISource, IWorkspace } from '../../../../types/workspace.types'
 import { fetchSet } from '../../../context/fetch'
 import CustomButton from '../../../items/button/button'
+import Alert from '../../../items/modal/alert'
 import CreateType from './createType'
 import DockerInfo from './dockerInfo'
 import Stepper from './stepper'
@@ -33,6 +34,7 @@ function CreateProject() {
   const [dockerInfo, setDockerInfo] = useState<IDockerInfo>(initialDocker)
   const [source, setSource] = useState<ISource | null>(null)
   const [step, setStep] = useState<number>(1)
+  const [modal, setModal] = useState<boolean>(false)
 
   const handlePreviousButton = () => {
     if (step === 2) {
@@ -47,13 +49,13 @@ function CreateProject() {
   const handleNextButton = () => {
     if (step === 2) {
       if (workspaceInfo.name === '') {
-        alert('Please fill in the essential information.')
+        setModal(true)
         return
       }
       setStep(3)
     } else {
       if (dockerInfo.image === '') {
-        alert('Please fill in the essential information.')
+        setModal(true)
         return
       }
       submitData()
@@ -126,6 +128,7 @@ function CreateProject() {
           )}
         </div>
       </div>
+      <Alert modal={modal} setModal={setModal} title="Empty Space" description="Please fill in the essential information." />
     </div>
   )
 }
