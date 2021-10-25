@@ -119,11 +119,22 @@ function CustomUserInput(props: IUserInputProps) {
   const classList = [classes.input, classes.user, classes.userName, classes.thumbnail, classes.userInfo]
 
   const getParticipantList = async () => {
+    const myId = await getUserData()
+
     const response = await fetchSet('/userList', 'GET', false)
     const { user, code } = await response.json()
 
+    if (code === 200 && user !== undefined) {
+      setParticipantList([myId, ...user])
+    }
+  }
+
+  const getUserData = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { user, code } = await response.json()
+
     if (code === 200) {
-      setParticipantList(user)
+      return user
     }
   }
 
