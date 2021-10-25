@@ -29,6 +29,7 @@ function Chat(props: IChatProps) {
   const [modal, setModal] = useState<boolean>(false)
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const getUserList = async () => {
@@ -224,15 +225,25 @@ function Chat(props: IChatProps) {
   }, [])
 
   useEffect(() => {
-    ws.addEventListener('message', chatWebSocketHandler)
-    if (channelList.length === 0) {
-      getChat()
-    }
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', chatWebSocketHandler)
+      if (channelList.length === 0) {
+        getChat()
+      }
 
-    return () => {
-      ws.removeEventListener('message', chatWebSocketHandler)
+      return () => {
+        ws.removeEventListener('message', chatWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-  }, [ws?.readyState, target, messageList, channelList, userInfo])
+  }, [wsCheck, target, messageList, channelList, userInfo])
+
+  useEffect(() => {
+    setWsCheck(0)
+  }, [target, messageList, channelList, userInfo])
 
   return (
     <React.Fragment>

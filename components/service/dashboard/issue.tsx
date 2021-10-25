@@ -10,6 +10,7 @@ function IssueView(props: IIssueViewProps) {
   const classes = issueStyle()
   const [kanbanList, setKanbanList] = useState<string[]>([])
   const [issueList, setIssueList] = useState<IIssue[] | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const getKanban = () => {
@@ -62,14 +63,20 @@ function IssueView(props: IIssueViewProps) {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
-    if (kanbanList.length === 0) {
+    if (wsCheck < 0) return
+
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
       getKanban()
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
-    }
-  }, [ws?.readyState])
+  }, [wsCheck])
 
   useEffect(() => {
     kanbanList.map((v: any) => {

@@ -376,9 +376,11 @@ function Note(props: INoteProps) {
       getNote()
       setOpenNum(-1)
     } else {
-      setOpenNum(openNum + 1)
+      setTimeout(() => {
+        setOpenNum(openNum + 1)
+      }, 100)
     }
-  }, [ws?.readyState, openNum])
+  }, [openNum])
 
   useEffect(() => {
     setTimeout(() => {

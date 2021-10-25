@@ -20,7 +20,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
   const classes = manageStyle()
   const router = useRouter()
   const manageMenu = ['Kanban', 'Milestone']
-  const [menu, setMenu] = useState<string>('Milestone')
+  const [menu, setMenu] = useState<string>('Kanban')
   const [modal, setModal] = useState<boolean>(false)
   const [kanbanList, setKanbanList] = useState<IKanban[]>([])
   const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
@@ -28,6 +28,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
   const [openResult, setOpenResult] = useState<boolean>(false)
   const [resultStatus, setResultStatus] = useState<boolean>(false)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
   const { workspaceId } = router.query
 
@@ -112,27 +113,21 @@ export default function ManageSpace(props: IManageSpaceProps) {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
-
-    if (kanbanList.length === 0 && mileList.length === 0) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
       getKanbanList()
       getMileList()
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setWsCheck(wsCheck + 1)
     }
-
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
-    }
-  }, [ws?.readyState])
+  }, [wsCheck])
 
   const handleChangeMenu = (name: string) => () => {
     setMenu(name)
   }
-
-  useEffect(() => {
-    setTimeout(() => {
-      setMenu('Kanban')
-    }, 100)
-  }, [])
 
   return (
     <div className={classes.manage}>

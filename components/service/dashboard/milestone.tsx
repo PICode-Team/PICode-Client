@@ -10,6 +10,7 @@ function MilestoneView(props: IMilestoneViewProps) {
   const {} = props
   const classes = milestoneStyle()
   const [mileList, setMileList] = useState<IMilestone[] | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const getMilestone = () => {
@@ -41,20 +42,18 @@ function MilestoneView(props: IMilestoneViewProps) {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', mileWebSocketHandler)
-    getMilestone()
-    return () => {
-      ws.removeEventListener('message', mileWebSocketHandler)
-    }
-  }, [ws?.readyState])
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (mileList === null) {
-        setMileList([])
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', mileWebSocketHandler)
+      getMilestone()
+      return () => {
+        ws.removeEventListener('message', mileWebSocketHandler)
       }
-    }, 100)
-  }, [])
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
+    }
+  }, [wsCheck])
 
   return (
     <div className={classes.milestone}>

@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 function DefaultIssue() {
   const classes = manageStyle()
   const manageMenu = ['Issue', 'Kanban', 'Milestone']
-  const [menu, setMenu] = useState<string>('Milestone')
+  const [menu, setMenu] = useState<string>('Issue')
   const [modal, setModal] = useState<boolean>(false)
   const [kanbanList, setKanbanList] = useState<IKanban[]>([])
   const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
@@ -28,8 +28,8 @@ function DefaultIssue() {
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
   const [issueList, setIssueList] = useState<IIssue[] | null>(null)
   const [modalIssue, setModalIssue] = useState<IIssue | null>(null)
-  const [openResult, setOpenResult] = useState<boolean>(false)
   const [resultStatus, setResultStatus] = useState<boolean>(false)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const router = useRouter()
   const ws: any = useWs()
   const { type } = router.query
@@ -82,11 +82,10 @@ function DefaultIssue() {
     if (message.category === 'kanban') {
       switch (message.type) {
         case 'getKanban':
+          console.log(message.data)
+
           if (message.data.kanbans.length > 0) {
             setKanbanList(message.data.kanbans)
-            message.data.kanbans.forEach((v: any) => {
-              getIssue(v.uuid)
-            })
           }
           break
 
@@ -150,32 +149,48 @@ function DefaultIssue() {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
 
-    if (kanbanList.length === 0 && mileList.length === 0) {
-      getKanbanList()
-      getMileList()
-    }
+      if (kanbanList.length === 0) {
+        getKanbanList()
+      }
 
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
+      if (mileList.length === 0) {
+        getMileList()
+      }
+
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-  }, [ws?.readyState, issueList])
+  }, [wsCheck, issueList])
 
   const handleChangeMenu = (name: string) => () => {
     setMenu(name)
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      if (issueList === null) {
-        setMenu('Issue')
-        if (type !== undefined) {
-          setMenu(type as string)
-        }
+    kanbanList.map((v: any) => {
+      if (v !== null) {
+        getIssue(v.uuid)
       }
-    }, 100)
+    })
+  }, [kanbanList])
+
+  useEffect(() => {
+    if (type !== undefined) {
+      setMenu(type as string)
+    }
   }, [])
+
+  useEffect(() => {
+    setWsCheck(0)
+  }, [issueList])
 
   return (
     <div className={classes.manage}>

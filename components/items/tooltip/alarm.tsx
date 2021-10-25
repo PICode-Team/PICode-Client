@@ -104,6 +104,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
   const { open, setOpen } = props
   const classes = alertDialogStyle()
   const [alarmList, setAlarmList] = useState<IAlarm[] | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const checkAlarm = (alarmId: string, alarmRoom: string) => {
@@ -161,14 +162,22 @@ export default function AlertDialog(props: IAlertDialogProps) {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', alertWebSocketHandler)
-    if (alarmList === null) {
-      getAlarm()
+    if (wsCheck < 0) return
+
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', alertWebSocketHandler)
+      if (alarmList === null) {
+        getAlarm()
+      }
+      return () => {
+        ws.removeEventListener('message', alertWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-    return () => {
-      ws.removeEventListener('message', alertWebSocketHandler)
-    }
-  }, [ws?.readyState, alarmList])
+  }, [wsCheck, alarmList])
 
   return (
     <React.Fragment>

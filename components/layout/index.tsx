@@ -21,6 +21,7 @@ function Layout(props: IPageProps) {
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const [userMouse, setUserMouse] = useState<{ x: number; y: number; screenSize: IUserMouse }>()
   const [loginUser, setLoginUser] = useState<{ loginId: string; workInfo: ISocketUserMouse }[] | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
 
   const route = useRouter()
   const ws: any = useWs()
@@ -57,15 +58,21 @@ function Layout(props: IPageProps) {
   }
 
   useEffect(() => {
-    getUserId()
-    getLoginUserData()
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      getUserId()
+      getLoginUserData()
 
-    ws.addEventListener('message', userMouseWebSocketHandler)
+      ws.addEventListener('message', userMouseWebSocketHandler)
 
-    return () => {
-      ws.removeEventListener('message', userMouseWebSocketHandler)
+      return () => {
+        ws.removeEventListener('message', userMouseWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-  }, [ws?.readyState])
+  }, [wsCheck])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

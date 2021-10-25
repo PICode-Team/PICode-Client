@@ -24,6 +24,7 @@ function IssueDetail() {
   const router = useRouter()
   const { issueUUID } = router.query
   const [issueInfo, setIssueInfo] = useState<IIssueDetail | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const getIssueDetail = (issueUUID: string) => {
@@ -57,15 +58,19 @@ function IssueDetail() {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
-
-    if (issueInfo === null) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
       getIssueDetail(issueUUID as string)
+
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
-    }
-  }, [ws?.readyState, issueInfo])
+  }, [wsCheck])
 
   return (
     <div className={classes.detail}>

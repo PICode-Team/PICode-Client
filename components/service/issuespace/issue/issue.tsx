@@ -19,6 +19,7 @@ function Issue(props: IIssueProps) {
   const [kanban, setKanban] = useState<string>('')
   const [name, setName] = useState<string>('')
   const [column, setColumn] = useState<string>('')
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const router = useRouter()
   const { workspaceId, kanbanUUID } = router.query
   const ws: any = useWs()
@@ -100,17 +101,24 @@ function Issue(props: IIssueProps) {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
-    getKanban()
-    getMilestone()
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
+      getKanban()
+      getMilestone()
 
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-  }, [ws?.readyState, kanban])
+  }, [wsCheck, kanban])
 
   useEffect(() => {
     getIssue(kanban)
+    setWsCheck(0)
   }, [kanban])
 
   return (
