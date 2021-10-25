@@ -102,7 +102,7 @@ function Topbar(props: ITopbarProps) {
             className={classes.userInfoData}
             style={{
               zIndex: idx,
-              backgroundImage: i.userThumbnail === undefined ? 'none' : ` url('http://localhost:8000/api/temp/${i.userThumbnail}')`,
+              backgroundImage: i.userThumbnail === undefined ? 'none' : `url('${process.env.NEXT_FE_API_URL}/api/temp/${i.userThumbnail}`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
