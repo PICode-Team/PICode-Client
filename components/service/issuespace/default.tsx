@@ -15,6 +15,7 @@ import Issue from './issue'
 import { useWs } from '../../context/websocket'
 import Label from './label'
 import CreateLabel from './create/label'
+import { useRouter } from 'next/router'
 
 function DefaultIssue() {
   const classes = manageStyle()
@@ -29,7 +30,9 @@ function DefaultIssue() {
   const [modalIssue, setModalIssue] = useState<IIssue | null>(null)
   const [openResult, setOpenResult] = useState<boolean>(false)
   const [resultStatus, setResultStatus] = useState<boolean>(false)
+  const router = useRouter()
   const ws: any = useWs()
+  const { type } = router.query
 
   const handleCreateButton = (event: React.MouseEvent<HTMLElement>) => {
     setModal(true)
@@ -167,6 +170,9 @@ function DefaultIssue() {
     setTimeout(() => {
       if (issueList === null) {
         setMenu('Issue')
+        if (type !== undefined) {
+          setMenu(type as string)
+        }
       }
     }, 100)
   }, [])

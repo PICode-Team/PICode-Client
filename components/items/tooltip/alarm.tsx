@@ -7,6 +7,7 @@ import { Cancel, Clear, ClearRounded } from '@material-ui/icons'
 import { IThemeStyle } from '../../../styles/theme'
 import { useWs } from '../../context/websocket'
 import { IAlarm } from '../../../types/alarm.types'
+import Toast from './toast'
 
 const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
@@ -150,8 +151,6 @@ export default function AlertDialog(props: IAlertDialogProps) {
           break
         case 'checkAlarm':
           if (alarmList !== null) {
-            console.log(alarmList.length, alarmList.filter((v) => v.alarmId !== message.data.alarmId).length)
-
             setAlarmList(alarmList.filter((v) => v.alarmId !== message.data.alarmId))
           }
           break
@@ -164,7 +163,6 @@ export default function AlertDialog(props: IAlertDialogProps) {
   useEffect(() => {
     ws.addEventListener('message', alertWebSocketHandler)
     getAlarm()
-
     return () => {
       ws.removeEventListener('message', alertWebSocketHandler)
     }

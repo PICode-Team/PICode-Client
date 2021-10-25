@@ -87,7 +87,9 @@ function IssueView(props: IIssueViewProps) {
     }, 100)
   }, [])
 
-  const handleLinkIssue = () => {}
+  const handleLinkIssue = (issueUUID: string) => () => {
+    window.location.href = `/issuespace/detail?issueUUID=${issueUUID}`
+  }
 
   return (
     <div className={classes.issue}>
@@ -96,7 +98,7 @@ function IssueView(props: IIssueViewProps) {
         {issueList !== null && issueList.length > 0 ? (
           issueList.map((v, i) => {
             return (
-              <div key={`dashboard-issue-${i}`} className={classes.card} onClick={handleLinkIssue}>
+              <div key={`dashboard-issue-${i}`} className={classes.card} onClick={handleLinkIssue(v.uuid)}>
                 <div className={classes.top}>
                   <div className={classes.issueName}>
                     <div className={classes.issueTitle}>{v.title}</div>

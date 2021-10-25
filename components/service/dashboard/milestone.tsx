@@ -36,7 +36,9 @@ function MilestoneView(props: IMilestoneViewProps) {
     }
   }
 
-  const handleLinkMilestone = () => {}
+  const handleLinkMilestone = () => {
+    window.location.href = '/issuespace?type=Milestone'
+  }
 
   useEffect(() => {
     ws.addEventListener('message', mileWebSocketHandler)

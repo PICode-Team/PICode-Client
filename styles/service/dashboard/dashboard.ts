@@ -52,6 +52,10 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       justifyContent: 'space-between',
       overflow: 'hidden',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: theme.brightness.step0,
+      },
     },
     top: {
       display: 'flex',
@@ -131,6 +135,10 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
       marginBottom: '8px',
       display: 'flex',
       justifyContent: 'space-between',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: theme.brightness.step0,
+      },
     },
   })
 )
@@ -167,8 +175,11 @@ export const milestoneStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'space-between',
       padding: '8px 12px 10px',
       marginBottom: '12px',
-      pointerEvents: 'none',
       flexDirection: 'column',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: theme.brightness.step0,
+      },
     },
 
     top: {

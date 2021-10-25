@@ -38,7 +38,9 @@ function NoteView(props: INoteViewProps) {
     }
   }
 
-  const handleLinkNote = () => {}
+  const handleLinkNote = () => {
+    window.location.href = '/notespace/'
+  }
 
   useEffect(() => {
     const value = window.localStorage.getItem('userId')
