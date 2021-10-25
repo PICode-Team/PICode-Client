@@ -122,7 +122,14 @@ function CreateIssue(props: ICreateIssueProps) {
 
   useEffect(() => {
     if (mileList.length > 0) {
-      setOptionList(mileList.reduce((a: IMilestoneSelect[], c: IMilestone) => [...a, { name: c.title, value: c.uuid }], []))
+      setOptionList(
+        mileList.reduce((a: IMilestoneSelect[], c: IMilestone) => {
+          if (c === null) {
+            return a
+          }
+          return [...a, { name: c.title, value: c.uuid }]
+        }, [])
+      )
     }
   }, [mileList])
 
@@ -160,6 +167,9 @@ function CreateIssue(props: ICreateIssueProps) {
             label="Kanban"
             onChange={handleTempUUID}
             optionList={kanbanList.reduce((a: { name: string; value: string }[], c) => {
+              if (c === null) {
+                return a
+              }
               return [...a, { name: c.title, value: c.uuid }]
             }, [])}
           />
