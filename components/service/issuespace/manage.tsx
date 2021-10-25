@@ -12,6 +12,7 @@ import CreateMilestone from './create/milestone'
 import CreateKanban from './create/kanban'
 import Board from './board'
 import Milestone from './milestone'
+import Alert from '../../items/modal/alert'
 
 interface IManageSpaceProps {}
 
