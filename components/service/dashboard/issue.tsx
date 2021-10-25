@@ -55,7 +55,7 @@ function IssueView(props: IIssueViewProps) {
     } else if (message.category === 'issue') {
       switch (message.type) {
         case 'getIssue':
-          if (message.data.issues.length > 0) setIssueList([message.data.issues])
+          if (message.data.issues.length > 0) setIssueList(message.data.issues)
           break
       }
     }
@@ -63,7 +63,9 @@ function IssueView(props: IIssueViewProps) {
 
   useEffect(() => {
     ws.addEventListener('message', issueWebSocketHandler)
-    getKanban()
+    if (kanbanList.length === 0) {
+      getKanban()
+    }
     return () => {
       ws.removeEventListener('message', issueWebSocketHandler)
     }
@@ -96,14 +98,11 @@ function IssueView(props: IIssueViewProps) {
             return (
               <div key={`dashboard-issue-${i}`} className={classes.card} onClick={handleLinkIssue}>
                 <div className={classes.top}>
-                  <div className={classes.thumbnail}></div>
                   <div className={classes.issueName}>
                     <div className={classes.issueTitle}>{v.title}</div>
                     <div className={classes.issueId}>#{v.issueId} Issue</div>
                   </div>
-                  <div className={classes.issueContentWrapper}>
-                    <div className={classes.issueContent}>{v.content ?? 'this issue has no content'}</div>
-                  </div>
+                  <div className={classes.issueContentWrapper}>{v.content ?? 'this issue has no content'}</div>
                 </div>
 
                 <div className={classes.bottom}>
