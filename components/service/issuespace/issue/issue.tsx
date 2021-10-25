@@ -113,14 +113,6 @@ function Issue(props: IIssueProps) {
     getIssue(kanban)
   }, [kanban])
 
-  useEffect(() => {
-    if (issueList === null) {
-      setTimeout(() => {
-        setIssueList([])
-      }, 100)
-    }
-  }, [])
-
   return (
     <div className={classes.wrapper}>
       <div className={classes.title}>

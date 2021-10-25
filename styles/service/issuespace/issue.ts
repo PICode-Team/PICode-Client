@@ -98,6 +98,10 @@ export const cardStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '6px',
       height: '120px',
       marginBottom: '15px',
+      cursor: 'pointer',
+      '&:hover': {
+        filter: theme.brightness.step0,
+      },
     },
     thumbnail: {
       width: '32px',
