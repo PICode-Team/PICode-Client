@@ -122,7 +122,7 @@ function ChatInput(props: IChatInputProps) {
   }
 
   const handleChatInputPaste = (event: any) => {
-    console.log(event.clipboardData)
+    // console.log(event.clipboardData)
   }
 
   const handleChatInputKeypress = (event: any) => {

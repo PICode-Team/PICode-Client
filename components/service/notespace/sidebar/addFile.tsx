@@ -43,20 +43,6 @@ function AddFile(props: IAddInput) {
     }
   }
 
-  const getNote = (noteId?: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-      ws.send(
-        JSON.stringify({
-          category: 'note',
-          type: 'getNote',
-          data: {
-            noteId,
-          },
-        })
-      )
-    }
-  }
-
   const handlefileRowBlur = (event: any) => {
     setAddFile(false)
     if (event.target.value === '') return

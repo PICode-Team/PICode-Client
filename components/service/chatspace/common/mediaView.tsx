@@ -13,8 +13,6 @@ function MediaView(props: IMediaViewProps) {
   const [index, setIndex] = useState<number>(0)
 
   const handleExpandClick = (url: string) => () => {
-    console.log(url)
-
     window.location.href = url
   }
 

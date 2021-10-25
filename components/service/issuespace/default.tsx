@@ -15,6 +15,8 @@ import Issue from './issue'
 import { useWs } from '../../context/websocket'
 import Label from './label'
 import CreateLabel from './create/label'
+import { useRouter } from 'next/router'
+import Alert from '../../items/modal/alert'
 
 function DefaultIssue() {
   const classes = manageStyle()
@@ -27,9 +29,13 @@ function DefaultIssue() {
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
   const [issueList, setIssueList] = useState<IIssue[] | null>(null)
   const [modalIssue, setModalIssue] = useState<IIssue | null>(null)
-  const [openResult, setOpenResult] = useState<boolean>(false)
   const [resultStatus, setResultStatus] = useState<boolean>(false)
+  const [openResult, setOpenResult] = useState<boolean>(false)
+  const [behaviorType, setBehaviorType] = useState<string>('')
+  const [wsCheck, setWsCheck] = useState<number>(0)
+  const router = useRouter()
   const ws: any = useWs()
+  const { type } = router.query
 
   const handleCreateButton = (event: React.MouseEvent<HTMLElement>) => {
     setModal(true)
@@ -81,9 +87,6 @@ function DefaultIssue() {
         case 'getKanban':
           if (message.data.kanbans.length > 0) {
             setKanbanList(message.data.kanbans)
-            message.data.kanbans.forEach((v: any) => {
-              getIssue(v.uuid)
-            })
           }
           break
 
@@ -92,13 +95,14 @@ function DefaultIssue() {
           getKanbanList()
           break
         case 'deleteKanban':
+          setBehaviorType('Kanban')
           if (message.data.code / 100 === 2) {
             setResultStatus(true)
             getKanbanList()
           } else {
             setResultStatus(false)
           }
-
+          setOpenResult(true)
           break
         default:
       }
@@ -118,12 +122,14 @@ function DefaultIssue() {
           break
 
         case 'deleteMilestone':
+          setBehaviorType('Milestone')
           if (message.data.code / 100 === 2) {
             setResultStatus(true)
             getMileList()
           } else {
             setResultStatus(false)
           }
+          setOpenResult(true)
           break
 
         default:
@@ -147,29 +153,48 @@ function DefaultIssue() {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
 
-    if (kanbanList.length === 0 && mileList.length === 0) {
-      getKanbanList()
-      getMileList()
-    }
+      if (kanbanList.length === 0) {
+        getKanbanList()
+      }
 
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
+      if (mileList.length === 0) {
+        getMileList()
+      }
+
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-  }, [ws?.readyState, issueList])
+  }, [wsCheck, issueList])
 
   const handleChangeMenu = (name: string) => () => {
     setMenu(name)
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      if (issueList === null) {
-        setIssueList([])
+    kanbanList.map((v: any) => {
+      if (v !== null) {
+        getIssue(v.uuid)
       }
-    }, 100)
+    })
+  }, [kanbanList])
+
+  useEffect(() => {
+    if (type !== undefined) {
+      setMenu(type as string)
+    }
   }, [])
+
+  useEffect(() => {
+    setWsCheck(0)
+  }, [issueList])
 
   return (
     <div className={classes.manage}>
@@ -201,6 +226,8 @@ function DefaultIssue() {
       {menu === 'Kanban' && <CreateKanban modal={modal} setModal={setModal} modalKanban={modalKanban} />}
       {menu === 'Milestone' && <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} />}
       {/* {menu === 'Label' && <CreateLabel />} */}
+
+      {openResult && <Alert modal={openResult} setModal={setOpenResult} title={behaviorType} description={resultStatus ? `Success Deleting ${behaviorType}` : `Error in Deleting ${behaviorType}`} />}
     </div>
   )
 }

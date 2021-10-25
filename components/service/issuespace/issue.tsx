@@ -66,7 +66,7 @@ function Issue(props: IIssueProps) {
                 <span className={classes.title} onClick={handleLinkDetail(v.uuid)}>
                   {v.title}
                 </span>
-                <span className={classes.tag}>{v.label}</span>
+                {v.label !== undefined && v.label !== '' && <span className={classes.tag}>{v.label}</span>}
               </div>
 
               <div className={classes.detail}>

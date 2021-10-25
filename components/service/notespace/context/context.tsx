@@ -16,7 +16,6 @@ interface INoteContextProps {
 function Context(props: INoteContextProps) {
   const { contextPosition, setOpenContext, setSelectFile, fileViewList, setAddFile } = props
   const classes = noteStyle()
-  const [userId, setUserId] = useState<string>('')
   const ws: any = useWs()
 
   if (ws?.readyState === WebSocket.CONNECTING) return <></>
@@ -36,8 +35,7 @@ function Context(props: INoteContextProps) {
         JSON.stringify({
           category: 'note',
           type: 'getNote',
-          data: {
-          },
+          data: {},
         })
       )
     }
@@ -87,15 +85,6 @@ function Context(props: INoteContextProps) {
     getNote()
     setSelectFile(null)
   }
-
-  useEffect(() => {
-    if (typeof window === undefined) return
-
-    const value = window.localStorage.getItem('userId')
-    if (value === null) return
-
-    setUserId(value)
-  }, [])
 
   return (
     <div onClick={handleClickContext} onContextMenu={handleContextMenu} className={classes.contextWrapper} style={{ left: contextPosition.x, top: contextPosition.y - 40 }}>

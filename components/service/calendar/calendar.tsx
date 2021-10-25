@@ -1,64 +1,64 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, IconButton, MenuItem, Select } from "@material-ui/core";
-import { ArrowBackIosOutlined, ArrowForwardIosOutlined, CalendarViewDayOutlined } from "@material-ui/icons";
-import clsx from "clsx";
-import { cloneDeep } from "lodash";
-import React, { useEffect, useState } from "react";
-import 'react-calendar/dist/Calendar.css';
-import { calendarStyle } from "../../../styles/service/calendarspace/calendar";
-import { useWs } from "../../context/websocket";
-import CustomSelect from "../../items/input/select";
-import { viewData } from "./constant";
-import CreateSchedule from "./createschedule";
-import DayView from "./dayview";
-import MonthView from "./monthview";
-import WeekView, { getWeek } from "./weekview";
+import { Button, IconButton, MenuItem, Select } from '@material-ui/core'
+import { ArrowBackIosOutlined, ArrowForwardIosOutlined, CalendarViewDayOutlined } from '@material-ui/icons'
+import clsx from 'clsx'
+import { cloneDeep } from 'lodash'
+import React, { useEffect, useState } from 'react'
+import 'react-calendar/dist/Calendar.css'
+import { calendarStyle } from '../../../styles/service/calendarspace/calendar'
+import { useWs } from '../../context/websocket'
+import CustomSelect from '../../items/input/select'
+import { viewData } from './constant'
+import CreateSchedule from './createschedule'
+import DayView from './dayview'
+import MonthView from './monthview'
+import WeekView, { getWeek } from './weekview'
 
 interface ICalendarType {
     [key: string]: ICalendarData[]
 }
 
 interface ICalendarData {
-    "type": string;
-    "title": string;
-    "content": string;
-    "startDate": string;
-    "dueDate": string;
-    "milestone": string;
-    "creator": string;
-    "issue": string;
-    "scheduleId": string;
+    type: string
+    title: string
+    content: string
+    startDate: string
+    dueDate: string
+    milestone: string
+    creator: string
+    issue: string
+    scheduleId: string
 }
 
 export const checkDate = (date: Date) => {
-    return `${String(date.getFullYear()).slice(2, 4)}-${date.getMonth() + 1}-${date.getDate()}`;
+    return `${String(date.getFullYear()).slice(2, 4)}-${date.getMonth() + 1}-${date.getDate()}`
 }
 
 export interface IDate {
-    today: Date,
-    tmpViewDay: Date,
-    schedule: ICalendarType | undefined,
-    setTmpViewDay: React.Dispatch<React.SetStateAction<Date>>,
+    today: Date
+    tmpViewDay: Date
+    schedule: ICalendarType | undefined
+    setTmpViewDay: React.Dispatch<React.SetStateAction<Date>>
     setView: React.Dispatch<React.SetStateAction<string>>
-    setModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const calDay = ["Sun", "Mon", "Tue", "Wen", "Tur", "Fri", "Sat"]
+export const calDay = ['Sun', 'Mon', 'Tue', 'Wen', 'Tur', 'Fri', 'Sat']
 
 export const getToday = (date: Date, type: string) => {
-    let tmpData = getWeek(date);
-    if (type === "day") {
-        return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} ${calDay[date.getDay()]}`;
-    } else if (type === "week") {
+    let tmpData = getWeek(date)
+    if (type === 'day') {
+        return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} ${calDay[date.getDay()]}`
+    } else if (type === 'week') {
         if (tmpData.endDate.getMonth() + 1 !== date.getMonth() + 1) {
-            return `${date.getFullYear()}.${date.getMonth() + 1} - ${tmpData.endDate.getMonth() + 1}`;
+            return `${date.getFullYear()}.${date.getMonth() + 1} - ${tmpData.endDate.getMonth() + 1}`
         } else if (tmpData.startDate.getMonth() + 1 !== date.getMonth() + 1) {
-            return `${date.getFullYear()}.${tmpData.startDate.getMonth() + 1} - ${date.getMonth() + 1} `;
+            return `${date.getFullYear()}.${tmpData.startDate.getMonth() + 1} - ${date.getMonth() + 1} `
         } else {
-            return `${date.getFullYear()}.${date.getMonth() + 1}`;
+            return `${date.getFullYear()}.${date.getMonth() + 1}`
         }
     } else {
-        return `${date.getFullYear()}.${date.getMonth() + 1}`;
+        return `${date.getFullYear()}.${date.getMonth() + 1}`
     }
 }
 
@@ -125,123 +125,113 @@ export default function CalanderSpace(props: any) {
             setOpenNum(-1);
         } else {
             setOpenNum(openNum + 1);
-        }
 
-    }, [ws?.readyState, openNum])
+        }
+    }, [openNum])
 
     useEffect(() => {
-        if (view === "month") {
-            if (tmpViewDay === undefined) return;
+        if (view === 'month') {
+            if (tmpViewDay === undefined) return
 
-            let tmpYear = tmpViewDay.getFullYear();
-            let tmpMonth = tmpViewDay.getMonth();
+            let tmpYear = tmpViewDay.getFullYear()
+            let tmpMonth = tmpViewDay.getMonth()
 
-            let newDate = new Date(tmpYear, tmpMonth, 1);
+            let newDate = new Date(tmpYear, tmpMonth, 1)
             setTmpViewDay(newDate)
         }
     }, [view])
 
-
     const returnValue: {
         [key: string]: JSX.Element
     } = {
-        day: <DayView today={today}
-            tmpViewDay={tmpViewDay}
-            schedule={calendarData}
-            setTmpViewDay={setTmpViewDay}
-            setView={setView}
-            setModal={setModal}
-        />,
-        week: <WeekView
-            today={today}
-            tmpViewDay={tmpViewDay}
-            schedule={calendarData}
-            setTmpViewDay={setTmpViewDay}
-            setView={setView}
-            setModal={setModal}
-        />,
-        month: <MonthView
-            today={today}
-            tmpViewDay={tmpViewDay}
-            schedule={calendarData}
-            setTmpViewDay={setTmpViewDay}
-            setView={setView}
-            setModal={setModal}
-        />
+        day: <DayView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setView={setView} setModal={setModal} />,
+        week: <WeekView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setView={setView} setModal={setModal} />,
+        month: <MonthView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setView={setView} setModal={setModal} />,
     }
 
-    return <div className={classes.wrapper}>
-        <div className={classes.calendarContent}>
-            <div className={classes.topbar}>
-                <div className={classes.changeday}>
-                    <IconButton onClick={() => {
-                        if (view === "day") {
-                            let tmpData = cloneDeep(tmpViewDay);
-                            tmpData.setDate(tmpViewDay.getDate() - 1)
-                            setTmpViewDay(tmpData)
-                        } else if (view === "week") {
-                            let tmpData = cloneDeep(tmpViewDay);
-                            tmpData.setDate(tmpViewDay.getDate() - 7)
-                            setTmpViewDay(tmpData)
-                        } else {
-                            let tmpData = cloneDeep(tmpViewDay);
-                            tmpData.setMonth(tmpData.getMonth() - 1);
-                            setTmpViewDay(tmpData)
-                        }
-                    }}>
-                        <ArrowBackIosOutlined className={classes.iconcolor} />
-                    </IconButton>
-                </div>
-                <div className={classes.today}>
-                    <div className={clsx(classes.todaytext, getToday(today, "day") === getToday(tmpViewDay, "day") && classes.highlightTodayText)} onClick={() => {
-                        setTmpViewDay(today);
-                    }}>
-                        {getToday(tmpViewDay, view)}
-                    </div>
-                    <div className={classes.changeview}>
-                        <select className={classes.selectview}
-                            value={view}
-                            onChange={(e) => {
-                                setView(e.target.value)
+    return (
+        <div className={classes.wrapper}>
+            <div className={classes.calendarContent}>
+                <div className={classes.topbar}>
+                    <div className={classes.changeday}>
+                        <IconButton
+                            onClick={() => {
+                                if (view === 'day') {
+                                    let tmpData = cloneDeep(tmpViewDay)
+                                    tmpData.setDate(tmpViewDay.getDate() - 1)
+                                    setTmpViewDay(tmpData)
+                                } else if (view === 'week') {
+                                    let tmpData = cloneDeep(tmpViewDay)
+                                    tmpData.setDate(tmpViewDay.getDate() - 7)
+                                    setTmpViewDay(tmpData)
+                                } else {
+                                    let tmpData = cloneDeep(tmpViewDay)
+                                    tmpData.setMonth(tmpData.getMonth() - 1)
+                                    setTmpViewDay(tmpData)
+                                }
                             }}
                         >
-                            {viewData.map((v) => {
-                                return <option key={v} value={v}>{v}</option>
-                            })}
-                        </select>
+                            <ArrowBackIosOutlined className={classes.iconcolor} />
+                        </IconButton>
+                    </div>
+                    <div className={classes.today}>
+                        <div
+                            className={clsx(classes.todaytext, getToday(today, 'day') === getToday(tmpViewDay, 'day') && classes.highlightTodayText)}
+                            onClick={() => {
+                                setTmpViewDay(today)
+                            }}
+                        >
+                            {getToday(tmpViewDay, view)}
+                        </div>
+                        <div className={classes.changeview}>
+                            <select
+                                className={classes.selectview}
+                                value={view}
+                                onChange={(e) => {
+                                    setView(e.target.value)
+                                }}
+                            >
+                                {viewData.map((v) => {
+                                    return (
+                                        <option key={v} value={v}>
+                                            {v}
+                                        </option>
+                                    )
+                                })}
+                            </select>
+                        </div>
+                    </div>
+                    <div className={classes.changeday}>
+                        <IconButton
+                            onClick={() => {
+                                if (view === 'day') {
+                                    let tmpData = cloneDeep(tmpViewDay)
+                                    tmpData.setDate(tmpViewDay.getDate() + 1)
+                                    setTmpViewDay(tmpData)
+                                } else if (view === 'week') {
+                                    let tmpData = cloneDeep(tmpViewDay)
+                                    tmpData.setDate(tmpViewDay.getDate() + 7)
+                                    setTmpViewDay(tmpData)
+                                } else {
+                                    let tmpData = cloneDeep(tmpViewDay)
+                                    tmpData.setMonth(tmpData.getMonth() + 1)
+                                    setTmpViewDay(tmpData)
+                                }
+                            }}
+                        >
+                            <ArrowForwardIosOutlined className={classes.iconcolor} />
+                        </IconButton>
                     </div>
                 </div>
-                <div className={classes.changeday}>
-                    <IconButton onClick={() => {
-                        if (view === "day") {
-                            let tmpData = cloneDeep(tmpViewDay);
-                            tmpData.setDate(tmpViewDay.getDate() + 1)
-                            setTmpViewDay(tmpData)
-                        }
-                        else if (view === "week") {
-                            let tmpData = cloneDeep(tmpViewDay);
-                            tmpData.setDate(tmpViewDay.getDate() + 7)
-                            setTmpViewDay(tmpData)
-                        } else {
-                            let tmpData = cloneDeep(tmpViewDay);
-                            tmpData.setMonth(tmpData.getMonth() + 1);
-                            setTmpViewDay(tmpData)
-                        }
-                    }}>
-                        <ArrowForwardIosOutlined className={classes.iconcolor} />
-                    </IconButton>
-                </div>
+                <div className={classes.calendar}>{calendarData !== undefined && returnValue[view]}</div>
             </div>
-            <div className={classes.calendar}>
-                {calendarData !== undefined && returnValue[view]}
-            </div>
+            <CreateSchedule
+                modal={modal}
+                setModal={setModal}
+                kanbanList={kanbanList}
+                tmpDay={tmpViewDay}
+                milestoneList={milestoneList}
+            />
         </div>
-        <CreateSchedule
-            modal={modal}
-            setModal={setModal}
-            kanbanList={kanbanList}
-            tmpDay={tmpViewDay}
-            milestoneList={milestoneList}
-        />
-    </div>
+    )
 }

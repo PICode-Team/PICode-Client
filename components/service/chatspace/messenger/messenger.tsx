@@ -14,7 +14,7 @@ import { IUser } from '../../../../types/user.types'
 import MediaView from '../common/mediaView'
 
 interface IMessengerProps {
-  userId: string
+  userId: IUser
 }
 
 function Messenger(props: IMessengerProps) {
@@ -34,6 +34,7 @@ function Messenger(props: IMessengerProps) {
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [thread, setThread] = useState<IThread | null>(null)
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const handleOpenMessenger = () => {
@@ -202,13 +203,19 @@ function Messenger(props: IMessengerProps) {
   }, [])
 
   useEffect(() => {
-    ws.addEventListener('message', chatWebSocketHandler)
-    getChat()
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', chatWebSocketHandler)
+      getChat()
 
-    return () => {
-      ws.removeEventListener('message', chatWebSocketHandler)
+      return () => {
+        ws.removeEventListener('message', chatWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-  }, [ws?.readyState, target, messageList])
+  }, [wsCheck, target, messageList])
 
   if (open) {
     return (
@@ -217,7 +224,7 @@ function Messenger(props: IMessengerProps) {
           <Home channelList={channelList} setOpen={setOpen} setTarget={setTarget} />
         ) : (
           <Room
-            userId={userId}
+            userId={userId.userId}
             target={target}
             messageList={messageList}
             newMessage={newMessage}
@@ -229,7 +236,7 @@ function Messenger(props: IMessengerProps) {
             setMediaViewData={setMediaViewData}
           />
         )}
-        {thread !== null && <Thread userId={userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} setMediaViewData={setMediaViewData} />}
+        {thread !== null && <Thread userId={userId.userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} setMediaViewData={setMediaViewData} />}
         {mediaViewData !== null && <MediaView mediaViewData={mediaViewData} setMediaViewData={setMediaViewData} />}
       </React.Fragment>
     )

@@ -85,7 +85,7 @@ const userInfoStyle = makeStyles((theme: IThemeStyle) =>
     editIcon: {
       width: '20px',
       height: '20px',
-      color: theme.font.high.color,
+      color: '#ffffff',
     },
     defaultThumbnail: {
       width: '100%',
@@ -143,7 +143,7 @@ export default function UserInfo(props: IUserInfoProps) {
         </IconButton>
       </div>
       <div className={classes.content}>
-        <div className={classes.thumbnail} style={{ backgroundImage: `url('http://localhost:8000/api/temp/${userInfo?.userThumbnail}')` }}>
+        <div className={classes.thumbnail} style={{ backgroundImage: userInfo?.userThumbnail === undefined ? 'none' : `url('${process.env.NEXT_FE_API_URL}/api/temp/${userInfo.userThumbnail}` }}>
           <div className={classes.thumbnailEdit} onClick={handleEditThumbnail}>
             <Edit className={classes.editIcon} />
           </div>

@@ -44,7 +44,15 @@ function Card(props: ICardProps) {
   }
 
   return (
-    <div className={classse.card} draggable onDragStart={handleDradStartCard} onDragEnd={handleDradEndCard}>
+    <div
+      className={classse.card}
+      draggable
+      onDragStart={handleDradStartCard}
+      onDragEnd={handleDradEndCard}
+      onClick={() => {
+        window.location.href = `/issuespace/detail?issueUUID=${issue.uuid}`
+      }}
+    >
       <div className={classse.header}>
         <div className={classse.thumbnail}></div>
         <div className={classse.headerText}>
@@ -53,7 +61,7 @@ function Card(props: ICardProps) {
         </div>
       </div>
       <div className={classse.content}>{issue.content}</div>
-      <div className={classse.labelWrapper}>{issue.label !== undefined && <div className={classse.label}>{issue.label}</div>}</div>
+      <div className={classse.labelWrapper}>{issue.label !== '' && <div className={classse.label}>{issue.label}</div>}</div>
     </div>
   )
 }

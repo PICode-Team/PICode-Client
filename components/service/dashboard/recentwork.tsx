@@ -12,12 +12,12 @@ import { uuidv4 } from '../../context/uuidv4'
 import { fetchSet } from '../../context/fetch'
 import DeleteModal from '../../items/modal/detail/delete'
 import ExportWorkspace from '../../items/modal/detail/export'
-import RequestResult from '../../items/modal/detail/result'
+import Alert from '../../items/modal/alert'
 
-interface IRecentWorkProps { }
+interface IRecentWorkProps {}
 
 function RecentWork(props: IRecentWorkProps) {
-  const { } = props
+  const {} = props
   const classes = recentWorkStyle()
   const [workspaceData, setWorkspaceData] = useState<IWorkspaceSpec[]>([])
   const [itemNum, setItemNum] = useState<number>(0)
@@ -219,7 +219,7 @@ function RecentWork(props: IRecentWorkProps) {
       </div>
       {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" title="Delete Workspace" />}
       {openExport && modalInfo !== null && <ExportWorkspace modal={openExport} setModal={setOpenExport} workspaceInfo={modalInfo} />}
-      {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
+      {openResult && <Alert modal={openResult} setModal={setOpenResult} title="Workspace" description={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
     </div>
   )
 }

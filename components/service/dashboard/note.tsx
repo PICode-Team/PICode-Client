@@ -10,6 +10,7 @@ function NoteView(props: INoteViewProps) {
   const classes = noteStyle()
   const [fileView, setFileView] = useState<IFileView[] | null>(null)
   const [userId, setUserId] = useState<string>('')
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const getNote = () => {
@@ -38,7 +39,9 @@ function NoteView(props: INoteViewProps) {
     }
   }
 
-  const handleLinkNote = () => {}
+  const handleLinkNote = () => {
+    window.location.href = '/notespace/'
+  }
 
   useEffect(() => {
     const value = window.localStorage.getItem('userId')
@@ -46,19 +49,17 @@ function NoteView(props: INoteViewProps) {
   }, [])
 
   useEffect(() => {
-    ws.addEventListener('message', noteWebSocketHandler)
-    getNote()
-    return () => {
-      ws.removeEventListener('message', noteWebSocketHandler)
-    }
-  }, [ws?.readyState])
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (fileView === null) {
-        setFileView([])
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', noteWebSocketHandler)
+      getNote()
+      return () => {
+        ws.removeEventListener('message', noteWebSocketHandler)
       }
-    }, 100)
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
+    }
   }, [])
 
   return (

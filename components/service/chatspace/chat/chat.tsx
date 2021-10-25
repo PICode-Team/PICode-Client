@@ -11,6 +11,7 @@ import CreateChannel from '../common/createChannel'
 import ResponsiveChat from './responsive/resposiveChat'
 import { useWs } from '../../../context/websocket'
 import MediaView from '../common/mediaView'
+import { useRouter } from 'next/router'
 
 interface IChatProps {
   toggle: boolean
@@ -27,9 +28,11 @@ function Chat(props: IChatProps) {
   const [target, setTarget] = useState<IChannel | null>(null)
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [modal, setModal] = useState<boolean>(false)
-  const [userId, setUserId] = useState<string | null>(null)
+  const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
+  const router = useRouter()
 
   const getUserList = async () => {
     const response = await fetchSet('/userList', 'GET', false)
@@ -39,6 +42,19 @@ function Chat(props: IChatProps) {
       setUserList(user)
     }
   }
+
+  const getUserId = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { code, user } = await response.json()
+
+    if (code === 200) {
+      setUserInfo(user)
+    }
+  }
+
+  useEffect(() => {
+    getUserId()
+  }, [])
 
   const getChat = () => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
@@ -161,7 +177,7 @@ function Chat(props: IChatProps) {
 
             setMessageList(messages)
           } else {
-            if (message.data.sender !== userId) {
+            if (message.data.sender !== userInfo?.userId) {
               setNewMessage(true)
               setTimeout(() => {
                 setNewMessage(false)
@@ -211,24 +227,34 @@ function Chat(props: IChatProps) {
   }, [])
 
   useEffect(() => {
-    if (typeof window === undefined) return
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', chatWebSocketHandler)
+      if (channelList.length === 0) {
+        getChat()
+      }
 
-    const value = window.localStorage.getItem('userId')
-    if (value === null) return
-
-    setUserId(value)
-  }, [])
+      return () => {
+        ws.removeEventListener('message', chatWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
+    }
+  }, [wsCheck, target, messageList, channelList, userInfo])
 
   useEffect(() => {
-    ws.addEventListener('message', chatWebSocketHandler)
-    if (channelList.length === 0) {
-      getChat()
-    }
+    setWsCheck(0)
+  }, [target, messageList, channelList, userInfo])
 
-    return () => {
-      ws.removeEventListener('message', chatWebSocketHandler)
+  useEffect(() => {
+    if (router.query.target !== undefined) {
+      const findTarget = channelList.find((v) => router.query.target === v.chatName)
+      if (findTarget !== undefined) {
+        setTarget(findTarget)
+      }
     }
-  }, [ws?.readyState, target, messageList, channelList])
+  }, [])
 
   return (
     <React.Fragment>

@@ -40,6 +40,20 @@ function CreateChannel(props: ICreateChannelProps) {
   const ws: any = useWs()
 
   const handleSubmit = () => {
+    if (isDM === true) {
+      if (name === '') {
+        alert('Please fill in the empty space.')
+
+        return
+      }
+    } else {
+      if (payload.name === '') {
+        alert('Please fill in the empty space.')
+
+        return
+      }
+    }
+
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -48,7 +62,7 @@ function CreateChannel(props: ICreateChannelProps) {
           data: {
             ...payload,
             target: isDM ? name : `#${payload.name}`,
-            chatParticipant: isDM ? undefined : payload.participants,
+            chatParticipant: isDM ? [name] : payload.participants,
           },
         })
       )

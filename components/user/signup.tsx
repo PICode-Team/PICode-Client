@@ -10,6 +10,7 @@ import { signupStyle } from '../../styles/user/signup'
 import CustomTextField from '../items/input/textfield'
 import Layout from './layout'
 import { fetchSet } from '../context/fetch'
+import Alert from '../items/modal/alert'
 
 interface IValidate {
   email: boolean
@@ -36,6 +37,7 @@ function SignUp() {
   const [imageUUID, setImageUUID] = useState<string>('')
   const [info, setInfo] = useState<ISignUpInfo>(initialInfoState)
   const [activeStep, setActiveStep] = useState<number>(0)
+  const [modal, setModal] = useState<boolean>(false)
   const [validate, setValidate] = useState<IValidate>({
     email: true,
     pw: true,
@@ -147,14 +149,25 @@ function SignUp() {
   }
 
   const handleClickSubmitButton = () => {
+    if (activeStep === 0) {
+      if (info.id === '' || info.password === '' || info.confirmPassword === '') {
+        setModal(true)
+        return
+      }
+    }
+
+    if (activeStep === 1) {
+      if (info.name === '') {
+        setModal(true)
+        return
+      }
+    }
+
     if (activeStep === 2) {
-      if (info.id === '') return
-      if (info.name === '') return
-      if (info.password === '' || info.password !== info.confirmPassword) return
-      if (info.confirmPassword === '') return
       submitSignUp()
       return
     }
+
     setActiveStep(activeStep + 1)
   }
 
@@ -199,6 +212,7 @@ function SignUp() {
             <a>If you have account&nbsp;&nbsp;→</a>
           </Link>
         </div>
+        <Alert modal={modal} setModal={setModal} title="Empty Space" description={info.password !== info.confirmPassword ? `password doesn't match.` : 'Please fill in the essential information.'} />
       </React.Fragment>
     </Layout>
   )

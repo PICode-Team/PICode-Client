@@ -12,7 +12,7 @@ import CreateMilestone from './create/milestone'
 import CreateKanban from './create/kanban'
 import Board from './board'
 import Milestone from './milestone'
-import RequestResult from '../../items/modal/detail/result'
+import Alert from '../../items/modal/alert'
 
 interface IManageSpaceProps {}
 
@@ -20,7 +20,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
   const classes = manageStyle()
   const router = useRouter()
   const manageMenu = ['Kanban', 'Milestone']
-  const [menu, setMenu] = useState<string>('Milestone')
+  const [menu, setMenu] = useState<string>('Kanban')
   const [modal, setModal] = useState<boolean>(false)
   const [kanbanList, setKanbanList] = useState<IKanban[]>([])
   const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
@@ -28,6 +28,8 @@ export default function ManageSpace(props: IManageSpaceProps) {
   const [modalMile, setModalMile] = useState<IMilestone | null>(null)
   const [openResult, setOpenResult] = useState<boolean>(false)
   const [resultStatus, setResultStatus] = useState<boolean>(false)
+  const [wsCheck, setWsCheck] = useState<number>(0)
+  const [behaviorType, setBehaviorType] = useState<string>('')
   const ws: any = useWs()
   const { workspaceId } = router.query
 
@@ -73,6 +75,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
           getKanbanList()
           break
         case 'deleteKanban':
+          setBehaviorType('Kanban')
           if (message.data.code / 100 === 2) {
             setResultStatus(true)
             getKanbanList()
@@ -99,12 +102,14 @@ export default function ManageSpace(props: IManageSpaceProps) {
           break
 
         case 'deleteMilestone':
+          setBehaviorType('Milestone')
           if (message.data.code / 100 === 2) {
             setResultStatus(true)
             getMileList()
           } else {
             setResultStatus(false)
           }
+          setOpenResult(true)
           break
         default:
       }
@@ -112,27 +117,21 @@ export default function ManageSpace(props: IManageSpaceProps) {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
-
-    if (kanbanList.length === 0 && mileList.length === 0) {
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
       getKanbanList()
       getMileList()
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setWsCheck(wsCheck + 1)
     }
-
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
-    }
-  }, [ws?.readyState])
+  }, [wsCheck])
 
   const handleChangeMenu = (name: string) => () => {
     setMenu(name)
   }
-
-  useEffect(() => {
-    setTimeout(() => {
-      setMenu('Kanban')
-    }, 100)
-  }, [])
 
   return (
     <div className={classes.manage}>
@@ -166,7 +165,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
       ) : (
         <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} workspaceId={workspaceId as string} />
       )}
-      {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
+      {openResult && <Alert modal={openResult} setModal={setOpenResult} title={behaviorType} description={resultStatus ? `Success Deleting ${behaviorType}` : `Error in Deleting ${behaviorType}`} />}
     </div>
   )
 }

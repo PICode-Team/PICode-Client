@@ -99,7 +99,11 @@ function CreateIssue(props: ICreateIssueProps) {
   }
 
   const handleSubmit = () => {
-    console.log(payload)
+    if (payload.title === '' || (kanbanUUID === undefined && tempUUID === '')) {
+      alert('Please fill in the empty space.')
+
+      return
+    }
 
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
@@ -124,7 +128,14 @@ function CreateIssue(props: ICreateIssueProps) {
 
   useEffect(() => {
     if (mileList.length > 0) {
-      setOptionList(mileList.reduce((a: IMilestoneSelect[], c: IMilestone) => [...a, { name: c.title, value: c.uuid }], []))
+      setOptionList(
+        mileList.reduce((a: IMilestoneSelect[], c: IMilestone) => {
+          if (c === null) {
+            return a
+          }
+          return [...a, { name: c.title, value: c.uuid }]
+        }, [])
+      )
     }
   }, [mileList])
 
@@ -153,7 +164,7 @@ function CreateIssue(props: ICreateIssueProps) {
       <React.Fragment>
         <CustomTextInput id="title" value={payload.title} label="Title" placeholder="title" onChange={handlePayload} />
         <CustomTextarea id="content" value={payload.content} label="Content" placeholder="content" onChange={handlePayload} />
-        <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />
+        <CustomUserInput value={userList} setValue={setUserList} label="Assignees" />
         <CustomTextInput id="label" value={payload.label} label="Label" placeholder="label" onChange={handlePayload} />
         {kanbanUUID === undefined && kanbanList !== undefined && (
           <CustomSelect
@@ -162,6 +173,9 @@ function CreateIssue(props: ICreateIssueProps) {
             label="Kanban"
             onChange={handleTempUUID}
             optionList={kanbanList.reduce((a: { name: string; value: string }[], c) => {
+              if (c === null) {
+                return a
+              }
               return [...a, { name: c.title, value: c.uuid }]
             }, [])}
           />

@@ -10,6 +10,7 @@ function IssueView(props: IIssueViewProps) {
   const classes = issueStyle()
   const [kanbanList, setKanbanList] = useState<string[]>([])
   const [issueList, setIssueList] = useState<IIssue[] | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const getKanban = () => {
@@ -55,22 +56,34 @@ function IssueView(props: IIssueViewProps) {
     } else if (message.category === 'issue') {
       switch (message.type) {
         case 'getIssue':
-          if (message.data.issues.length > 0) setIssueList([message.data.issues])
+          if (message.data.issues.length > 0) setIssueList(message.data.issues)
           break
       }
     }
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
-    getKanban()
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
+    if (wsCheck < 0) return
+
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
+      getKanban()
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-  }, [ws?.readyState])
+  }, [wsCheck])
 
   useEffect(() => {
-    kanbanList.map((v) => getIssue(v))
+    kanbanList.map((v: any) => {
+      if (v !== null) {
+        getIssue(v.uuid)
+      }
+    })
   }, [kanbanList])
 
   useEffect(() => {
@@ -81,7 +94,9 @@ function IssueView(props: IIssueViewProps) {
     }, 100)
   }, [])
 
-  const handleLinkIssue = () => {}
+  const handleLinkIssue = (issueUUID: string) => () => {
+    window.location.href = `/issuespace/detail?issueUUID=${issueUUID}`
+  }
 
   return (
     <div className={classes.issue}>
@@ -90,16 +105,13 @@ function IssueView(props: IIssueViewProps) {
         {issueList !== null && issueList.length > 0 ? (
           issueList.map((v, i) => {
             return (
-              <div key={`dashboard-issue-${i}`} className={classes.card} onClick={handleLinkIssue}>
+              <div key={`dashboard-issue-${i}`} className={classes.card} onClick={handleLinkIssue(v.uuid)}>
                 <div className={classes.top}>
-                  <div className={classes.thumbnail}></div>
                   <div className={classes.issueName}>
                     <div className={classes.issueTitle}>{v.title}</div>
                     <div className={classes.issueId}>#{v.issueId} Issue</div>
                   </div>
-                  <div className={classes.issueContentWrapper}>
-                    <div className={classes.issueContent}>{v.content ?? 'this issue has no content'}</div>
-                  </div>
+                  <div className={classes.issueContentWrapper}>{v.content ?? 'this issue has no content'}</div>
                 </div>
 
                 <div className={classes.bottom}>

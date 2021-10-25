@@ -1,42 +1,54 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { issueDetailStyle } from '../../../styles/service/issuespace/issue'
-import { IIssue } from '../../../types/issue.types'
 import { useWs } from '../../context/websocket'
+
+interface IIssueDetail {
+  assigner: string[]
+  column: string
+  content: string
+  creation: string
+  creator: string
+  dueDate: string
+  issueId: number
+  kanban: string
+  label: string
+  milestone: string
+  startDate: string
+  title: string
+  uuid: string
+}
 
 function IssueDetail() {
   const classes = issueDetailStyle()
   const router = useRouter()
   const { issueUUID } = router.query
-  const [issueInfo, setIssueInfo] = useState<IIssue | null>(null)
+  const [issueInfo, setIssueInfo] = useState<IIssueDetail | null>(null)
+  const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
-  const getIssue = (issueUUID: string) => {
+  const getIssueDetail = (issueUUID: string) => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'issue',
-          type: 'getIssue',
+          type: 'getIssueDetail',
           data: {
-            option: {
-              issueUUID,
-            },
+            issueUUID,
           },
         })
       )
     }
   }
 
-  const issueWebSocketHandler = async (msg: any) => {
+  const issueWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
 
     if (message.category === 'issue') {
       switch (message.type) {
-        case 'getIssue':
-          console.log(message.data.issue)
-
-          if (message.data.code === 200) {
-            setIssueInfo(message.data.issue)
+        case 'getIssueDetail':
+          if (message.data !== undefined) {
+            setIssueInfo(message.data)
           }
           break
       }
@@ -44,50 +56,58 @@ function IssueDetail() {
   }
 
   useEffect(() => {
-    ws.addEventListener('message', issueWebSocketHandler)
+    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+      ws.addEventListener('message', issueWebSocketHandler)
+      getIssueDetail(issueUUID as string)
 
-    if (issueInfo === null) {
-      getIssue(issueUUID as string)
+      return () => {
+        ws.removeEventListener('message', issueWebSocketHandler)
+      }
+    } else {
+      setTimeout(() => {
+        setWsCheck(wsCheck + 1)
+      }, 100)
     }
-    return () => {
-      ws.removeEventListener('message', issueWebSocketHandler)
-    }
-  }, [ws?.readyState])
+  }, [wsCheck])
 
   return (
     <div className={classes.detail}>
       <div className={classes.header}>
         <div>
-          <span className={classes.title}>{issueInfo?.title ?? ''}</span>
-          <span className={classes.issueNumber}>{issueInfo?.issueId ?? ''}</span>
+          <span className={classes.title}>{issueInfo !== null && issueInfo.title}</span>
+          <span className={classes.issueNumber}>#{issueInfo !== null && issueInfo.issueId}</span>
         </div>
         <div>
           <span className={`${classes.activeStatus} ${classes.open}`}>Open</span>
-          <span className={classes.creation}>{issueInfo?.creator ?? ''} opened this issue</span>
+          <span className={classes.creation}>{issueInfo !== null && issueInfo.creator} opened this issue</span>
         </div>
       </div>
 
       <div className={classes.wrapper}>
         <div className={classes.item}>
           <div className={classes.key}>Assignees</div>
-          <div className={classes.value}>{issueInfo?.assigner ?? ''}</div>
+          <div className={classes.value}>{issueInfo !== null && (issueInfo.assigner.length === 0 ? 'Empty' : issueInfo.assigner.join(', '))}</div>
         </div>
         <div className={classes.item}>
           <div className={classes.key}>Labels</div>
-          <div className={classes.value}>{issueInfo?.label ?? ''}</div>
+          <div className={classes.value}>{issueInfo !== null && (issueInfo.label === '' ? 'Empty' : issueInfo.label)}</div>
         </div>
         <div className={classes.item}>
           <div className={classes.key}>Kanban Board</div>
-          <div className={classes.value}>{1}</div>
+          <div className={classes.value}>{issueInfo !== null && issueInfo.kanban}</div>
+        </div>
+        <div className={classes.item}>
+          <div className={classes.key}>Column</div>
+          <div className={classes.value}>{issueInfo !== null && issueInfo.column}</div>
         </div>
         <div className={classes.item}>
           <div className={classes.key}>Milestone</div>
-          <div className={classes.value}>{2}</div>
+          <div className={classes.value}>{issueInfo !== null && (issueInfo.milestone === '' ? 'Empty' : issueInfo.milestone)}</div>
         </div>
 
         <div className={classes.divider} />
 
-        <div className={classes.description}>{issueInfo?.content ?? ''}</div>
+        <div className={classes.description}>{issueInfo !== null && issueInfo.content}</div>
       </div>
     </div>
   )

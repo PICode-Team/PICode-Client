@@ -21,14 +21,13 @@ function Board(props: IBoardProps) {
   const router = useRouter()
   const [kanbanIssue, setKanbanIssue] = useState<string>('')
   const [openDelete, setOpenDelete] = useState<boolean>(false)
-  const [resultStatus, setResultStatus] = useState<boolean>(true)
   const [name, setName] = useState<string>('')
   const [uuid, setUuid] = useState<string>('')
 
-  const handleLinkIssuePage = (uuid: string) => (event: React.MouseEvent) => {
+  const handleLinkIssuePage = (workspaceId: string, uuid: string) => (event: React.MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    window.location.href = router.route + '/issue' + router.asPath.split(router.route)[1] + `&kanbanUUID=${uuid}`
+    window.location.href = `/issuespace/issue?workspaceId=${workspaceId}&kanbanUUID=${uuid}`
   }
 
   const handleEditBoard = (kanban: IKanban) => (event: React.MouseEvent) => {
@@ -72,7 +71,7 @@ function Board(props: IBoardProps) {
           {kanbanList !== null &&
             kanbanList.map((v, i) => {
               return (
-                <div key={v.uuid} onClick={handleLinkIssuePage(v.uuid)} className={classes.item}>
+                <div key={v.uuid} onClick={handleLinkIssuePage(v.workspaceId, v.uuid)} className={classes.item}>
                   <div className={classes.iconLayout}>
                     <div className={classes.title}>{v.title}</div>
                     <div className={classes.iconWrapper}>

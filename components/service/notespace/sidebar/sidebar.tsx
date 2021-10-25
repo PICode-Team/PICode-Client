@@ -41,17 +41,6 @@ function Sidebar(props: INoteSidebar) {
   const classes = noteStyle()
   const ws: any = useWs()
 
-  const [userId, setUserId] = useState<string>('')
-
-  useEffect(() => {
-    if (typeof window === undefined) return
-
-    const value = window.localStorage.getItem('userId')
-    if (value === null) return
-
-    setUserId(value)
-  }, [])
-
   if (fileViewList === null) return <></>
   if (ws.readyState === WebSocket.CONNECTING) return <></>
 

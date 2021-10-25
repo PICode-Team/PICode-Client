@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { activitybarStyle } from '../../../../../styles/service/chatspace/chat'
-import { IChannel, IThread } from '../../../../../types/chat.types'
+import { IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
-import { useWs } from '../../../../context/websocket'
+import { fetchSet } from '../../../../context/fetch'
 import Content from './content'
 import Header from './header'
 
@@ -18,46 +18,35 @@ function Activitybar(props: IActivitybarProps) {
   const classes = activitybarStyle()
   const threadMessageRef = useRef<HTMLInputElement>(null)
   const threadEndRef = useRef<HTMLInputElement>(null)
-  const [userId, setUserId] = useState<string>('')
-  const ws: any = useWs()
+  const [userInfo, setUserInfo] = useState<IUser | null>(null)
 
-  const sendMessage = (target: string, message: string, parentChatId: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
-      ws.send(
-        JSON.stringify({
-          category: 'chat',
-          type: 'sendMessage',
-          data: {
-            target,
-            message,
-            parentChatId,
-          },
-        })
-      )
+  const getUserId = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { code, user } = await response.json()
+
+    if (code === 200) {
+      setUserInfo(user)
     }
   }
 
   useEffect(() => {
-    if (typeof window === undefined) return
-
-    const value = window.localStorage.getItem('userId')
-    if (value === null) return
-
-    setUserId(value)
+    getUserId()
   }, [])
 
   return (
     <div className={classes.activitybar}>
       <Header thread={thread} setThread={setThread} />
-      <Content
-        thread={thread}
-        userId={userId}
-        threadMessageRef={threadMessageRef}
-        threadEndRef={threadEndRef}
-        setThread={setThread}
-        particiapntList={particiapntList}
-        setMediaViewData={setMediaViewData}
-      />
+      {userInfo !== null && (
+        <Content
+          thread={thread}
+          userId={userInfo.userId}
+          threadMessageRef={threadMessageRef}
+          threadEndRef={threadEndRef}
+          setThread={setThread}
+          particiapntList={particiapntList}
+          setMediaViewData={setMediaViewData}
+        />
+      )}
     </div>
   )
 }
