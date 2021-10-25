@@ -75,6 +75,12 @@ function CreateKanban(props: ICreateKanbanProps) {
   }
 
   const handleSubmit = (isCreate: boolean) => () => {
+    if (payload.title === '' || (workspaceId === undefined && tempWorkspaceId === '')) {
+      alert('Please fill in the empty space.')
+
+      return
+    }
+
     if (isCreate === true) {
       createKanban(payload, workspaceId ?? tempWorkspaceId)
     } else {
