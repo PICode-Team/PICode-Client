@@ -70,6 +70,12 @@ function CreateMilestone(props: ICreateMilestoneProps) {
   }
 
   const handleSubmit = (isCreate: boolean) => () => {
+    if (payload.title === '' || (workspaceId === undefined && tempWorkspaceId === '') || payload.startDate === '' || payload.endDate === '') {
+      alert('Please fill in the empty space.')
+
+      return
+    }
+
     if (isCreate) {
       createMilestone(payload, workspaceId ?? tempWorkspaceId)
     } else {

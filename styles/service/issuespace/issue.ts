@@ -271,6 +271,7 @@ export const manageStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'center',
       height: 'calc(100% - 60px)',
       padding: '20px',
+      overflow: 'auto',
     },
     search: {
       width: '30%',

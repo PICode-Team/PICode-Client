@@ -23,7 +23,6 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
       gridTemplateColumns: 'repeat(3, calc(33% - 16px))',
       gap: '28px 28px',
       padding: '30px',
-      gridTemplateRows: 'repeat(4, calc(25% - 21px))',
       overflow: 'auto',
       '@media screen and (max-width: 960px)': {
         gridTemplateColumns: 'repeat(2, calc(50% - 14px))',
@@ -44,6 +43,7 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '6px',
       padding: '20px',
       display: 'flex',
+      height: 'fit-content',
       flexDirection: 'column',
       '&:hover': {
         backgroundColor: theme.backgroundColor.step1,
@@ -90,7 +90,7 @@ export const defaultStyle = makeStyles((theme: IThemeStyle) =>
       width: '100%',
       display: 'flex',
       justifyContent: 'space-between',
-      marginTop: '30px',
+      marginTop: '20px',
       flex: 1,
       alignItems: 'flex-end',
     },

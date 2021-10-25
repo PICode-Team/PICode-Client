@@ -99,6 +99,12 @@ function CreateIssue(props: ICreateIssueProps) {
   }
 
   const handleSubmit = () => {
+    if (payload.title === '' || (kanbanUUID === undefined && tempUUID === '')) {
+      alert('Please fill in the empty space.')
+
+      return
+    }
+
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
@@ -158,7 +164,7 @@ function CreateIssue(props: ICreateIssueProps) {
       <React.Fragment>
         <CustomTextInput id="title" value={payload.title} label="Title" placeholder="title" onChange={handlePayload} />
         <CustomTextarea id="content" value={payload.content} label="Content" placeholder="content" onChange={handlePayload} />
-        <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />
+        <CustomUserInput value={userList} setValue={setUserList} label="Assignees" />
         <CustomTextInput id="label" value={payload.label} label="Label" placeholder="label" onChange={handlePayload} />
         {kanbanUUID === undefined && kanbanList !== undefined && (
           <CustomSelect
