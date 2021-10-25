@@ -162,17 +162,13 @@ export default function AlertDialog(props: IAlertDialogProps) {
 
   useEffect(() => {
     ws.addEventListener('message', alertWebSocketHandler)
-    getAlarm()
+    if (alarmList === null) {
+      getAlarm()
+    }
     return () => {
       ws.removeEventListener('message', alertWebSocketHandler)
     }
   }, [ws?.readyState, alarmList])
-
-  useEffect(() => {
-    if (alarmList === null) {
-      setAlarmList([])
-    }
-  }, [])
 
   return (
     <React.Fragment>
