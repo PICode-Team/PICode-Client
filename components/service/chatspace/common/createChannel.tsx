@@ -48,7 +48,7 @@ function CreateChannel(props: ICreateChannelProps) {
           data: {
             ...payload,
             target: isDM ? name : `#${payload.name}`,
-            chatParticipant: isDM ? undefined : payload.participants,
+            chatParticipant: isDM ? [name] : payload.participants,
           },
         })
       )

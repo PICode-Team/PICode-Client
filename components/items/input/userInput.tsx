@@ -37,6 +37,10 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       alignItems: 'center',
       color: '#757575',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      fontSize: '13.3px',
       '&:hover': {
         filter: theme.brightness.step2,
       },
@@ -193,7 +197,7 @@ function CustomUserInput(props: IUserInputProps) {
               ))}
             </React.Fragment>
           ) : (
-            `Input Workspace Participant`
+            `input workspace participant`
           )}
         </div>
       </div>
