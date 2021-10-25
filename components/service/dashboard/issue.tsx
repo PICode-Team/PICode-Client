@@ -70,7 +70,11 @@ function IssueView(props: IIssueViewProps) {
   }, [ws?.readyState])
 
   useEffect(() => {
-    kanbanList.map((v) => getIssue(v))
+    kanbanList.map((v: any) => {
+      if (v !== null) {
+        getIssue(v.uuid)
+      }
+    })
   }, [kanbanList])
 
   useEffect(() => {
