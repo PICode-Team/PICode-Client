@@ -48,8 +48,6 @@ function IssueDetail() {
       switch (message.type) {
         case 'getIssueDetail':
           if (message.data !== undefined) {
-            console.log(message.data)
-
             setIssueInfo(message.data)
           }
           break

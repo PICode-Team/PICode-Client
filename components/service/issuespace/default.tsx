@@ -82,8 +82,6 @@ function DefaultIssue() {
     if (message.category === 'kanban') {
       switch (message.type) {
         case 'getKanban':
-          console.log(message.data)
-
           if (message.data.kanbans.length > 0) {
             setKanbanList(message.data.kanbans)
           }

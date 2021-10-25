@@ -151,8 +151,6 @@ function SignUp() {
   const handleClickSubmitButton = () => {
     if (activeStep === 0) {
       if (info.id === '' || info.password === '' || info.confirmPassword === '') {
-        console.log(info)
-
         setModal(true)
         return
       }
