@@ -3,6 +3,7 @@ import { contentStyle } from '../../../../../styles/service/chatspace/chat'
 
 import { IChannel, IChat, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
+import { fetchSet } from '../../../../context/fetch'
 import Boundary from '../../common/boundary'
 import ChatInput from '../../common/chatInput'
 import MessageBox from '../../common/messageBox'
@@ -56,23 +57,27 @@ function Content(props: IContentProps) {
   const classes = contentStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
-  const [userId, setUserId] = useState<string>('')
+  const [userInfo, setUserInfo] = useState<IUser | null>(null)
+
+  const getUserId = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { code, user } = await response.json()
+
+    if (code === 200) {
+      setUserInfo(user)
+    }
+  }
 
   useEffect(() => {
-    if (typeof window === undefined) return
-
-    const value = window.localStorage.getItem('userId')
-    if (value === null) return
-
-    setUserId(value)
-  }, [])
+    getUserId()
+  })
 
   return (
     <div className={classes.contentWrapper}>
       <Header target={target} />
       <div className={classes.content}>
         <div className={classes.contentBox}>
-          {renderMessage(messageList, userId, false, setThread, target, particiapntList, setMediaViewData)}
+          {userInfo !== null && renderMessage(messageList, userInfo.userId, false, setThread, target, particiapntList, setMediaViewData)}
           <div ref={endRef} />
         </div>
       </div>

@@ -99,8 +99,6 @@ function CreateIssue(props: ICreateIssueProps) {
   }
 
   const handleSubmit = () => {
-    console.log(payload)
-
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({

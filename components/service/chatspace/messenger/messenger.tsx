@@ -14,7 +14,7 @@ import { IUser } from '../../../../types/user.types'
 import MediaView from '../common/mediaView'
 
 interface IMessengerProps {
-  userId: string
+  userId: IUser
 }
 
 function Messenger(props: IMessengerProps) {
@@ -217,7 +217,7 @@ function Messenger(props: IMessengerProps) {
           <Home channelList={channelList} setOpen={setOpen} setTarget={setTarget} />
         ) : (
           <Room
-            userId={userId}
+            userId={userId.userId}
             target={target}
             messageList={messageList}
             newMessage={newMessage}
@@ -229,7 +229,7 @@ function Messenger(props: IMessengerProps) {
             setMediaViewData={setMediaViewData}
           />
         )}
-        {thread !== null && <Thread userId={userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} setMediaViewData={setMediaViewData} />}
+        {thread !== null && <Thread userId={userId.userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} setMediaViewData={setMediaViewData} />}
         {mediaViewData !== null && <MediaView mediaViewData={mediaViewData} setMediaViewData={setMediaViewData} />}
       </React.Fragment>
     )

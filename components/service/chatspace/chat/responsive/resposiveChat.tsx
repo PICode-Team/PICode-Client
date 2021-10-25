@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { responsiveChatStyle } from '../../../../../styles/service/chatspace/chat'
 import { IChannel, IChat, IThread } from '../../../../../types/chat.types'
 import { IUser } from '../../../../../types/user.types'
+import { fetchSet } from '../../../../context/fetch'
 import Content from './content'
 import Home from './home'
 import Thread from './thread'
@@ -23,22 +24,30 @@ interface IResponsiveProps {
 function ResponsiveChat(props: IResponsiveProps) {
   const { target, thread } = props
   const classes = responsiveChatStyle()
-  const [userId, setUserId] = useState<string>('')
+  const [userInfo, setUserInfo] = useState<IUser | null>(null)
+
+  const getUserId = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { code, user } = await response.json()
+
+    if (code === 200) {
+      setUserInfo(user)
+    }
+  }
 
   useEffect(() => {
-    if (typeof window === undefined) return
-
-    const value = window.localStorage.getItem('userId')
-    if (value === null) return
-
-    setUserId(value)
-  }, [])
+    getUserId()
+  })
 
   return (
     <div className={classes.responsiveChat}>
       <Home {...props} />
-      {target !== null ? <Content {...props} target={target as IChannel} userId={userId} /> : <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>}
-      {target !== null && thread !== null && <Thread {...props} thread={thread as IThread} userId={userId} />}
+      {target !== null && userInfo !== null ? (
+        <Content {...props} target={target as IChannel} userId={userInfo.userId} />
+      ) : (
+        <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
+      )}
+      {target !== null && thread !== null && userInfo !== null && <Thread {...props} thread={thread as IThread} userId={userInfo.userId} />}
     </div>
   )
 }

@@ -33,8 +33,6 @@ function IssueDetail() {
     if (message.category === 'issue') {
       switch (message.type) {
         case 'getIssue':
-          console.log(message.data.issue)
-
           if (message.data.code === 200) {
             setIssueInfo(message.data.issue)
           }

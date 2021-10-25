@@ -27,7 +27,7 @@ function Chat(props: IChatProps) {
   const [target, setTarget] = useState<IChannel | null>(null)
   const [newMessage, setNewMessage] = useState<boolean>(false)
   const [modal, setModal] = useState<boolean>(false)
-  const [userId, setUserId] = useState<string | null>(null)
+  const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const ws: any = useWs()
 
@@ -39,6 +39,19 @@ function Chat(props: IChatProps) {
       setUserList(user)
     }
   }
+
+  const getUserId = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { code, user } = await response.json()
+
+    if (code === 200) {
+      setUserInfo(user)
+    }
+  }
+
+  useEffect(() => {
+    getUserId()
+  })
 
   const getChat = () => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
@@ -161,7 +174,7 @@ function Chat(props: IChatProps) {
 
             setMessageList(messages)
           } else {
-            if (message.data.sender !== userId) {
+            if (message.data.sender !== userInfo?.userId) {
               setNewMessage(true)
               setTimeout(() => {
                 setNewMessage(false)
@@ -211,15 +224,6 @@ function Chat(props: IChatProps) {
   }, [])
 
   useEffect(() => {
-    if (typeof window === undefined) return
-
-    const value = window.localStorage.getItem('userId')
-    if (value === null) return
-
-    setUserId(value)
-  }, [])
-
-  useEffect(() => {
     ws.addEventListener('message', chatWebSocketHandler)
     if (channelList.length === 0) {
       getChat()
@@ -228,7 +232,7 @@ function Chat(props: IChatProps) {
     return () => {
       ws.removeEventListener('message', chatWebSocketHandler)
     }
-  }, [ws?.readyState, target, messageList, channelList])
+  }, [ws?.readyState, target, messageList, channelList, userInfo])
 
   return (
     <React.Fragment>

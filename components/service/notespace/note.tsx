@@ -11,6 +11,7 @@ import { noteStyle } from '../../../styles/service/notespace/note'
 import { IContextPosition, IFileView, INoteContent, IPosition } from '../../../types/note.types'
 import { useWs } from '../../context/websocket'
 import DrawDiagram from './content/diagram'
+import { fetchSet } from '../../context/fetch'
 
 const initialPositionState: IPosition = {
   x: 0,
@@ -25,10 +26,10 @@ const initialContextPositionState: IContextPosition = {
   path: '',
 }
 
-interface INoteProps { }
+interface INoteProps {}
 
 function Note(props: INoteProps) {
-  const { } = props
+  const {} = props
   const classes = noteStyle()
   const [contentList, setContentList] = useState<INoteContent[]>([])
   const [contextPosition, setContextPosition] = useState<IContextPosition>(initialContextPositionState)
@@ -38,13 +39,12 @@ function Note(props: INoteProps) {
   const [cursor, setCursor] = useState<string>('')
   const [drag, setDrag] = useState<string>('')
   const [tmpFileName, setTmpFileName] = useState<string>('')
-  const [userId, setUserId] = useState<string>('')
   const [highlight, setHighlight] = useState<number>()
   const [show, setShow] = useState<boolean>(false)
   const [dragEnd, setDragEnd] = useState<boolean>(false)
   const [addFile, setAddFile] = useState<boolean>(false)
   const [openContext, setOpenContext] = useState<boolean>(false)
-  const [openNum, setOpenNum] = React.useState<number>(0);
+  const [openNum, setOpenNum] = React.useState<number>(0)
   const ws: any = useWs()
   const output: any = {}
 
@@ -274,7 +274,7 @@ function Note(props: INoteProps) {
     setContentList(tmpContent)
   }
 
-  const handleDragIndicatorMouseDown = () => { }
+  const handleDragIndicatorMouseDown = () => {}
 
   const handleAddClick = (index: number) => () => {
     const tool = document.getElementById(`${index}tool`)
@@ -368,15 +368,15 @@ function Note(props: INoteProps) {
   }
 
   useEffect(() => {
-    if (fileViewList === null) return;
-    if (openNum < 0) return;
+    if (fileViewList === null) return
+    if (openNum < 0) return
 
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', noteWebSocketHandler)
       getNote()
-      setOpenNum(-1);
+      setOpenNum(-1)
     } else {
-      setOpenNum(openNum + 1);
+      setOpenNum(openNum + 1)
     }
   }, [ws?.readyState, openNum])
 
@@ -386,15 +386,6 @@ function Note(props: INoteProps) {
         setFileViewList([])
       }
     }, 100)
-  }, [])
-
-  useEffect(() => {
-    if (typeof window === undefined) return
-
-    const value = window.localStorage.getItem('userId')
-    if (value === null) return
-
-    setUserId(value)
   }, [])
 
   useEffect(() => {
@@ -517,11 +508,12 @@ function Note(props: INoteProps) {
               <input id="createTime" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="creation" onChange={handleSelectFileChange} value={selectFile.createTime} />
             </div>
           </div>
-          {selectFile.path.split('/').some((v) => v.includes(".io")) ?
-            <div className={classes.drawRoot} >
+          {selectFile.path.split('/').some((v) => v.includes('.io')) ? (
+            <div className={classes.drawRoot}>
               <DrawDiagram selectFile={selectFile} />
             </div>
-            : <div className={classes.writeRoot} onKeyDown={handleCtrlZ}>
+          ) : (
+            <div className={classes.writeRoot} onKeyDown={handleCtrlZ}>
               <div id="writeContent" className={classes.writeContent} onClick={handleClickContent}>
                 {show && (
                   <div className={classes.settingTool} style={{ left: position.x, top: position.y }}>
@@ -572,7 +564,8 @@ function Note(props: INoteProps) {
                   )
                 })}
               </div>
-            </div>}
+            </div>
+          )}
         </div>
       )}
       {openContext && <NoteContext contextPosition={contextPosition} setOpenContext={setOpenContext} setSelectFile={setSelectFile} fileViewList={fileViewList} setAddFile={setAddFile} />}
