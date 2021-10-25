@@ -19,7 +19,7 @@ import CreateLabel from './create/label'
 function DefaultIssue() {
   const classes = manageStyle()
   const manageMenu = ['Issue', 'Kanban', 'Milestone']
-  const [menu, setMenu] = useState<string>('Issue')
+  const [menu, setMenu] = useState<string>('Milestone')
   const [modal, setModal] = useState<boolean>(false)
   const [kanbanList, setKanbanList] = useState<IKanban[]>([])
   const [modalKanban, setModalKanban] = useState<IKanban | null>(null)
@@ -166,7 +166,7 @@ function DefaultIssue() {
   useEffect(() => {
     setTimeout(() => {
       if (issueList === null) {
-        setIssueList([])
+        setMenu('Issue')
       }
     }, 100)
   }, [])

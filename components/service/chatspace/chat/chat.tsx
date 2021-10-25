@@ -51,7 +51,7 @@ function Chat(props: IChatProps) {
 
   useEffect(() => {
     getUserId()
-  })
+  }, [])
 
   const getChat = () => {
     if (ws !== undefined && ws.readyState === WebSocket.OPEN) {

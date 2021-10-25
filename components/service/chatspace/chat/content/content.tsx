@@ -70,7 +70,7 @@ function Content(props: IContentProps) {
 
   useEffect(() => {
     getUserId()
-  })
+  }, [])
 
   return (
     <div className={classes.contentWrapper}>

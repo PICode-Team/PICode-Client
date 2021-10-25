@@ -37,7 +37,7 @@ function ResponsiveChat(props: IResponsiveProps) {
 
   useEffect(() => {
     getUserId()
-  })
+  }, [])
 
   return (
     <div className={classes.responsiveChat}>
