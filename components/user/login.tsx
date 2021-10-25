@@ -6,7 +6,7 @@ import { loginStyle } from '../../styles/user/login'
 import { fetchSet } from '../context/fetch'
 import CustomTextField from '../items/input/textfield'
 import Layout from './layout'
-import RequestResult from '../items/modal/detail/result'
+import Alert from '../items/modal/alert'
 
 interface ILoginInfo {
   id: string
@@ -72,7 +72,7 @@ function Login() {
             <a>Sign up</a>
           </Link>
         </div>
-        <RequestResult resultStatus={false} modal={open} setModal={setOpen} text="Check your id or password." />
+        <Alert modal={open} setModal={setOpen} title="Login Fail" description={'Check your id or password.'} />
       </React.Fragment>
     </Layout>
   )

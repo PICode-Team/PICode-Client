@@ -35,6 +35,7 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
     md: {
       width: '30%',
       height: '30%',
+      marginTop: '22.5%',
     },
     lg: {
       height: '61%',
@@ -63,6 +64,7 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
       justifyContent: 'center',
       alignItems: 'center',
       fontSize: '20px',
+      color: theme.font.medium.color,
     },
 
     modalFooter: {

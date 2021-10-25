@@ -12,7 +12,6 @@ import CreateMilestone from './create/milestone'
 import CreateKanban from './create/kanban'
 import Board from './board'
 import Milestone from './milestone'
-import RequestResult from '../../items/modal/detail/result'
 
 interface IManageSpaceProps {}
 
@@ -166,7 +165,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
       ) : (
         <CreateMilestone modal={modal} setModal={setModal} modalMile={modalMile} workspaceId={workspaceId as string} />
       )}
-      {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
+      {openResult && <Alert modal={openResult} setModal={setOpenResult} title="Workspace" description={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
     </div>
   )
 }

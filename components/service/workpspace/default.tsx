@@ -8,7 +8,7 @@ import CustomButton from '../../items/button/button'
 import { fetchSet } from '../../context/fetch'
 import DeleteModal from '../../items/modal/detail/delete'
 import ExportWorkspace from '../../items/modal/detail/export'
-import RequestResult from '../../items/modal/detail/result'
+import Alert from '../../items/modal/alert'
 
 function DefaultCodeView() {
   const classes = defaultStyle()
@@ -132,7 +132,7 @@ function DefaultCodeView() {
       </div>
       {openDelete && <DeleteModal name={name} uuid={uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="workspace" title="Delete Workspace" />}
       {openExport && modalInfo !== null && <ExportWorkspace modal={openExport} setModal={setOpenExport} workspaceInfo={modalInfo} exportType="codespace" />}
-      {openResult && <RequestResult modal={openResult} setModal={setOpenResult} resultStatus={resultStatus} text={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
+      {openResult && <Alert modal={openResult} setModal={setOpenResult} title="Workspace" description={resultStatus ? 'Success Deleting workspace' : 'Error in Deleting workspace'} />}
     </div>
   )
 }
