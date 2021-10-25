@@ -70,6 +70,7 @@ export default function CalanderSpace(props: any) {
     const [today, setToday] = React.useState<Date>(new Date())
     const [modal, setModal] = React.useState<boolean>(false);
     const [kanbanList, setKanbanList] = React.useState();
+    const [milestoneList, setMilestoneList] = React.useState();
     const [tmpViewDay, setTmpViewDay] = React.useState<Date>(new Date());
     const [openNum, setOpenNum] = React.useState<number>(0);
     const [scheduleDay, setScheduleDay] = React.useState<Date>();
@@ -83,10 +84,16 @@ export default function CalanderSpace(props: any) {
                     break;
                 }
             }
-        } else if (message.type === "kanban") {
+        } else if (message.category === "kanban") {
             switch (message.type) {
                 case "getKanban": {
                     setKanbanList(message.data.kanbans)
+                }
+            }
+        } else if (message.category === "milestone") {
+            switch (message.type) {
+                case "getMilestone": {
+                    setMilestoneList(message.data)
                 }
             }
         }
@@ -107,8 +114,14 @@ export default function CalanderSpace(props: any) {
                 type: "getKanban",
                 data: {}
             }
+            let getMilestonePayload = {
+                category: "milestone",
+                type: "getMilestone",
+                data: {}
+            }
             ws.send(JSON.stringify(payload))
             ws.send(JSON.stringify(getKanbanPayload))
+            ws.send(JSON.stringify(getMilestonePayload))
             setOpenNum(-1);
         } else {
             setOpenNum(openNum + 1);
@@ -223,6 +236,12 @@ export default function CalanderSpace(props: any) {
                 {calendarData !== undefined && returnValue[view]}
             </div>
         </div>
-        <CreateSchedule modal={modal} setModal={setModal} kanbanList={kanbanList} tmpDay={tmpViewDay} />
+        <CreateSchedule
+            modal={modal}
+            setModal={setModal}
+            kanbanList={kanbanList}
+            tmpDay={tmpViewDay}
+            milestoneList={milestoneList}
+        />
     </div>
 }

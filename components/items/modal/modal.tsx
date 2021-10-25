@@ -36,8 +36,9 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
     xs: {},
     sm: {},
     md: {
+      height: "fit-content",
       width: '30%',
-      height: '42%',
+      minHeight: '42%',
     },
     lg: {
       height: '61%',
