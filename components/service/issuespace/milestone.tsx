@@ -71,6 +71,7 @@ function Milestone(props: IMilestoneProps) {
 
   const handleDeleteSubmit = (uuid: string) => () => {
     deleteMilestone(uuid)
+    setOpenDelete(false)
   }
 
   const handleDeleteMile = (uuid: string, name: string) => async (event: React.MouseEvent) => {
