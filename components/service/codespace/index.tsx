@@ -197,7 +197,7 @@ export default function CodeSpace() {
 
     useEffect(() => {
         if (workspaceId === undefined) return;
-        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+        if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
             ws.addEventListener("message", fileWebsocketHanlder);
             setTest(-1);
         } else {

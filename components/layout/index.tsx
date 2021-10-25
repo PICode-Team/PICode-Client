@@ -36,7 +36,7 @@ function Layout(props: IPageProps) {
   }
 
   const getLoginUserData = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'work',
@@ -58,7 +58,7 @@ function Layout(props: IPageProps) {
   }
 
   useEffect(() => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       getUserId()
       getLoginUserData()
 
@@ -95,7 +95,7 @@ function Layout(props: IPageProps) {
           },
         })
       }
-    }, 100),
+    }, 500),
     []
   )
 
@@ -103,7 +103,7 @@ function Layout(props: IPageProps) {
     if (userMouse === null) return
     if (ws === undefined) return
 
-    if (ws.readyState === WebSocket.OPEN) {
+    if (ws?.readyState === WebSocket.OPEN) {
       let payload: ISocketUserMouse = {
         workingPath: path,
       }

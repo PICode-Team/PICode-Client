@@ -108,7 +108,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
   const ws: any = useWs()
 
   const checkAlarm = (alarmId: string, alarmRoom: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'alarm',
@@ -123,7 +123,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
   }
 
   const getAlarm = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'alarm',
@@ -164,7 +164,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
   useEffect(() => {
     if (wsCheck < 0) return
 
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', alertWebSocketHandler)
       if (alarmList === null) {
         getAlarm()

@@ -39,7 +39,7 @@ function CreateKanban(props: ICreateKanbanProps) {
   }
 
   const createKanban = (payload: ICreateKanbanState, workspaceId: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'kanban',
@@ -51,7 +51,7 @@ function CreateKanban(props: ICreateKanbanProps) {
   }
 
   const updateKanban = (payload: ICreateKanbanState, workspaceId: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'kanban',

@@ -26,15 +26,15 @@ const initialContextPositionState: IContextPosition = {
   path: '',
 }
 
-interface INoteProps {}
+interface INoteProps { }
 
 function Note(props: INoteProps) {
-  const {} = props
+  const { } = props
   const classes = noteStyle()
   const [contentList, setContentList] = useState<INoteContent[]>([])
   const [contextPosition, setContextPosition] = useState<IContextPosition>(initialContextPositionState)
   const [position, setPosition] = useState<IPosition>(initialPositionState)
-  const [fileViewList, setFileViewList] = useState<IFileView[] | null>(null)
+  const [fileViewList, setFileViewList] = useState<IFileView[] | null>([])
   const [selectFile, setSelectFile] = useState<IFileView | null>(null)
   const [cursor, setCursor] = useState<string>('')
   const [drag, setDrag] = useState<string>('')
@@ -63,10 +63,11 @@ function Note(props: INoteProps) {
 
             const splitedPath = note.path.split('/')
             splitedPath.splice(0, 1)
-
             pushToOutput(note.path, splitedPath, output, note)
+            console.log(...(fileViewList ?? []), note)
             setFileViewList([...(fileViewList ?? []), note])
           } else {
+            console.log(message.data)
             setFileViewList(message.data)
           }
           break
@@ -75,14 +76,13 @@ function Note(props: INoteProps) {
         case 'deleteNote':
           break
         case 'createNote':
-          getNote(message.data.noteId)
           break
       }
     }
   }
 
   const getNote = (noteId?: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
@@ -96,7 +96,7 @@ function Note(props: INoteProps) {
   }
 
   const updateNote = (noteId: string, content: INoteContent[]) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
@@ -274,7 +274,7 @@ function Note(props: INoteProps) {
     setContentList(tmpContent)
   }
 
-  const handleDragIndicatorMouseDown = () => {}
+  const handleDragIndicatorMouseDown = () => { }
 
   const handleAddClick = (index: number) => () => {
     const tool = document.getElementById(`${index}tool`)
@@ -368,27 +368,16 @@ function Note(props: INoteProps) {
   }
 
   useEffect(() => {
-    if (fileViewList === null) return
     if (openNum < 0) return
 
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', noteWebSocketHandler)
       getNote()
       setOpenNum(-1)
     } else {
-      setTimeout(() => {
-        setOpenNum(openNum + 1)
-      }, 100)
+      setOpenNum(openNum + 1)
     }
   }, [openNum])
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (fileViewList === null) {
-        setFileViewList([])
-      }
-    }, 100)
-  }, [])
 
   useEffect(() => {
     if (selectFile === null) return

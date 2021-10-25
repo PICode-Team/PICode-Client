@@ -46,7 +46,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
   }
 
   const createMilestone = (payload: ICreateMileState, workspaceId: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',
@@ -58,7 +58,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
   }
 
   const updateMilestone = (payload: ICreateMileState, workspaceId: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',

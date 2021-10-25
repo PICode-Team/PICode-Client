@@ -52,7 +52,7 @@ function ChatInput(props: IChatInputProps) {
   }
 
   const sendMessage = (target: string, message: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
@@ -72,7 +72,7 @@ function ChatInput(props: IChatInputProps) {
       return { ...a, [c]: true }
     }, {})
 
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'alarm',
@@ -307,9 +307,9 @@ function ChatInput(props: IChatInputProps) {
     }
   }
 
-  const handleChatInputChange = (event: any) => {}
+  const handleChatInputChange = (event: any) => { }
 
-  const handleRichTextClick = (tag: string) => () => {}
+  const handleRichTextClick = (tag: string) => () => { }
 
   useEffect(() => {
     document.addEventListener('click', clickHandler)

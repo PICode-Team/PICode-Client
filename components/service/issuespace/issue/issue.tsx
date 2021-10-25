@@ -7,10 +7,10 @@ import { ArrowBackIos } from '@material-ui/icons'
 import { useWs } from '../../../context/websocket'
 import CreateIssue from '../create/issue'
 import Col from './col'
-interface IIssueProps {}
+interface IIssueProps { }
 
 function Issue(props: IIssueProps) {
-  const {} = props
+  const { } = props
   const classes = issueStyle()
   const [issueList, setIssueList] = useState<IIssue[] | null>(null)
   const [mileList, setMileList] = useState<IMilestone[]>([])
@@ -25,7 +25,7 @@ function Issue(props: IIssueProps) {
   const ws: any = useWs()
 
   const getKanban = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'kanban',
@@ -37,7 +37,7 @@ function Issue(props: IIssueProps) {
   }
 
   const getMilestone = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',
@@ -49,7 +49,7 @@ function Issue(props: IIssueProps) {
   }
 
   const getIssue = (kanban: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'issue',
@@ -101,7 +101,7 @@ function Issue(props: IIssueProps) {
   }
 
   useEffect(() => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', issueWebSocketHandler)
       getKanban()
       getMilestone()

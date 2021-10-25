@@ -44,7 +44,7 @@ function Milestone(props: IMilestoneProps) {
   const ws: any = useWs()
 
   const deleteMilestone = (uuid: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',
@@ -83,7 +83,7 @@ function Milestone(props: IMilestoneProps) {
     setUuid(uuid)
   }
 
-  const handleClickMile = () => {}
+  const handleClickMile = () => { }
 
   return (
     <div className={classes.board}>

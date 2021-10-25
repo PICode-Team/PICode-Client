@@ -134,7 +134,7 @@ export default function CodeContent(props: {
     }, [selectFile])
 
     useEffect(() => {
-        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+        if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
             ws.addEventListener("message", fileWebsocketHanlder)
             setOpenWs(-1)
         } else {

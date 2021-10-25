@@ -51,7 +51,7 @@ function Messenger(props: IMessengerProps) {
   }
 
   const getChat = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
@@ -62,7 +62,7 @@ function Messenger(props: IMessengerProps) {
   }
 
   const getChatLog = (page: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN && target !== null) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN && target !== null) {
       ws.send(
         JSON.stringify({
           category: 'chat',
@@ -77,7 +77,7 @@ function Messenger(props: IMessengerProps) {
   }
 
   const getChatLogList = (target: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
@@ -203,7 +203,7 @@ function Messenger(props: IMessengerProps) {
   }, [])
 
   useEffect(() => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', chatWebSocketHandler)
       getChat()
 

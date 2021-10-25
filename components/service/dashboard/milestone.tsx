@@ -4,17 +4,17 @@ import { IMilestone } from '../../../types/issue.types'
 import { useWs } from '../../context/websocket'
 import { getPercentage } from '../issuespace/milestone'
 
-interface IMilestoneViewProps {}
+interface IMilestoneViewProps { }
 
 function MilestoneView(props: IMilestoneViewProps) {
-  const {} = props
+  const { } = props
   const classes = milestoneStyle()
   const [mileList, setMileList] = useState<IMilestone[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
   const getMilestone = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',
@@ -42,7 +42,7 @@ function MilestoneView(props: IMilestoneViewProps) {
   }
 
   useEffect(() => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', mileWebSocketHandler)
       getMilestone()
       return () => {

@@ -21,7 +21,7 @@ function Context(props: INoteContextProps) {
   if (ws?.readyState === WebSocket.CONNECTING) return <></>
 
   const deleteNote = (noteId: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
@@ -42,7 +42,7 @@ function Context(props: INoteContextProps) {
   }
 
   const getNote = (noteId?: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',

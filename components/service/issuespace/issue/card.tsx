@@ -15,7 +15,7 @@ function Card(props: ICardProps) {
   const ws: any = useWs()
 
   const updateIssue = (column: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'issue',
@@ -32,7 +32,7 @@ function Card(props: ICardProps) {
     }
   }
 
-  const handleDradStartCard = () => {}
+  const handleDradStartCard = () => { }
 
   const handleDradEndCard = (event: any) => {
     for (const column of columnList!) {

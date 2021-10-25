@@ -1,13 +1,13 @@
 import { useWs } from '../../../context/websocket'
 
-interface IMentionHelperProps {}
+interface IMentionHelperProps { }
 
 function MentionHelper(props: IMentionHelperProps) {
-  const {} = props
+  const { } = props
   const ws: any = useWs()
 
   const createAlarm = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'alarm',

@@ -37,7 +37,7 @@ function Board(props: IBoardProps) {
   }
 
   const deleteKanban = (uuid: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'kanban',
