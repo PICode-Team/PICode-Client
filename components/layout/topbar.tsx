@@ -146,7 +146,7 @@ function Topbar(props: ITopbarProps) {
         </div>
       </div>
       {openUserInfo === true && <UserInfo open={openUserInfo} setOpen={setOpenUserInfo} />}
-      {openAlert === true && <AlertDialog open={openAlert} setOpen={setOpenAlert} />}
+      <AlertDialog open={openAlert} setOpen={setOpenAlert} />
     </div>
   )
 }

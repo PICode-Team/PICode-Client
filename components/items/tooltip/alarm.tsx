@@ -14,7 +14,8 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
       width: '300px',
       height: '400px',
       position: 'absolute',
-      background: '#6d7681',
+      backgroundColor: theme.backgroundColor.step2,
+      filter: theme.brightness.step0,
       zIndex: 4,
       right: '135px',
       top: '30px',
@@ -35,17 +36,21 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
       width: '100%',
       height: 'calc(100% - 63px)',
       overflowY: 'auto',
-      backgroundColor: '#505965',
+      backgroundColor: theme.backgroundColor.step2,
+      filter: theme.brightness.step0,
     },
     row: {
       color: theme.font.high.color,
       padding: '6px 14px',
-      backgroundColor: '#505965',
+      backgroundColor: theme.backgroundColor.step2,
       display: 'flex',
       fontSize: '12px',
       justifyContent: 'space-between',
       width: '100%',
       cursor: 'pointer',
+      '&:hover': {
+        filter: theme.brightness.step0,
+      },
     },
     rowBody: {
       display: 'flex',
@@ -70,7 +75,7 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
     clearWrapper: {
       cursor: 'pointer',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       zIndex: 999,
     },
     footer: {
@@ -78,8 +83,8 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
       height: '20px',
     },
     notification: {
-      top: '10px',
-      left: '30px',
+      top: '12px',
+      right: '108px',
       width: '10px',
       height: '10px',
       borderRadius: '10px',
@@ -145,6 +150,8 @@ export default function AlertDialog(props: IAlertDialogProps) {
           break
         case 'checkAlarm':
           if (alarmList !== null) {
+            console.log(alarmList.length, alarmList.filter((v) => v.alarmId !== message.data.alarmId).length)
+
             setAlarmList(alarmList.filter((v) => v.alarmId !== message.data.alarmId))
           }
           break
@@ -161,7 +168,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
     return () => {
       ws.removeEventListener('message', alertWebSocketHandler)
     }
-  }, [ws?.readyState])
+  }, [ws?.readyState, alarmList])
 
   useEffect(() => {
     if (alarmList === null) {
@@ -171,33 +178,35 @@ export default function AlertDialog(props: IAlertDialogProps) {
 
   return (
     <React.Fragment>
-      <div className={classes.content}>
-        <div className={classes.header}>Recent Alarm</div>
-        <div className={classes.alarmContent}>
-          {alarmList !== null &&
-            alarmList.length > 0 &&
-            alarmList.map((v: any, i: number) => {
-              return (
-                <div key={`alarm-${i}`} className={classes.row}>
-                  <div className={classes.rowBody} onClick={handleClickRow(v.alarmId, v.alarmRoom, v.location)}>
-                    <div>
-                      <div className={classes.thumbnail}></div>
+      {open === true && (
+        <div className={classes.content}>
+          <div className={classes.header}>Recent Alarm</div>
+          <div className={classes.alarmContent}>
+            {alarmList !== null &&
+              alarmList.length > 0 &&
+              alarmList.map((v: any, i: number) => {
+                return (
+                  <div key={`alarm-${i}`} className={classes.row}>
+                    <div className={classes.rowBody} onClick={handleClickRow(v.alarmId, v.alarmRoom, v.location)}>
+                      <div>
+                        <div className={classes.thumbnail}></div>
+                      </div>
+                      <div>
+                        <div className={classes.rowTitle}>{`${v.userId}'s ${v.type}`}</div>
+                        <div className={classes.rowContent}>{v.content}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className={classes.rowTitle}>{`${v.userId}'s ${v.type}`}</div>
-                      <div className={classes.rowContent}>{v.content}</div>
+                    <div className={classes.clearWrapper} onClick={handleClear(v.alarmId, v.alarmRoom)}>
+                      <Clear className={classes.clear} />
                     </div>
                   </div>
-                  <div className={classes.clearWrapper} onClick={handleClear(v.alarmId, v.alarmRoom)}>
-                    <Clear className={classes.clear} />
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
+          </div>
+          <div className={classes.footer}></div>
         </div>
-        <div className={classes.footer}></div>
-      </div>
-      {alarmList !== null && alarmList.length > 0 && false && <div className={classes.notification} />}
+      )}
+      {alarmList !== null && alarmList.length > 0 && <div className={classes.notification} />}
     </React.Fragment>
   )
 }
