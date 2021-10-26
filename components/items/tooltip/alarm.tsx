@@ -111,12 +111,18 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
       padding: '10px',
       animation: '$slidein 1s',
       transition: 'all ease-in 0.2s',
+      overflow: 'hidden',
     },
     toastTitle: {
       fontWeight: 'bold',
     },
     toastContent: {
-      wordBreak: 'break-word',
+      width: '100%',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitLineClamp: 3,
+      marginTop: '6px',
     },
     disapper: {
       animation: '$disappear 1s',

@@ -318,6 +318,7 @@ export const messageBoxStyle = makeStyles((theme: IThemeStyle) =>
       marginTop: '2px',
       marginLeft: '10px',
       cursor: 'pointer',
+      maxWidth: '300px',
     },
   })
 )
@@ -1350,6 +1351,11 @@ export const mediaViewStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      height: 'calc(90% - 50px)',
+      '&>img': {
+        maxWidth: '100%',
+        maxHeight: '100%',
+      },
     },
     footer: {
       height: '50px',
