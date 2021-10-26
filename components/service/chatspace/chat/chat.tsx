@@ -32,6 +32,7 @@ function Chat(props: IChatProps) {
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
   const [queryCheck, setQueryCheck] = useState<boolean>(false)
+  const [value, setValue] = useState<string>('')
   const ws: any = useWs()
   const router = useRouter()
 
@@ -238,9 +239,7 @@ function Chat(props: IChatProps) {
         ws.removeEventListener('message', chatWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
   }, [wsCheck, target, messageList, channelList, userInfo])
 
