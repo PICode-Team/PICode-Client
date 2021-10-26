@@ -53,7 +53,7 @@ function ChatInput(props: IChatInputProps) {
 
     if (code === 200) {
       if (messageRef.current !== null) {
-        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="${process.env.NEXT_FE_API_URL}/api/temp/${uploadFileId}.png">`
+        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="${process.env.NEXT_FE_API_URL}/api/temp/${uploadFileId}">`
       }
     }
   }
@@ -342,9 +342,9 @@ function ChatInput(props: IChatInputProps) {
     }
   }
 
-  const handleChatInputChange = (event: any) => { }
+  const handleChatInputChange = (event: any) => {}
 
-  const handleRichTextClick = (tag: string) => () => { }
+  const handleRichTextClick = (tag: string) => () => {}
 
   useEffect(() => {
     document.addEventListener('click', clickHandler)
