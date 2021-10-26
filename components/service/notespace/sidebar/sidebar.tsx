@@ -42,7 +42,6 @@ function Sidebar(props: INoteSidebar) {
   const ws: any = useWs()
 
   if (fileViewList === null) return <></>
-  if (ws.readyState === WebSocket.CONNECTING) return <></>
 
   const pushToOutput = (path: string, splitedPath: string[], obj: any, value: any): any => {
     const clone = { ...value, children: {} }
@@ -67,7 +66,7 @@ function Sidebar(props: INoteSidebar) {
   }
 
   const updateNote = (noteId: string, path: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
@@ -91,7 +90,7 @@ function Sidebar(props: INoteSidebar) {
   }
 
   const getNote = (noteId?: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',
@@ -138,7 +137,6 @@ function Sidebar(props: INoteSidebar) {
     for (const node of nodeGroup) {
       if (dragEndNode.path !== node.path) {
         const name = node.path.split('/')
-
         // updateNote(node.noteId, dragEndNode.path + '/' + name[name.length - 1])
         getNote()
       }

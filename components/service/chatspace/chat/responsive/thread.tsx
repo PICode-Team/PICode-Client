@@ -72,7 +72,7 @@ function Thread(props: IThreadProps) {
   }
 
   const sendMessage = (target: string, message: string, parentChatId: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
@@ -92,7 +92,7 @@ function Thread(props: IThreadProps) {
       return { ...a, [c]: true }
     }, {})
 
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'alarm',

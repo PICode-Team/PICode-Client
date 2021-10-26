@@ -21,7 +21,7 @@ function AddFile(props: IAddInput) {
   const ws: any = useWs()
 
   const createNote = (path: string, creator: string, content: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'note',

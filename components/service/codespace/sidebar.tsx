@@ -167,7 +167,7 @@ export default function CodeSideBar({ setDragId, setOpenId, projectName, fileLis
                 if (rightClick === undefined || rightClick.filePath === undefined) return;
                 let workspaceId = getQuery();
                 if (workspaceId === undefined) return;
-                if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+                if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
                     ws.send(
                         JSON.stringify({
                             category: 'code',

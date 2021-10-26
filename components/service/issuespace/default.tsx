@@ -42,7 +42,7 @@ function DefaultIssue() {
   }
 
   const getKanbanList = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'kanban',
@@ -54,7 +54,7 @@ function DefaultIssue() {
   }
 
   const getIssue = (kanbanUUID: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'issue',
@@ -68,7 +68,7 @@ function DefaultIssue() {
   }
 
   const getMileList = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',
@@ -153,7 +153,7 @@ function DefaultIssue() {
   }
 
   useEffect(() => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', issueWebSocketHandler)
 
       if (kanbanList.length === 0) {

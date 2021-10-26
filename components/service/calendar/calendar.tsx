@@ -102,7 +102,7 @@ export default function CalanderSpace(props: any) {
     useEffect(() => {
         if (openNum < 0) return;
 
-        if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+        if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
             ws.addEventListener("message", calendarWebsocketHanlder);
             let payload = {
                 category: "calendar",

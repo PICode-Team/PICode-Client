@@ -14,7 +14,7 @@ import Board from './board'
 import Milestone from './milestone'
 import Alert from '../../items/modal/alert'
 
-interface IManageSpaceProps {}
+interface IManageSpaceProps { }
 
 export default function ManageSpace(props: IManageSpaceProps) {
   const classes = manageStyle()
@@ -38,7 +38,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
   }
 
   const getKanbanList = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'kanban',
@@ -50,7 +50,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
   }
 
   const getMileList = () => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'milestone',
@@ -117,7 +117,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
   }
 
   useEffect(() => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', issueWebSocketHandler)
       getKanbanList()
       getMileList()

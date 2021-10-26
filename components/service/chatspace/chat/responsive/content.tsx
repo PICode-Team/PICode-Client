@@ -65,7 +65,7 @@ function Content(props: IContentProps) {
   }
 
   const sendMessage = (target: string, message: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
@@ -84,7 +84,7 @@ function Content(props: IContentProps) {
       return { ...a, [c]: true }
     }, {})
 
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'alarm',

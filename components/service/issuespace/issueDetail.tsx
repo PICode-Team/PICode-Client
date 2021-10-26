@@ -28,7 +28,7 @@ function IssueDetail() {
   const ws: any = useWs()
 
   const getIssueDetail = (issueUUID: string) => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'issue',
@@ -56,7 +56,7 @@ function IssueDetail() {
   }
 
   useEffect(() => {
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', issueWebSocketHandler)
       getIssueDetail(issueUUID as string)
 

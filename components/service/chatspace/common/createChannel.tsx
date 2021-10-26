@@ -54,7 +54,7 @@ function CreateChannel(props: ICreateChannelProps) {
       }
     }
 
-    if (ws !== undefined && ws.readyState === WebSocket.OPEN) {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
         JSON.stringify({
           category: 'chat',
