@@ -348,6 +348,21 @@ export const enteringStyle = makeStyles((theme: IThemeStyle) =>
       fontWeight: 'bold',
       lineHeight: '24px',
     },
+
+    '@keyframes entering': {
+      '0%': {
+        transform: 'translateY(0)',
+      },
+      '25%': {
+        transform: 'translateY(-2px)',
+      },
+      '50%': {
+        transform: 'translateY(0)',
+      },
+      '100%': {
+        transform: 'translateY(0)',
+      },
+    },
   })
 )
 
@@ -369,12 +384,12 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
       height: '38px',
       width: '100%',
       backgroundColor: 'inherit',
-      color: 'inherit',
       outline: 'none',
       border: 'none',
       padding: '8px',
       fontSize: '16px',
       overflow: 'auto',
+      color: theme.font.high.color,
       '& img': {
         maxWidth: '300px',
       },
@@ -986,6 +1001,9 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
       fontSize: '16px',
       overflow: 'auto',
       color: theme.font.high.color,
+      '& img': {
+        maxWidth: '300px',
+      },
     },
 
     mentionHelper: {
@@ -1242,12 +1260,15 @@ export const responsiveThreadStyle = makeStyles((theme: IThemeStyle) =>
       height: '38px',
       width: '100%',
       backgroundColor: 'inherit',
-      color: 'inherit',
       outline: 'none',
       border: 'none',
       padding: '8px',
       fontSize: '16px',
       overflow: 'auto',
+      color: theme.font.high.color,
+      '& img': {
+        maxWidth: '300px',
+      },
     },
 
     mentionHelper: {
