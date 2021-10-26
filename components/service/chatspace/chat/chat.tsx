@@ -31,6 +31,7 @@ function Chat(props: IChatProps) {
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
+  const [queryCheck, setQueryCheck] = useState<boolean>(false)
   const ws: any = useWs()
   const router = useRouter()
 
@@ -248,13 +249,16 @@ function Chat(props: IChatProps) {
   }, [target, messageList, channelList, userInfo])
 
   useEffect(() => {
+    if (queryCheck === true) return
+
     if (router.query.target !== undefined) {
       const findTarget = channelList.find((v) => router.query.target === v.chatName)
       if (findTarget !== undefined) {
+        setQueryCheck(true)
         setTarget(findTarget)
       }
     }
-  }, [])
+  }, [channelList])
 
   return (
     <React.Fragment>
