@@ -264,9 +264,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
         ws.removeEventListener('message', alertWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
   }, [wsCheck, alarmList, toastList, toastWrapperRef])
 

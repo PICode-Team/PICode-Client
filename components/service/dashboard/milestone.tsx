@@ -49,9 +49,7 @@ function MilestoneView(props: IMilestoneViewProps) {
         ws.removeEventListener('message', mileWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
   }, [wsCheck])
 

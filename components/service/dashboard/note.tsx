@@ -56,9 +56,7 @@ function NoteView(props: INoteViewProps) {
         ws.removeEventListener('message', noteWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
   }, [])
 
