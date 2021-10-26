@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { makeStyles, createStyles } from '@material-ui/core'
-import { IconButton } from '@material-ui/core'
-import { Cancel, Clear, ClearRounded } from '@material-ui/icons'
+import { Clear } from '@material-ui/icons'
 
 import { IThemeStyle } from '../../../styles/theme'
 import { useWs } from '../../context/websocket'
 import { IAlarm } from '../../../types/alarm.types'
-import Toast from './toast'
 
 const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
@@ -92,6 +90,54 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
       background: 'red',
       position: 'absolute',
     },
+
+    wrapper: {
+      position: 'absolute',
+      zIndex: 99999,
+      top: '55px',
+    },
+    toast: {
+      width: '180px',
+      height: '100px',
+      backgroundColor: theme.backgroundColor.step1,
+      borderRadius: '12px',
+      marginTop: '10px',
+      marginLeft: '15px',
+      filter: theme.brightness.step1,
+      color: theme.font.high.color,
+      padding: '10px',
+      animation: '$slidein 1s',
+      transition: 'all ease-in 0.2s',
+    },
+    toastTitle: {
+      fontWeight: 'bold',
+    },
+    toastContent: {
+      wordBreak: 'break-word',
+    },
+    disapper: {
+      animation: '$disappear 1s',
+    },
+
+    '@keyframes slidein': {
+      from: {
+        transform: 'translateX(60px)',
+        opacity: 0.2,
+      },
+      to: {
+        transform: 'translateX(0)',
+        opacity: 1,
+      },
+    },
+
+    '@keyframes disappear': {
+      from: {
+        opacity: 1,
+      },
+      to: {
+        opacity: 0,
+      },
+    },
   })
 )
 
@@ -105,6 +151,8 @@ export default function AlertDialog(props: IAlertDialogProps) {
   const classes = alertDialogStyle()
   const [alarmList, setAlarmList] = useState<IAlarm[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
+  const [toastList, setToastList] = useState<IAlarm[]>([])
+  const toastWrapperRef = useRef<HTMLDivElement>(null)
   const ws: any = useWs()
 
   const checkAlarm = (alarmId: string, alarmRoom: string) => {
@@ -156,6 +204,46 @@ export default function AlertDialog(props: IAlertDialogProps) {
           }
           break
         case 'createAlarm':
+          const newAlarm = message.data
+
+          if (toastWrapperRef !== null && toastWrapperRef.current !== null) {
+            const toast = document.createElement('div')
+            toast.id = newAlarm.alarmId
+            toast.classList.add(classes.toast)
+
+            const title = document.createElement('div')
+            title.classList.add(classes.toastTitle)
+            title.innerText = `${newAlarm.userId}'s ${newAlarm.type}`
+
+            const content = document.createElement('div')
+            content.classList.add(classes.toastContent)
+            content.innerText = newAlarm.content
+
+            toast.appendChild(title)
+            toast.appendChild(content)
+
+            toastWrapperRef.current.appendChild(toast)
+
+            const target = document.getElementById(newAlarm.alarmId)
+
+            if (target !== null) {
+              setTimeout(() => {
+                target.classList.add(classes.disapper)
+              }, 2000)
+
+              setTimeout(() => {
+                toastWrapperRef.current?.removeChild(target)
+              }, 2700)
+            }
+          }
+
+          setToastList([...toastList, newAlarm])
+          setTimeout(() => {
+            setToastList(toastList.slice(1))
+          }, 5000)
+          if (alarmList !== null) {
+            setAlarmList([...alarmList, newAlarm])
+          }
           break
       }
     }
@@ -177,7 +265,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
         setWsCheck(wsCheck + 1)
       }, 100)
     }
-  }, [wsCheck, alarmList])
+  }, [wsCheck, alarmList, toastList, toastWrapperRef])
 
   return (
     <React.Fragment>
@@ -210,6 +298,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
         </div>
       )}
       {alarmList !== null && alarmList.length > 0 && <div className={classes.notification} />}
+      <div className={classes.wrapper} ref={toastWrapperRef}></div>
     </React.Fragment>
   )
 }
