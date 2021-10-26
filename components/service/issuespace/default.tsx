@@ -33,6 +33,7 @@ function DefaultIssue() {
   const [openResult, setOpenResult] = useState<boolean>(false)
   const [behaviorType, setBehaviorType] = useState<string>('')
   const [wsCheck, setWsCheck] = useState<number>(0)
+  const [search, setSearch] = useState<string>('')
   const router = useRouter()
   const ws: any = useWs()
   const { type } = router.query
@@ -201,7 +202,14 @@ function DefaultIssue() {
       <div className={classes.title}>
         <div className={classes.search}>
           <Search />
-          <input type="text" placeholder="Search User or Channel" />
+          <input
+            type="text"
+            placeholder="Search User or Channel"
+            value={search}
+            onChange={(event: any) => {
+              setSearch(event.target.value)
+            }}
+          />
         </div>
         <CustomButton text="Create" onClick={handleCreateButton} />
       </div>
@@ -215,9 +223,9 @@ function DefaultIssue() {
             ))}
           </div>
           <div className={classes.manageContent}>
-            {menu === 'Issue' && <Issue issueList={issueList} setModal={setModal} setModalIssue={setModalIssue} />}
-            {menu === 'Kanban' && <Board kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />}
-            {menu === 'Milestone' && <Milestone milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />}
+            {menu === 'Issue' && <Issue search={search} issueList={issueList} setModal={setModal} setModalIssue={setModalIssue} />}
+            {menu === 'Kanban' && <Board search={search} kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />}
+            {menu === 'Milestone' && <Milestone search={search} milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />}
             {/* {menu === 'Label' && <Label />} */}
           </div>
         </div>

@@ -95,7 +95,7 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
       position: 'absolute',
       zIndex: 99999,
       top: '55px',
-      height: 'calc(100% - 55px)',
+      maxHeight: 'calc(100% - 55px)',
       overflowY: 'hidden',
       width: '260px',
     },

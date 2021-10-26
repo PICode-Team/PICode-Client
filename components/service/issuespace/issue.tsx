@@ -5,13 +5,14 @@ import { IIssue } from '../../../types/issue.types'
 import CustomCheckbox from '../../items/input/checkbox'
 
 interface IIssueProps {
+  search: string
   issueList: IIssue[] | null
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   setModalIssue: React.Dispatch<React.SetStateAction<IIssue | null>>
 }
 
 function Issue(props: IIssueProps) {
-  const { issueList, setModal, setModalIssue } = props
+  const { search, issueList, setModal, setModalIssue } = props
   const classes = issueTableStyle()
   const [activeStatus, setActiveStatus] = useState<boolean>(true)
 
@@ -49,35 +50,37 @@ function Issue(props: IIssueProps) {
       </div>
 
       {issueList !== null &&
-        issueList.map((v, i) => (
-          <div className={`${classes.bodyWrapper} ${i === 0 && classes.noneBorderTop}`} key={`issue-${i}`}>
-            <div className={classes.checkbox}>
-              <CustomCheckbox value={false} label="" />
-            </div>
-            <div className={classes.activeStatus}>
-              <CheckCircleOutlineRounded
-                style={{
-                  color: '#549F69',
-                }}
-              />
-            </div>
-            <div className={classes.content}>
-              <div>
-                <span className={classes.title} onClick={handleLinkDetail(v.uuid)}>
-                  {v.title}
-                </span>
-                {v.label !== undefined && v.label !== '' && <span className={classes.tag}>{v.label}</span>}
+        issueList
+          .filter((v) => v.title.includes(search))
+          .map((v, i) => (
+            <div className={`${classes.bodyWrapper} ${i === 0 && classes.noneBorderTop}`} key={`issue-${i}`}>
+              <div className={classes.checkbox}>
+                <CustomCheckbox value={false} label="" />
+              </div>
+              <div className={classes.activeStatus}>
+                <CheckCircleOutlineRounded
+                  style={{
+                    color: '#549F69',
+                  }}
+                />
+              </div>
+              <div className={classes.content}>
+                <div>
+                  <span className={classes.title} onClick={handleLinkDetail(v.uuid)}>
+                    {v.title}
+                  </span>
+                  {v.label !== undefined && v.label !== '' && <span className={classes.tag}>{v.label}</span>}
+                </div>
+
+                <div className={classes.detail}>
+                  <div className={classes.creation}>{`#${v.issueId} opened by ${v.creator}`}</div>
+                  <div className={classes.milestone}>{v.assigner}</div>
+                </div>
               </div>
 
-              <div className={classes.detail}>
-                <div className={classes.creation}>{`#${v.issueId} opened by ${v.creator}`}</div>
-                <div className={classes.milestone}>{v.assigner}</div>
-              </div>
+              <div className={classes.assignee}></div>
             </div>
-
-            <div className={classes.assignee}></div>
-          </div>
-        ))}
+          ))}
     </div>
   )
 }
