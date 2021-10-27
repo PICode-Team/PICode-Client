@@ -259,8 +259,6 @@ export default function AlertDialog(props: IAlertDialogProps) {
   }
 
   useEffect(() => {
-    if (wsCheck < 0) return
-
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', alertWebSocketHandler)
       if (alarmList === null) {
