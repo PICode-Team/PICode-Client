@@ -72,6 +72,7 @@ export default function CalanderSpace(props: any) {
   const [kanbanList, setKanbanList] = React.useState()
   const [milestoneList, setMilestoneList] = React.useState()
   const [tmpViewDay, setTmpViewDay] = React.useState<Date>(new Date())
+  const [modalDate, setModalDate] = React.useState<Date>(new Date())
   const [openNum, setOpenNum] = React.useState<number>(0)
   const [scheduleDay, setScheduleDay] = React.useState<Date>()
 
@@ -154,7 +155,7 @@ export default function CalanderSpace(props: any) {
   } = {
     day: <DayView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setView={setView} setModal={setModal} />,
     week: <WeekView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setView={setView} setModal={setModal} />,
-    month: <MonthView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setView={setView} setModal={setModal} />,
+    month: <MonthView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setModalDate={setModalDate} setView={setView} setModal={setModal} />,
   }
 
   return (
@@ -233,7 +234,7 @@ export default function CalanderSpace(props: any) {
         </div>
         <div className={classes.calendar}>{calendarData !== undefined && returnValue[view]}</div>
       </div>
-      <CreateSchedule modal={modal} setModal={setModal} kanbanList={kanbanList} tmpDay={tmpViewDay} milestoneList={milestoneList} />
+      <CreateSchedule modal={modal} setModal={setModal} kanbanList={kanbanList} tmpDay={modalDate} milestoneList={milestoneList} />
     </div>
   )
 }

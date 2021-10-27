@@ -116,7 +116,7 @@ function Chat(props: IChatProps) {
           if (message.data !== undefined) {
             const messages: IChat[] = message.data.map((v: any) => {
               return {
-                user: v.sender,
+                sender: v.sender,
                 message: v.message,
                 time: v.time,
                 chatId: v.chatId,
@@ -158,7 +158,7 @@ function Chat(props: IChatProps) {
             const messages: IChat[] = messageList.map((v) => {
               if (v.chatId === message.data.parentChatId) {
                 const newMessageData = {
-                  user: message.data.sender,
+                  sender: message.data.sender,
                   message: message.data.message,
                   time: message.data.time,
                   chatId: message.data.chatId ?? '',
@@ -190,7 +190,7 @@ function Chat(props: IChatProps) {
             setMessageList([
               ...messageList,
               {
-                user: message.data.sender,
+                sender: message.data.sender,
                 message: message.data.message,
                 time: message.data.time,
                 chatId: message.data.chatId,

@@ -1,5 +1,5 @@
 export interface IChat {
-  user: string
+  sender: string
   time: string
   message: string
   chatId: string

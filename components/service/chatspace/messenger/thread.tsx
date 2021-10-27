@@ -101,7 +101,7 @@ function Thread(props: IThreadProps) {
   }
 
   const messageInfo = {
-    user: thread.parentUser,
+    sender: thread.parentUser,
     message: thread.parentMessage,
     time: thread.parentTime,
     threadList: [],

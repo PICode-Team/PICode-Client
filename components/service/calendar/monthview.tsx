@@ -6,7 +6,7 @@ import { calDay, checkDate, getToday, IDate } from './calendar'
 import CreateSchedule from './createschedule'
 import { getWeek } from './weekview'
 
-export default function MonthView(props: IDate) {
+export default function MonthView(props: IDate & { setModalDate: React.Dispatch<React.SetStateAction<Date>> }) {
   const classes = viewStyle()
   const [dragId, setDragId] = React.useState<string>()
   let weekNum = [0, 1, 2, 3, 4, 5]
@@ -60,6 +60,7 @@ export default function MonthView(props: IDate) {
                     }
                   }}
                   onClick={() => {
+                    props.setModalDate(tmpDay)
                     props.setModal(true)
                   }}
                 >

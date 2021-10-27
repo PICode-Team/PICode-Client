@@ -43,9 +43,9 @@ const getTimeText = (time: string) => {
 
 function MessageBox(props: IMessageBoxProps) {
   const { messageInfo, reverse, target, particiapntList, setThread, setMediaViewData } = props
-  const { user, message, time, chatId, threadList } = messageInfo
+  const { sender, message, time, chatId, threadList } = messageInfo
   const classes = messageBoxStyle()
-  const thumbnailUrl = particiapntList.find((v) => v.userId === user)?.userThumbnail
+  const thumbnailUrl = particiapntList.find((v) => v.userId === sender)?.userThumbnail
   const [url, setUrl] = useState<string | null>(null)
   const [preview, setPreview] = useState<IOpenGraph | null>(null)
   const [imageList, setImageList] = useState<string[]>([])
@@ -60,7 +60,7 @@ function MessageBox(props: IMessageBoxProps) {
         parentId: chatId,
         parentMessage: message,
         parentTime: time,
-        parentUser: user,
+        parentUser: sender,
         parentChatParticipant: target.chatParticipant,
       })
     }
@@ -125,7 +125,7 @@ function MessageBox(props: IMessageBoxProps) {
         <div className={classes.thumbnail} style={thumbnailUrl !== undefined ? { backgroundImage: `url('${process.env.NEXT_FE_API_URL}/api/temp/${thumbnailUrl}`, backgroundSize: 'cover' } : {}} />
       )}
       <div className={`${target !== null && classes.messageInfo}`} style={{ alignItems: reverse ? 'flex-end' : 'flex-start' }}>
-        {!reverse && <div className={classes.target}>{user}</div>}
+        {!reverse && <div className={classes.target}>{sender}</div>}
         <div className={`${classes.textWrapper} ${reverse && classes.reversedTextWrapper}`}>
           {!empty && <span className={classes.messageText} ref={contentRef}></span>}
           <span className={classes.time}>
@@ -149,11 +149,6 @@ function MessageBox(props: IMessageBoxProps) {
         </div>
         {target !== null && threadList.length > 0 && (
           <div className={classes.thread} onClick={handleSetThread}>
-            <div className={classes.threadParticipant}>
-              {particiapntList.map((v, i) => (
-                <div key={`${chatId}-thread-${i}`}></div>
-              ))}
-            </div>
             <div className={classes.threadCount}>{threadList.length} replies</div>
             <div className={classes.lastThread}>Last reply {threadList.slice(-1)[0].time.split(' ')[0]}</div>
           </div>

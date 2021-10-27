@@ -114,11 +114,10 @@ export default function CreateSchedule(props: ICreateSchedule) {
   }
 
   useEffect(() => {
-    const date = new Date()
-    const today = moment(date).format('YYYY-MM-DD')
+    const date = moment(tmpDay).format('YYYY-MM-DD')
 
-    setPayload({ ...payload, startDate: today, dueDate: today })
-  }, [])
+    setPayload({ ...payload, startDate: date, dueDate: date })
+  }, [tmpDay])
 
   const handleSubmit = () => {
     if (payload.title === '') {
