@@ -12,6 +12,7 @@ const footerStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       justifyContent: 'flex-end',
       alignItems: 'flex-end',
+      marginTop: '30px',
     },
   })
 )
