@@ -171,7 +171,7 @@ function DefaultIssue() {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck, issueList])
+  }, [ws?.readyState, wsCheck, issueList])
 
   const handleChangeMenu = (name: string) => () => {
     setMenu(name)

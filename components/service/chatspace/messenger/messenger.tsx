@@ -213,7 +213,7 @@ function Messenger(props: IMessengerProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck, target, messageList])
+  }, [ws?.readyState, wsCheck, target, messageList])
 
   if (open) {
     return (

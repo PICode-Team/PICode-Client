@@ -66,7 +66,7 @@ function IssueDetail() {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck])
+  }, [ws?.readyState, wsCheck])
 
   return (
     <div className={classes.detail}>

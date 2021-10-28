@@ -72,7 +72,7 @@ function IssueView(props: IIssueViewProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck])
+  }, [ws?.readyState, wsCheck])
 
   useEffect(() => {
     kanbanList.map((v: any) => {

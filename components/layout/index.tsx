@@ -70,7 +70,7 @@ function Layout(props: IPageProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck])
+  }, [ws?.readyState, wsCheck])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

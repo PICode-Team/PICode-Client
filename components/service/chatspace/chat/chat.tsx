@@ -242,7 +242,7 @@ function Chat(props: IChatProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck, target, messageList, channelList, userInfo])
+  }, [ws?.readyState, wsCheck, target, messageList, channelList, userInfo])
 
   useEffect(() => {
     setWsCheck(0)
