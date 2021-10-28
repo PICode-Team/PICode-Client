@@ -7,10 +7,10 @@ import { ArrowBackIos } from '@material-ui/icons'
 import { useWs } from '../../../context/websocket'
 import CreateIssue from '../create/issue'
 import Col from './col'
-interface IIssueProps { }
+interface IIssueProps {}
 
 function Issue(props: IIssueProps) {
-  const { } = props
+  const {} = props
   const classes = issueStyle()
   const [issueList, setIssueList] = useState<IIssue[] | null>(null)
   const [mileList, setMileList] = useState<IMilestone[]>([])
@@ -112,7 +112,7 @@ function Issue(props: IIssueProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck, kanban])
+  }, [ws?.readyState, wsCheck, kanban])
 
   useEffect(() => {
     getIssue(kanban)

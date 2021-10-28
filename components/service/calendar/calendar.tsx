@@ -79,15 +79,21 @@ export default function CalanderSpace(props: any) {
   const calendarWebsocketHanlder = (msg: any) => {
     const message = JSON.parse(msg.data)
     if (message.category === 'calendar') {
-      console.log(message.data)
-
       switch (message.type) {
         case 'getCalendar': {
           setCalendarData(message.data.schedules)
           break
         }
         case 'createSchedule': {
-          console.log(message.data)
+          if (message.data.code === 200) {
+            ws.send(
+              JSON.stringify({
+                category: 'calendar',
+                type: 'getCalendar',
+                data: {},
+              })
+            )
+          }
 
           break
         }

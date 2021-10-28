@@ -128,7 +128,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck])
+  }, [ws?.readyState, wsCheck])
 
   const handleChangeMenu = (name: string) => () => {
     setMenu(name)

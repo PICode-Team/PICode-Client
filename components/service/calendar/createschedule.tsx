@@ -172,8 +172,8 @@ export default function CreateSchedule(props: ICreateSchedule) {
         <CustomDate id="dueDate" onChange={handleDueDate} value={payload.dueDate} label="Due Date" placeholder="Due Date" />
         <CustomTextarea id="content" label="content" value={payload.content} placeholder="Content" onChange={handlePayload} />
         <label style={{ color: '#fff' }}>Optional</label>
-        <CustomSelect value={payload.milestoneId} label={'Milestone'} optionList={mileData} onChange={() => {}} />
-        <CustomSelect value={payload.kanbanId} label={'Kanban'} optionList={kanbanData} onChange={() => {}} />
+        <CustomSelect id="milestoneId" value={payload.milestoneId} label={'Milestone'} optionList={mileData} onChange={handlePayload} />
+        <CustomSelect id="kanbanId" value={payload.kanbanId} label={'Kanban'} optionList={kanbanData} onChange={handlePayload} />
       </React.Fragment>
     </Modal>
   )

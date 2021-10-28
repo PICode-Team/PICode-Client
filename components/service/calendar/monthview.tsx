@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { cloneDeep } from 'lodash'
+import moment from 'moment'
 import React from 'react'
 import { viewStyle } from '../../../styles/service/calendarspace/day'
 import { calDay, checkDate, getToday, IDate } from './calendar'
@@ -23,7 +24,7 @@ export default function MonthView(props: IDate & { setModalDate: React.Dispatch<
             {calDay.map((day, idx) => {
               let tmpDay = cloneDeep(tmpWeekData.startDate)
               tmpDay.setDate(tmpWeekData.startDate.getDate() + idx)
-              let scheduleDay: string = checkDate(tmpDay)
+              let scheduleDay: string = moment(tmpDay).format('YY-MM-DD')
               let tmpMonth = tmpDay.getMonth()
               let realMonth = props.tmpViewDay.getMonth()
               let checkToday = false

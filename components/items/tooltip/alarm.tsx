@@ -270,7 +270,7 @@ export default function AlertDialog(props: IAlertDialogProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck, alarmList, toastList, toastWrapperRef])
+  }, [ws?.readyState, wsCheck, alarmList, toastList, toastWrapperRef])
 
   return (
     <React.Fragment>
