@@ -53,7 +53,7 @@ function ChatInput(props: IChatInputProps) {
 
     if (code === 200) {
       if (messageRef.current !== null) {
-        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="${process.env.NEXT_FE_API_URL}/api/temp/${uploadFileId}">`
+        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="/api/temp/${uploadFileId}">`
       }
     }
   }

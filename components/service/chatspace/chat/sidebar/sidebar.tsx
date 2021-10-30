@@ -76,7 +76,7 @@ function Sidebar(props: ISidebarProps) {
                   style={
                     thumbnailUrl !== undefined
                       ? {
-                          backgroundImage: `url('${process.env.NEXT_FE_API_URL}/api/temp/${thumbnailUrl}')`,
+                          backgroundImage: `url('/api/temp/${thumbnailUrl}')`,
                           backgroundSize: 'cover',
                         }
                       : {}
