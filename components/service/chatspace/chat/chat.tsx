@@ -34,6 +34,7 @@ function Chat(props: IChatProps) {
   const [queryCheck, setQueryCheck] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
   const [threadValue, setThreadValue] = useState<string>('')
+  const [getChannelCheck, setGetChannelCheck] = useState<boolean>(false)
   const ws: any = useWs()
   const router = useRouter()
 
@@ -232,8 +233,9 @@ function Chat(props: IChatProps) {
   useEffect(() => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', chatWebSocketHandler)
-      if (channelList.length === 0) {
+      if (getChannelCheck === false) {
         getChat()
+        setGetChannelCheck(true)
       }
 
       return () => {

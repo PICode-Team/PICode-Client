@@ -35,6 +35,7 @@ function Messenger(props: IMessengerProps) {
   const [thread, setThread] = useState<IThread | null>(null)
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
+  const [getChannelCheck, setGetChannelCheck] = useState<boolean>(false)
   const ws: any = useWs()
 
   const handleOpenMessenger = () => {
@@ -205,7 +206,10 @@ function Messenger(props: IMessengerProps) {
   useEffect(() => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', chatWebSocketHandler)
-      getChat()
+      if (getChannelCheck === false) {
+        getChat()
+        setGetChannelCheck(true)
+      }
 
       return () => {
         ws.removeEventListener('message', chatWebSocketHandler)
