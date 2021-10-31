@@ -139,6 +139,10 @@ function SignUp() {
     const response = await fetchSet('/user', 'POST', true, JSON.stringify(payload))
     const { code } = await response.json()
 
+    if (code === 500) {
+      alert('The same ID exists. Please use a different ID.')
+    }
+
     if (code !== 201) return
     window.location.href = '/'
   }

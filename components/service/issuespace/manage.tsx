@@ -14,7 +14,7 @@ import Board from './board'
 import Milestone from './milestone'
 import Alert from '../../items/modal/alert'
 
-interface IManageSpaceProps { }
+interface IManageSpaceProps {}
 
 export default function ManageSpace(props: IManageSpaceProps) {
   const classes = manageStyle()
@@ -30,6 +30,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
   const [resultStatus, setResultStatus] = useState<boolean>(false)
   const [wsCheck, setWsCheck] = useState<number>(0)
   const [behaviorType, setBehaviorType] = useState<string>('')
+  const [search, setSearch] = useState<string>('')
   const ws: any = useWs()
   const { workspaceId } = router.query
 
@@ -127,7 +128,7 @@ export default function ManageSpace(props: IManageSpaceProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck])
+  }, [ws?.readyState, wsCheck])
 
   const handleChangeMenu = (name: string) => () => {
     setMenu(name)
@@ -138,7 +139,14 @@ export default function ManageSpace(props: IManageSpaceProps) {
       <div className={classes.title}>
         <div className={classes.search}>
           <Search />
-          <input type="text" placeholder="Search User or Channel" />
+          <input
+            type="text"
+            placeholder="Search User or Channel"
+            value={search}
+            onChange={(event: any) => {
+              setSearch(event.target.value)
+            }}
+          />
         </div>
         <CustomButton text="Create" onClick={handleCreateButton} />
       </div>
@@ -153,9 +161,9 @@ export default function ManageSpace(props: IManageSpaceProps) {
           </div>
           <div className={classes.manageContent}>
             {menu === 'Kanban' ? (
-              <Board kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />
+              <Board search={search} kanbanList={kanbanList} setModal={setModal} setModalKanban={setModalKanban} />
             ) : (
-              <Milestone milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />
+              <Milestone search={search} milestoneList={mileList} setModal={setModal} setModalMile={setModalMile} />
             )}
           </div>
         </div>

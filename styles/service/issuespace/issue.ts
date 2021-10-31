@@ -299,6 +299,7 @@ export const manageStyle = makeStyles((theme: IThemeStyle) =>
         cursor: 'pointer',
       },
       '&>input': {
+        width: '100%',
         backgroundColor: 'inherit',
         outline: 'none',
         border: 'none',

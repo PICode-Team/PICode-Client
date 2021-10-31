@@ -27,11 +27,13 @@ export const renderMessage = (
       renderElementList.push(<Boundary text={messageList[i].time.split(' ')[0]} />)
     }
 
+    console.log(messageList[i])
+
     renderElementList.push(
       <MessageBox
         messageInfo={messageList[i]}
         key={`messagebox-${i}`}
-        reverse={messageList[i].user === userId}
+        reverse={messageList[i].sender === userId}
         target={target}
         particiapntList={particiapntList}
         setThread={setThread}

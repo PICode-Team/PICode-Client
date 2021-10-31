@@ -40,7 +40,27 @@ function ChatInput(props: IChatInputProps) {
   const [participantList, setParticipantList] = useState<IUser[]>([])
   const [messageContent, setMessageContent] = useState<string>('')
   const [mentionIndex, setMentionIndex] = useState<number>(0)
+  const [userImage, setUserImage] = useState<any>(null)
   const ws: any = useWs()
+
+  const makeImageUuid = async () => {
+    if (userImage === undefined) return
+
+    const formData = new FormData()
+    formData.append('uploadFile', userImage)
+    const response = await fetchSet('/data', 'POST', false, formData)
+    const { code, uploadFileId } = await response.json()
+
+    if (code === 200) {
+      if (messageRef.current !== null) {
+        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="${process.env.NEXT_FE_API_URL}/api/temp/${uploadFileId}">`
+      }
+    }
+  }
+
+  useEffect(() => {
+    makeImageUuid()
+  }, [userImage])
 
   const getParticipantList = async () => {
     const response = await fetchSet('/userList', 'GET', false)
@@ -122,7 +142,22 @@ function ChatInput(props: IChatInputProps) {
   }
 
   const handleChatInputPaste = (event: any) => {
-    // console.log(event.clipboardData)
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items
+
+    for (const index in items) {
+      const item = items[index]
+      if (item.kind === 'file') {
+        event.preventDefault()
+        event.stopPropagation()
+
+        const blob = item.getAsFile()
+        const reader = new FileReader()
+        reader.onload = function (event: any) {
+          setUserImage(blob)
+        }
+        reader.readAsDataURL(blob)
+      }
+    }
   }
 
   const handleChatInputKeypress = (event: any) => {
@@ -307,9 +342,9 @@ function ChatInput(props: IChatInputProps) {
     }
   }
 
-  const handleChatInputChange = (event: any) => { }
+  const handleChatInputChange = (event: any) => {}
 
-  const handleRichTextClick = (tag: string) => () => { }
+  const handleRichTextClick = (tag: string) => () => {}
 
   useEffect(() => {
     document.addEventListener('click', clickHandler)

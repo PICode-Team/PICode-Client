@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight, Close, CloudDownload, FilterNone, Share } from '@material-ui/icons'
 import React, { useState } from 'react'
 import { mediaViewStyle } from '../../../../styles/service/chatspace/chat'
+import { uuidv4 } from '../../../context/uuidv4'
 
 interface IMediaViewProps {
   mediaViewData: string[]
@@ -23,12 +24,12 @@ function MediaView(props: IMediaViewProps) {
   const handleDownloadClick = (url: string) => () => {
     const downloadTag = document.createElement('a')
     downloadTag.style.display = 'none'
+    downloadTag.download = `테스트.jpg`
     downloadTag.href = url
+
     document.body.append(downloadTag)
     downloadTag.click()
-    setTimeout(() => {
-      document.body.removeChild(downloadTag)
-    }, 500)
+    document.body.removeChild(downloadTag)
   }
 
   const handleShareClick = () => {}

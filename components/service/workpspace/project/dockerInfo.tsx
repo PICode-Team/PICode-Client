@@ -37,6 +37,11 @@ const initialState: IEditDocker = {
   deletedNetwork: '',
 }
 
+interface IOptionData {
+  name: string
+  value: string
+}
+
 function DockerInfo(props: IDockerInfoProps) {
   const { dockerInfo, setDockerInfo, edit, workspaceId } = props
   const classes = createWorkspaceStyle()
@@ -44,6 +49,9 @@ function DockerInfo(props: IDockerInfoProps) {
   const [networkList, setNetworkList] = useState<any[]>([])
   const [containerList, setContainerList] = useState<any[]>([])
   const [editDocker, setEditDocker] = useState<IEditDocker>(initialState)
+
+  const networkOptionList: IOptionData[] = []
+  const containerOptionList: IOptionData[] = []
 
   const handleRadio = (e: any) => {
     if (e.currentTarget.id === 'add') {
@@ -80,6 +88,24 @@ function DockerInfo(props: IDockerInfoProps) {
     }
   }, [])
 
+  useEffect(() => {
+    networkList.map((v) => {
+      networkOptionList.push({
+        name: v.name,
+        value: v.networkId,
+      })
+    })
+  }, [networkList])
+
+  useEffect(() => {
+    containerList.map((v) => {
+      containerOptionList.push({
+        name: v.containerId,
+        value: v.containerId,
+      })
+    })
+  }, [containerList])
+
   const onChangeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDockerInfo({ ...dockerInfo, [event.target.id]: event.target.value })
   }
@@ -114,10 +140,10 @@ function DockerInfo(props: IDockerInfoProps) {
             <React.Fragment>
               <CustomTextInput id="bridgeId" value={dockerInfo.bridgeId ?? ''} label="Bridge Name" placeholder="Input Bridge Name" onChange={onChangeInfo} />
               <CustomTextInput id="bridgeAlias" value={dockerInfo.bridgeAlias ?? ''} label="Bridge Alias" placeholder="Input Bridge Alias" onChange={onChangeInfo} />
-              <CustomSelect id="addedContainer" value={editDocker.addedContainer} label="Containers To Be Connected" onChange={onChangeEditedInfo} />
+              <CustomSelect id="addedContainer" value={editDocker.addedContainer} label="Containers To Be Connected" onChange={onChangeEditedInfo} optionList={containerOptionList} />
             </React.Fragment>
           ) : (
-            <CustomSelect id="deletedNetwork" value={editDocker.deletedNetwork} label="Deleted Network" onChange={onChangeEditedInfo} />
+            <CustomSelect id="deletedNetwork" value={editDocker.deletedNetwork} label="Deleted Network" onChange={onChangeEditedInfo} optionList={networkOptionList} />
           )}
         </React.Fragment>
       ) : (

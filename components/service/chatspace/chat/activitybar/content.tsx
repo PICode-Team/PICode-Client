@@ -21,7 +21,7 @@ function Content(props: IContentProps) {
   const classes = activitybarContentStyle()
 
   const messageInfo = {
-    user: thread.parentUser,
+    sender: thread.parentUser,
     message: thread.parentMessage,
     time: thread.parentTime,
     threadList: [],

@@ -64,11 +64,9 @@ function IssueDetail() {
         ws.removeEventListener('message', issueWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck])
+  }, [ws?.readyState, wsCheck])
 
   return (
     <div className={classes.detail}>

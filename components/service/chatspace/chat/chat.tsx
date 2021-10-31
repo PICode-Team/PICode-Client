@@ -31,6 +31,9 @@ function Chat(props: IChatProps) {
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
+  const [queryCheck, setQueryCheck] = useState<boolean>(false)
+  const [inputValue, setInputValue] = useState<string>('')
+  const [threadValue, setThreadValue] = useState<string>('')
   const ws: any = useWs()
   const router = useRouter()
 
@@ -113,7 +116,7 @@ function Chat(props: IChatProps) {
           if (message.data !== undefined) {
             const messages: IChat[] = message.data.map((v: any) => {
               return {
-                user: v.sender,
+                sender: v.sender,
                 message: v.message,
                 time: v.time,
                 chatId: v.chatId,
@@ -155,7 +158,7 @@ function Chat(props: IChatProps) {
             const messages: IChat[] = messageList.map((v) => {
               if (v.chatId === message.data.parentChatId) {
                 const newMessageData = {
-                  user: message.data.sender,
+                  sender: message.data.sender,
                   message: message.data.message,
                   time: message.data.time,
                   chatId: message.data.chatId ?? '',
@@ -187,7 +190,7 @@ function Chat(props: IChatProps) {
             setMessageList([
               ...messageList,
               {
-                user: message.data.sender,
+                sender: message.data.sender,
                 message: message.data.message,
                 time: message.data.time,
                 chatId: message.data.chatId,
@@ -237,24 +240,25 @@ function Chat(props: IChatProps) {
         ws.removeEventListener('message', chatWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck, target, messageList, channelList, userInfo])
+  }, [ws?.readyState, wsCheck, target, messageList, channelList, userInfo])
 
   useEffect(() => {
     setWsCheck(0)
   }, [target, messageList, channelList, userInfo])
 
   useEffect(() => {
+    if (queryCheck === true) return
+
     if (router.query.target !== undefined) {
       const findTarget = channelList.find((v) => router.query.target === v.chatName)
       if (findTarget !== undefined) {
+        setQueryCheck(true)
         setTarget(findTarget)
       }
     }
-  }, [])
+  }, [channelList])
 
   return (
     <React.Fragment>

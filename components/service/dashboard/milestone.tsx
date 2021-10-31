@@ -4,10 +4,10 @@ import { IMilestone } from '../../../types/issue.types'
 import { useWs } from '../../context/websocket'
 import { getPercentage } from '../issuespace/milestone'
 
-interface IMilestoneViewProps { }
+interface IMilestoneViewProps {}
 
 function MilestoneView(props: IMilestoneViewProps) {
-  const { } = props
+  const {} = props
   const classes = milestoneStyle()
   const [mileList, setMileList] = useState<IMilestone[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
@@ -49,11 +49,9 @@ function MilestoneView(props: IMilestoneViewProps) {
         ws.removeEventListener('message', mileWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck])
+  }, [ws?.readyState, wsCheck])
 
   return (
     <div className={classes.milestone}>

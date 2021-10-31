@@ -107,7 +107,7 @@ function Messenger(props: IMessengerProps) {
           const messages: IChat[] = []
           message.data.forEach((v: any) => {
             messages.push({
-              user: v.sender,
+              sender: v.sender,
               message: v.message,
               time: v.time,
               chatId: v.chatId,
@@ -131,7 +131,7 @@ function Messenger(props: IMessengerProps) {
             const messages: IChat[] = messageList.map((v) => {
               if (v.chatId === message.data.parentChatId) {
                 const newMessageData = {
-                  user: message.data.sender,
+                  sender: message.data.sender,
                   message: message.data.message,
                   time: message.data.time,
                   chatId: message.data.chatId ?? '',
@@ -163,7 +163,7 @@ function Messenger(props: IMessengerProps) {
             setMessageList([
               ...messageList,
               {
-                user: message.data.sender,
+                sender: message.data.sender,
                 message: message.data.message,
                 time: message.data.time,
                 chatId: message.data.chatId,
@@ -211,11 +211,9 @@ function Messenger(props: IMessengerProps) {
         ws.removeEventListener('message', chatWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck, target, messageList])
+  }, [ws?.readyState, wsCheck, target, messageList])
 
   if (open) {
     return (

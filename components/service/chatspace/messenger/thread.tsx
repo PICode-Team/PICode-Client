@@ -32,7 +32,27 @@ function Thread(props: IThreadProps) {
   const [participantList, setParticipantList] = useState<IUser[]>([])
   const [messageContent, setMessageContent] = useState<string>('')
   const [mentionIndex, setMentionIndex] = useState<number>(0)
+  const [userImage, setUserImage] = useState<any>(null)
   const ws: any = useWs()
+
+  const makeImageUuid = async () => {
+    if (userImage === undefined) return
+
+    const formData = new FormData()
+    formData.append('uploadFile', userImage)
+    const response = await fetchSet('/data', 'POST', false, formData)
+    const { code, uploadFileId } = await response.json()
+
+    if (code === 200) {
+      if (messageRef.current !== null) {
+        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="${process.env.NEXT_FE_API_URL}/api/temp/${uploadFileId}">`
+      }
+    }
+  }
+
+  useEffect(() => {
+    makeImageUuid()
+  }, [userImage])
 
   const getParticipantList = async () => {
     const response = await fetchSet('/userList', 'GET', false)
@@ -81,7 +101,7 @@ function Thread(props: IThreadProps) {
   }
 
   const messageInfo = {
-    user: thread.parentUser,
+    sender: thread.parentUser,
     message: thread.parentMessage,
     time: thread.parentTime,
     threadList: [],
@@ -293,6 +313,25 @@ function Thread(props: IThreadProps) {
     }
   }
 
+  const handleChatInputPaste = (event: any) => {
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items
+
+    for (const index in items) {
+      const item = items[index]
+      if (item.kind === 'file') {
+        event.preventDefault()
+        event.stopPropagation()
+
+        const blob = item.getAsFile()
+        const reader = new FileReader()
+        reader.onload = function (event: any) {
+          setUserImage(blob)
+        }
+        reader.readAsDataURL(blob)
+      }
+    }
+  }
+
   const handleClickBack = () => {
     setThread(null)
   }
@@ -374,7 +413,15 @@ function Thread(props: IThreadProps) {
           <div className={classes.imoji}>
             <SentimentSatisfied />
           </div>
-          <div id="editor" className={classes.customInput} contentEditable={true} onKeyUp={handleChatInputKeyup} onKeyPress={handleChatInputKeypress} ref={messageRef}></div>
+          <div
+            id="editor"
+            className={classes.customInput}
+            contentEditable={true}
+            onKeyUp={handleChatInputKeyup}
+            onKeyPress={handleChatInputKeypress}
+            onPaste={handleChatInputPaste}
+            ref={messageRef}
+          ></div>
           <div className={classes.send} onClick={handleSendMessage}>
             <Send />
           </div>

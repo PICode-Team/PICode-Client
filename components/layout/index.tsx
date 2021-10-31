@@ -68,11 +68,9 @@ function Layout(props: IPageProps) {
         ws.removeEventListener('message', userMouseWebSocketHandler)
       }
     } else {
-      setTimeout(() => {
-        setWsCheck(wsCheck + 1)
-      }, 100)
+      setWsCheck(wsCheck + 1)
     }
-  }, [wsCheck])
+  }, [ws?.readyState, wsCheck])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
