@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import type { AppContext, AppInitialProps, AppProps } from 'next/app'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { darkTheme, whiteTheme } from '../styles/theme'
 import wrapper from '../stores'
@@ -10,18 +10,32 @@ import { fetchSet } from '../components/context/fetch'
 
 function App({ Component, pageProps }: AppProps) {
   const theme = useSelector((state: any) => state.theme)
+  const [checkLogin, setCheckLogin] = useState<number>(0);
+
 
   let checkCookie = async () => {
     const response = await fetchSet('/user', 'GET', true)
     const { user, code } = await response.json()
     if (code !== 200) {
       localStorage.removeItem("userId")
+      if (pageProps.path !== "/") {
+        window.location.href = "/"
+      }
+      setCheckLogin(-1);
+    } else {
+      setCheckLogin(1);
     }
   }
 
   useEffect(() => {
     checkCookie();
   }, [pageProps.cookie])
+
+  useEffect(() => {
+    if (checkLogin < 0) {
+      setCheckLogin(0)
+    }
+  }, [checkLogin])
 
   return (
     <React.Fragment>
