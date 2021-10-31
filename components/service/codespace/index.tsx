@@ -60,10 +60,6 @@ export default function CodeSpace() {
     };
 
     useEffect(() => {
-        // console.log(viewState)
-    }, [viewState]);
-
-    useEffect(() => {
         if (openId === undefined) return;
         let name = openId.split("/");
         if (viewState === undefined) {

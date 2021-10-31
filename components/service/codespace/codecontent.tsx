@@ -44,6 +44,7 @@ export default function CodeContent(props: {
     const monaco = useMonaco();
     const beforeData = useRef<any>();
     const onlyCursor = useRef<boolean>(false);
+    const serverLineRef = useRef<number>();
     const lineRef = useRef<{ lineNumber: number, column: number }>({ lineNumber: 0, column: 0 })
     const editorRef = useRef<any>(null);
 
@@ -61,14 +62,10 @@ export default function CodeContent(props: {
 
         editor.onDidChangeCursorPosition((e: any) => {
             if (e.source !== "modelChange") {
-                if (e.reason === 3) {
-                    onlyCursor.current = true;
-                } else {
-                    onlyCursor.current = false;
-                }
                 lineRef.current = e.position
             }
         })
+
     }
 
     const fileWebsocketHanlder = (msg: any) => {
@@ -76,6 +73,17 @@ export default function CodeContent(props: {
         if (message.category === 'code') {
             switch (message.type) {
                 case "getCode": {
+                    if (message.data.rowInfo !== undefined) {
+                        let userId = localStorage.getItem("userId");
+                        for (let i in message.data.rowInfo) {
+                            if (i === userId) {
+                                serverLineRef.current = message.data.rowInfo[i]
+                                break;
+                            }
+                            let alreadyHaveOwner = document.querySelectorAll(".line-numbers");
+                            console.log(alreadyHaveOwner)
+                        }
+                    }
                     setOriginData(message.data.fileContent)
                     break;
                 }
@@ -149,13 +157,16 @@ export default function CodeContent(props: {
         let tmpOriginData = cloneDeep(originData);
         if (fileData !== undefined && !focusIdChange) {
             let defaultLine = lineRef.current.lineNumber;
-            if (defaultLine > 0) {
+            if (defaultLine > 0 && onlyCursor.current) {
                 let tmpArrData = tmpOriginData.split("\n")
                 let tmpFileData = fileData.split("\n");
                 let toHigh = defaultLine - 1;
                 let toLow = tmpFileData.length + 1 - defaultLine;
                 let maxValue = Math.max(toHigh, toLow);
-                tmpArrData[lineRef.current.lineNumber - 1] = tmpFileData[lineRef.current.lineNumber - 1];
+                if (serverLineRef.current !== undefined) {
+                    tmpArrData[serverLineRef.current - 1] = tmpFileData[lineRef.current.lineNumber - 1];
+                    lineRef.current.lineNumber = serverLineRef.current;
+                }
                 tmpOriginData = tmpArrData.join('\n');
             }
         }
@@ -330,23 +341,27 @@ export default function CodeContent(props: {
                     let tmpText = v?.split("\n");
 
                     if (e.changes[0].range.startLineNumber !== e.changes[0].range.endLineNumber) {
+                        onlyCursor.current = true;
                         lineRef.current = {
                             lineNumber: e.changes[0].range.startLineNumber,
                             column: tmpText !== undefined ? tmpText[e.changes[0].range.startLineNumber]?.length ?? 0 : 0
                         }
                     }
                     else if (e.changes[0].text === "\r\n" || e.changes[0].text === "\n") {
+                        onlyCursor.current = true;
                         lineRef.current = {
-                            lineNumber: e.changes[0].range.endLineNumber + 1,
+                            lineNumber: e.changes[0].range.endLineNumber,
                             column: lineRef.current.column > 0 ? 0 : lineRef.current.column
                         }
                     }
                     else if (e.changes[0].text === "") {
+                        onlyCursor.current = true;
                         lineRef.current = {
                             lineNumber: e.changes[0].range.endLineNumber,
                             column: e.changes[0].range.endColumn - e.changes[0].rangeLength
                         }
                     } else if (e.changes[0].text.length !== 1) {
+                        onlyCursor.current = true;
                         lineRef.current = {
                             lineNumber: e.changes[0].range.endLineNumber,
                             column: lineRef.current.column + e.changes[0].text.length
@@ -357,6 +372,8 @@ export default function CodeContent(props: {
                             column: e.changes[0].range.endColumn + 1
                         }
                     }
+                    let enterLine = e.changes[0].text.split("\n").length;
+
                     const payload = {
                         category: "code",
                         type: "updateCode",
@@ -372,7 +389,10 @@ export default function CodeContent(props: {
                                         startCol: range.startColumn,
                                         endCol: range.endColumn,
                                         data: v.text,
-                                        focusRow: lineRef.current.lineNumber
+                                        rowInfo: {
+                                            isUpdate: onlyCursor.current,
+                                            lineNumber: lineRef.current.lineNumber + (enterLine - 1)
+                                        }
                                     }
                                 })
                             }
@@ -381,6 +401,7 @@ export default function CodeContent(props: {
                     if (openWs < 0) {
                         ws.send(JSON.stringify(payload));
                     }
+                    onlyCursor.current = false;
                     setFileData(v);
                 }}
             />
