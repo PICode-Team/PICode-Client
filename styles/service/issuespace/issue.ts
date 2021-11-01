@@ -124,6 +124,8 @@ export const cardStyle = makeStyles((theme: IThemeStyle) =>
     },
     labelWrapper: {
       display: 'flex',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
     label: {
       fontSize: '10px',
@@ -214,6 +216,12 @@ export const boardStyle = makeStyles((theme: IThemeStyle) =>
       height: '10px',
       backgroundColor: '#4078b8',
       borderRadius: '6px',
+    },
+
+    description: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
     },
   })
 )
@@ -471,6 +479,8 @@ export const issueDetailStyle = makeStyles((theme: IThemeStyle) =>
       paddingTop: '20px',
       color: theme.font.high.color,
       fontSize: '14px',
+      whiteSpace: 'pre-line',
+      wordBreak: 'break-word',
     },
   })
 )
