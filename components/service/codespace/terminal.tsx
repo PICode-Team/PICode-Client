@@ -17,6 +17,7 @@ function Terminal(props: any): JSX.Element {
         display: 'inline-block',
         overflow: 'auto',
         outline: 'none',
+        color: "#fff"
       }}
       onClick={(e) => {
         let terminal = document.getElementById(`terminal${props.terminalCount}`)
@@ -28,7 +29,7 @@ function Terminal(props: any): JSX.Element {
       {props.content[props.id]?.map((v: string, idx: number) => (
         <>
           <Ansi key={v}>{v}</Ansi>
-          {props.content[props.id].length - 1 !== idx && <br />}
+          {(props.content[props.id].length - 1 !== idx || idx !== 0) && <br />}
         </>
       ))}
       <span

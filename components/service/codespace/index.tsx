@@ -38,6 +38,7 @@ export default function CodeSpace() {
     const [test, setTest] = React.useState<number>(0);
     const terminalUuid = React.useRef<string[]>([])
     const [openTerminalCount, setOpenTerminalCount] = React.useState<number>(0);
+    const [terminalContent, setTerminalContent] = React.useState<Record<string, string[]>>({});
     const tmpTerminalTest = React.useRef<Record<string, string[]>>({});
     const [termialUpdate, setTerminalUpdate] = React.useState<number>(0);
 
@@ -178,10 +179,10 @@ export default function CodeSpace() {
 
     useEffect(() => {
         if (workspaceId === undefined) return;
-        if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
+        if (test > 0 && ws !== undefined && ws?.readyState === WebSocket.OPEN) {
             ws.addEventListener("message", fileWebsocketHanlder);
             setTest(-1);
-        } else {
+        } else if (test != -1) {
             setTest(test + 1);
         }
     }, [workspaceId, test]);
