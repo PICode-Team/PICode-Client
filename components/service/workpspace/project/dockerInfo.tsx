@@ -140,10 +140,24 @@ function DockerInfo(props: IDockerInfoProps) {
             <React.Fragment>
               <CustomTextInput id="bridgeId" value={dockerInfo.bridgeId ?? ''} label="Bridge Name" placeholder="Input Bridge Name" onChange={onChangeInfo} />
               <CustomTextInput id="bridgeAlias" value={dockerInfo.bridgeAlias ?? ''} label="Bridge Alias" placeholder="Input Bridge Alias" onChange={onChangeInfo} />
-              <CustomSelect id="addedContainer" value={editDocker.addedContainer} label="Containers To Be Connected" onChange={onChangeEditedInfo} optionList={containerOptionList} />
+              <CustomSelect
+                id="addedContainer"
+                placeholder="select added container"
+                value={editDocker.addedContainer}
+                label="Containers To Be Connected"
+                onChange={onChangeEditedInfo}
+                optionList={containerOptionList}
+              />
             </React.Fragment>
           ) : (
-            <CustomSelect id="deletedNetwork" value={editDocker.deletedNetwork} label="Deleted Network" onChange={onChangeEditedInfo} optionList={networkOptionList} />
+            <CustomSelect
+              id="deletedNetwork"
+              placeholder="select deleted network"
+              value={editDocker.deletedNetwork}
+              label="Deleted Network"
+              onChange={onChangeEditedInfo}
+              optionList={networkOptionList}
+            />
           )}
         </React.Fragment>
       ) : (
