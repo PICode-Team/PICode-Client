@@ -402,6 +402,9 @@ export const recentWorkStyle = makeStyles((theme: IThemeStyle) =>
     value: {
       width: '40%',
       fontSize: '14px',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
     },
 
     footer: {
