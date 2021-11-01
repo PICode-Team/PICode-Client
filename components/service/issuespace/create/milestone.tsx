@@ -130,6 +130,7 @@ function CreateMilestone(props: ICreateMilestoneProps) {
             value={tempWorkspaceId}
             label="Workspace"
             onChange={handleWorkspaceId}
+            placeholder="select workspace"
             optionList={workspaceData.reduce((a: { name: string; value: string }[], c) => {
               return [...a, { name: c.name, value: c.workspaceId }]
             }, [])}
