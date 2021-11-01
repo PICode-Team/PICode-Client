@@ -285,5 +285,17 @@ export const createWorkspaceStyle = makeStyles((theme: IThemeStyle) =>
     verticalAlignMiddle: {
       verticalAlign: 'middle',
     },
+
+    fileName: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      maxWidth: '550px',
+      '@media screen and (max-width: 960px)': {
+        maxWidth: '430px',
+      },
+      '@media screen and (max-width: 600px)': {
+        maxWidth: '100%',
+      },
+    },
   })
 )

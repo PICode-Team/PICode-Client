@@ -26,6 +26,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   const [imageName, setImageName] = useState<string>('')
   const [fileName, setFileName] = useState<string>('')
   const [userList, setUserList] = useState<string[]>([])
+  const [uploadType, setUploadType] = useState<string>('')
   const fileButton = useRef<any>(null)
 
   useEffect(() => {
@@ -55,11 +56,12 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   const thumbnailDrop = async (e: any) => {
     e.preventDefault()
     const files = e.dataTransfer.files
+
     if (files !== undefined) {
       setImageName(files[0].name)
       let formData = new FormData()
       formData.append('uploadFile', files[0])
-      const response = await fetchSet(`/data`, 'POST', true, formData)
+      const response = await fetchSet(`/data`, 'POST', false, formData)
       const { uploadFileId, code } = await response.json()
 
       if (code === 200) {
@@ -78,7 +80,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
       setFileName(files[0].name)
       const formData = new FormData()
       formData.append('uploadFile', files[0])
-      const response = await fetchSet('/userList', 'POST', true, formData)
+      const response = await fetchSet('/userList', 'POST', false, formData)
       const { uploadFileId, code } = await response.json()
 
       if (code === 200) {
@@ -102,7 +104,8 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
     }
   }
 
-  const handleFileButtonClick = () => {
+  const handleFileButtonClick = (fileType: string) => () => {
+    setUploadType(fileType)
     fileButton.current.click()
   }
 
@@ -124,7 +127,22 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
   const handleUploadFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const tmpImage = event.target.files
 
-    if (tmpImage !== null) {
+    if (tmpImage === null || tmpImage === undefined) return
+
+    if (uploadType === 'thumbnail') {
+      setImageName(tmpImage[0].name)
+      let formData = new FormData()
+      formData.append('uploadFile', tmpImage[0])
+      const response = await fetchSet(`/data`, 'POST', false, formData)
+      const { uploadFileId, code } = await response.json()
+
+      if (code === 200) {
+        setWorkspaceInfo({
+          ...workspaceInfo,
+          thumbnail: uploadFileId,
+        })
+      }
+    } else if (uploadType === 'zip') {
       const formData = new FormData()
       formData.append('uploadFile', tmpImage[0])
       const response = await fetchSet('/data', 'POST', false, formData)
@@ -149,6 +167,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
         }
       }
     }
+    setUploadType('')
   }
 
   const handleIsExtractClick = (event: any) => {
@@ -171,13 +190,13 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
       <div className={classes.doubleContent}>
         <div className={classes.textarea}>
           <span>Project Thumbnail</span>
-          <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={thumbnailDrop} onClick={handleFileButtonClick}>
+          <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={thumbnailDrop} onClick={handleFileButtonClick('thumbnail')}>
             {upload ? (
               <div className={classes.upload}>
                 <div>
                   <InsertPhoto className={classes.uploadIcon} />
                 </div>
-                <span>{imageName !== '' ? imageName : 'Drop Image'}</span>
+                <div className={classes.fileName}>{imageName !== '' ? imageName : 'Drop Image'}</div>
               </div>
             ) : (
               <>
@@ -185,16 +204,22 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
                   <div>
                     <CloudUpload className={classes.uploadIcon} />
                   </div>
-                  <span>
+                  <div className={classes.fileName}>
                     {edit === true ? (
-                      'If you want change image, upload image'
+                      imageName !== '' ? (
+                        imageName
+                      ) : (
+                        'If you want change image, upload image'
+                      )
+                    ) : imageName !== '' ? (
+                      imageName
                     ) : (
                       <React.Fragment>
                         <div>Drag and Drop Image or</div>
                         <div>Click to upload Image</div>
                       </React.Fragment>
                     )}
-                  </span>
+                  </div>
                 </div>
               </>
             )}
@@ -210,9 +235,9 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
               </span>
               <div className={classes.isExtract}>
                 is Extract?
-                <input type="checkbox" defaultChecked={(source as any).upload ? (source as any).upload.isExtract : true} onClick={handleIsExtractClick} className={classes.verticalAlignMiddle} />
+                <input type="checkbox" defaultChecked={(source as any)?.upload ? (source as any)?.upload.isExtract : true} onClick={handleIsExtractClick} className={classes.verticalAlignMiddle} />
               </div>
-              <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop} onClick={handleFileButtonClick}>
+              <div className={classes.imageUpload} onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop} onClick={handleFileButtonClick('zip')}>
                 {upload ? (
                   <div className={classes.upload}>
                     <div>

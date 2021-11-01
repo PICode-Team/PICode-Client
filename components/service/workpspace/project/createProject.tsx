@@ -38,10 +38,10 @@ function CreateProject() {
 
   const handlePreviousButton = () => {
     if (step === 2) {
-      setType('nothing')
       setWorkspaceInfo(initialWorkspace)
       setDockerInfo(initialDocker)
       setSource(null)
+      setType('nothing')
     }
     setStep(step - 1)
   }
