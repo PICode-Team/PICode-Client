@@ -17,9 +17,9 @@ interface IMilestoneProps {
 export const getPercentage = (startDate: string, endDate: string) => {
   const today = new Date()
   const [startYear, startMonth, startDay] = startDate.split('-')
-  const start = new Date(Number(`20${startYear}`), Number(startMonth), Number(startDay))
+  const start = new Date(Number(`${startYear}`), Number(startMonth), Number(startDay))
   const [endYear, endMonth, endDay] = endDate.split('-')
-  const end = new Date(Number(`20${endYear}`), Number(endMonth), Number(endDay))
+  const end = new Date(Number(`${endYear}`), Number(endMonth), Number(endDay))
 
   const whole = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
   const now = Math.round((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))

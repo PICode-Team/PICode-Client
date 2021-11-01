@@ -30,7 +30,11 @@ function MilestoneView(props: IMilestoneViewProps) {
     if (message.category === 'milestone') {
       switch (message.type) {
         case 'getMilestone':
-          setMileList(message.data)
+          setMileList(
+            message.data.map((v: IMilestone) => {
+              return { ...v, startDate: `20${v.startDate}`, endDate: `20${v.endDate}` }
+            })
+          )
           break
         default:
       }
