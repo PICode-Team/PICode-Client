@@ -60,6 +60,7 @@ function DefaultCodeView() {
       setOpenDelete(false)
       setOpenResult(true)
       setResultStatus(true)
+      setWorkspaceData(projectData.filter((v) => v.workspaceId !== workspaceId))
     } else {
       setOpenDelete(false)
       setOpenResult(true)
@@ -108,7 +109,7 @@ function DefaultCodeView() {
               </div>
             </div>
             <div className={classes.infoWrapper}>
-              <div className={classes.infoKey}>Author</div>
+              <div className={classes.infoKey}>Participant</div>
               <div className={classes.infoValue}>{v.participants}</div>
             </div>
             <div className={classes.infoWrapper}>

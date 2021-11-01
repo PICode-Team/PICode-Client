@@ -4,7 +4,6 @@ import { recentWorkStyle } from '../../../styles/service/dashboard/dashboard'
 import { Add, ArrowBackIos, DeleteForever, Settings, CloudDownload, ArrowForwardIos } from '@material-ui/icons'
 import { IconButton } from '@material-ui/core'
 import { Carousel } from 'react-responsive-carousel'
-import * as d3 from 'd3'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 import { IWorkspaceSpec } from '../../../types/workspace.types'
@@ -68,6 +67,7 @@ function RecentWork(props: IRecentWorkProps) {
       setOpenDelete(false)
       setOpenResult(true)
       setResultStatus(true)
+      setWorkspaceData(workspaceData.filter((v) => v.workspaceId !== workspaceId))
     } else {
       setOpenDelete(false)
       setOpenResult(true)
@@ -154,7 +154,7 @@ function RecentWork(props: IRecentWorkProps) {
               <div className={classes.cardContent} id="textcontent">
                 <div className={classes.wrapper}>
                   <div className={classes.line}>
-                    <div className={classes.key}>Author</div>
+                    <div className={classes.key}>Participant</div>
                     <div className={classes.value}>{participantsInfo ?? 'No one'}</div>
                   </div>
                   <div className={classes.line}>
