@@ -81,10 +81,11 @@ export default function CodeContent(props: {
                                 break;
                             }
                             let alreadyHaveOwner = document.querySelectorAll(".line-numbers");
-                            console.log(alreadyHaveOwner)
                         }
                     }
-                    setOriginData(message.data.fileContent)
+                    if (message.data.filePath === selectFile?.path) {
+                        setOriginData(message.data.fileContent)
+                    }
                     break;
                 }
             }
@@ -100,22 +101,35 @@ export default function CodeContent(props: {
             if (selectFile === undefined) return;
             if (tmpWorkSpaceId === undefined) return;
             if (openWs < 0) {
-                ws.send(
-                    JSON.stringify({
-                        category: 'code',
-                        type: 'getCode',
-                        data: {
-                            workspaceId: tmpWorkSpaceId,
-                            filePath: selectFile.path
-                        }
-                    })
-                );
+                if (props.focusId !== selectFile.path) {
+                    ws.send(
+                        JSON.stringify({
+                            category: 'code',
+                            type: 'getCode',
+                            data: {
+                                workspaceId: tmpWorkSpaceId,
+                                filePath: props.focusId
+                            }
+                        })
+                    );
+                } else {
+                    ws.send(
+                        JSON.stringify({
+                            category: 'code',
+                            type: 'getCode',
+                            data: {
+                                workspaceId: tmpWorkSpaceId,
+                                filePath: selectFile.path
+                            }
+                        })
+                    );
+                }
             }
         }, 1000);
         return () => {
             clearInterval(timer);
         };
-    }, [selectFile])
+    }, [selectFile, props.focusId])
 
     useEffect(() => {
         if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
@@ -147,6 +161,19 @@ export default function CodeContent(props: {
     }, [selectFile, openWs])
 
     useEffect(() => {
+        if (openWs < 0 && props.focusId !== undefined) {
+            const tmpWorkSpaceId = router.query.workspaceId;
+            ws.send(
+                JSON.stringify({
+                    category: 'code',
+                    type: 'getCode',
+                    data: {
+                        workspaceId: tmpWorkSpaceId,
+                        filePath: props.focusId
+                    }
+                })
+            );
+        }
         setFocusIdChange(true);
     }, [props.focusId])
 
@@ -168,11 +195,16 @@ export default function CodeContent(props: {
                     lineRef.current.lineNumber = serverLineRef.current;
                 }
                 tmpOriginData = tmpArrData.join('\n');
+            } else if (!onlyCursor.current && serverLineRef.current === lineRef.current.lineNumber) {
+                let tmpArrData = tmpOriginData.split("\n")
+                let tmpFileData = fileData.split("\n");
+                tmpArrData[lineRef.current.lineNumber - 1] = tmpFileData[lineRef.current.lineNumber - 1];
+                tmpOriginData = tmpArrData.join('\n');
             }
         }
         beforeData.current = originData;
         setFileData(tmpOriginData)
-    }, [originData, props.focusId])
+    }, [originData])
 
     useEffect(() => {
         if (changeValue) {
@@ -186,7 +218,7 @@ export default function CodeContent(props: {
                     type: 'getCode',
                     data: {
                         workspaceId: tmpWorkSpaceId,
-                        filePath: selectFile.path
+                        filePath: props.focusId
                     }
                 })
             );
@@ -272,9 +304,14 @@ export default function CodeContent(props: {
             }}>
             {props.viewState?.children?.map((v, idx) => {
                 let fileType = v.path.split("/");
+                let checkName = props.focusId?.split("/");
+                let resultName = "";
+                if (checkName !== undefined) {
+                    resultName = checkName[checkName.length - 1]
+                }
                 return <div key={v.path}
                     draggable
-                    className={clsx(classes.topFile, selectFile.name === v.name && classes.activeTopFile)}
+                    className={clsx(classes.topFile, resultName === v.name && classes.activeTopFile)}
                     onClick={() => {
                         setSelectFile(v)
                     }}
@@ -373,7 +410,9 @@ export default function CodeContent(props: {
                         }
                     }
                     let enterLine = e.changes[0].text.split("\n").length;
-
+                    if (serverLineRef.current !== lineRef.current.lineNumber) {
+                        onlyCursor.current = true
+                    }
                     const payload = {
                         category: "code",
                         type: "updateCode",

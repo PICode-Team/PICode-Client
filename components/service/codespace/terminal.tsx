@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import Ansi from 'ansi-to-react'
 import { throttle } from 'lodash'
 import { terminalStyle } from '../../../styles/service/codespace/code'
-import { useWs } from '../../context/websocket'
 import { IconButton } from '@material-ui/core'
 import { CancelOutlined, Close, DeleteForeverOutlined } from '@material-ui/icons'
 
@@ -60,8 +59,6 @@ function Terminal(props: any): JSX.Element {
 
 export default function TerminalContent(props: any): JSX.Element {
   const classes = terminalStyle()
-  const ws = useWs()
-
   const userMouseMoveCapture = React.useCallback(
     throttle((e) => {
       //
@@ -70,16 +67,28 @@ export default function TerminalContent(props: any): JSX.Element {
   )
 
   let terminalContent = []
-  for (let i = 0; i < props.terminalCount; i++) {
-    terminalContent.push(<Terminal {...props} terminalCount={i} ws={ws} id={props.uuid[i]} width={`${100 / props.terminalCount}%`} />)
+  for (let i = 0; i < props.openTerminalCount; i++) {
+    terminalContent.push(<Terminal {...props} terminalCount={i} ws={props.ws} id={props.uuid[i]} width={`${100 / props.terminalCount}%`} />)
   }
+
   return (
     <div className={classes.terminal} style={{ height: `${props.height}px` }}>
       <div draggable={false} className={classes.resizerBar} />
       <IconButton
         style={{ position: 'absolute', top: '6px', right: '6px', width: '12px', height: '12px' }}
-        onClick={() => {
-          props.setOpenContent(props.terminalCount - 1)
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation()
+          if (props.ws !== undefined && props.ws?.readyState === WebSocket.OPEN) {
+            let payload = {
+              category: "terminal",
+              type: "deleteTerminal",
+              data: {
+                id: props.uuid[0]
+              }
+            }
+            props.ws.send(JSON.stringify(payload))
+          }
         }}
       >
         <Close style={{ width: '20px', height: '20px', color: '#dedede' }} />
