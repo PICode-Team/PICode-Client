@@ -40,6 +40,7 @@ function Activitybar(props: IActivitybarProps) {
       <Header thread={thread} setThread={setThread} />
       {userInfo !== null && (
         <Content
+          toggle={false}
           newMessage={newMessage}
           setNewMessage={setNewMessage}
           thread={thread}
