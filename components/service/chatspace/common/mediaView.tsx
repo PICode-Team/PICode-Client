@@ -17,6 +17,7 @@ function MediaView(props: IMediaViewProps) {
     const downloadTag = document.createElement('a')
     downloadTag.style.display = 'none'
     downloadTag.href = url
+    downloadTag.target = '_blank'
 
     document.body.append(downloadTag)
     downloadTag.click()
@@ -29,6 +30,7 @@ function MediaView(props: IMediaViewProps) {
 
   const handleDownloadClick = (url: string) => () => {
     const downloadTag = document.createElement('a')
+    downloadTag.download = `${uuidv4()}`
     downloadTag.style.display = 'none'
     downloadTag.href = url
 
@@ -79,9 +81,9 @@ function MediaView(props: IMediaViewProps) {
           <div className={classes.icon} onClick={handleDownloadClick(mediaViewData[index])}>
             <CloudDownload />
           </div>
-          <div className={classes.icon} onClick={handleShareClick}>
+          {/* <div className={classes.icon} onClick={handleShareClick}>
             <Share />
-          </div>
+          </div> */}
         </div>
       </div>
     </React.Fragment>
