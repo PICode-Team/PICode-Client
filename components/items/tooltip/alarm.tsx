@@ -94,10 +94,14 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
     wrapper: {
       position: 'absolute',
       zIndex: 99999,
-      top: '55px',
+      bottom: '15px',
+      right: '0px',
       maxHeight: 'calc(100% - 55px)',
       overflowY: 'hidden',
       width: '260px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
     },
     toast: {
       width: '180px',
@@ -105,7 +109,7 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
       backgroundColor: theme.backgroundColor.step1,
       borderRadius: '12px',
       marginTop: '10px',
-      marginLeft: '15px',
+      marginRight: '25px',
       filter: theme.brightness.step1,
       color: theme.font.high.color,
       padding: '10px',
@@ -130,7 +134,7 @@ const alertDialogStyle = makeStyles((theme: IThemeStyle) =>
 
     '@keyframes slidein': {
       from: {
-        transform: 'translateX(60px)',
+        transform: 'translateX(-60px)',
         opacity: 0.2,
       },
       to: {
