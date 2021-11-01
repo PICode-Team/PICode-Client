@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react'
 import { IChannel } from '../../../../types/chat.types'
 import { allTagRegex, imageRegex } from '../../../context/regex'
 
@@ -9,18 +10,22 @@ interface IRowProps {
 
 function Row(props: IRowProps) {
   const { target, setTarget, classes } = props
-  const filteredMessage = (target.recentMessage ?? '').replace(allTagRegex, '')
-  const checkImage = (() => {
-    const regexMessage = imageRegex.exec(target.recentMessage)
-    if (regexMessage === null) return false
-    return true
-  })()
-  const recentText = (() => {
+  const [text, setText] = useState<string>('')
+
+  useEffect(() => {
+    const filteredMessage = target.recentMessage.replace(allTagRegex, '').trim()
+    const checkImage = (() => {
+      const regexMessage = imageRegex.exec(target.recentMessage)
+      if (regexMessage === null) return false
+      return true
+    })()
+
     if (filteredMessage === '' && checkImage === true) {
-      return '(image)'
+      setText('(image)')
+      return
     }
-    return filteredMessage
-  })()
+    setText(filteredMessage)
+  }, [])
 
   const handleClickRow = () => {
     setTarget(target)
@@ -31,11 +36,11 @@ function Row(props: IRowProps) {
       <div className={classes.users}></div>
       <div className={classes.titleWrapper}>
         <div className={classes.title}>
-          <div className={classes.titleText}>{target.chatName ?? (target.userId as string)}</div>
+          <div className={classes.titleText}>{target.chatName}</div>
           <div className={classes.participant}>{target.chatName !== undefined && target.chatParticipant.length}</div>
           <div className={classes.etc}></div>
         </div>
-        <div className={classes.thumbnail}>{recentText}</div>
+        <div className={classes.thumbnail}>{text}</div>
       </div>
       <div className={classes.chatInfo}>
         <div className={classes.lastTime}>{target.recentTime !== '' && target.recentTime !== undefined && target.recentTime.split(' ')[0]}</div>
@@ -45,4 +50,4 @@ function Row(props: IRowProps) {
   )
 }
 
-export default Row
+export default React.memo(Row)

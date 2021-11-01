@@ -56,12 +56,13 @@ function Sidebar(props: ISidebarProps) {
           .filter((v) => v.chatName.indexOf(search) !== -1)
           .map((v, i) => {
             const thumbnailUrl = participantList.find((user) => user.userName === v.chatName)?.userThumbnail
-            const filteredMessage = (v.recentMessage ?? '').replace(allTagRegex, '')
+            const filteredMessage = v.recentMessage.replace(allTagRegex, '').trim()
             const checkImage = (() => {
               const regexMessage = imageRegex.exec(v.recentMessage)
               if (regexMessage === null) return false
               return true
             })()
+
             const recentText = (() => {
               if (filteredMessage === '' && checkImage === true) {
                 return '(image)'

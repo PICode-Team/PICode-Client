@@ -107,10 +107,10 @@ function MessageBox(props: IMessageBoxProps) {
 
     const processedMessage = (() => {
       if (URLRegexMessage !== null) {
-        return message.replace(URLRegexMessage[0], `<a href="${URLRegexMessage[0]}">${URLRegexMessage[0]}</a>`).replace(imageRegex, '')
+        return message.replace(URLRegexMessage[0], `<a href="${URLRegexMessage[0]}">${URLRegexMessage[0]}</a>`).replace(imageRegex, '').trim()
       }
 
-      return message.replace(imageRegex, '')
+      return message.replace(imageRegex, '').trim()
     })()
 
     if (processedMessage === '' || processedMessage === ' ') {
