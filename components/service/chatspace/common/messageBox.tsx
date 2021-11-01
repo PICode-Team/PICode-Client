@@ -113,7 +113,7 @@ function MessageBox(props: IMessageBoxProps) {
       return message.replace(imageRegex, '')
     })()
 
-    if (processedMessage === '') {
+    if (processedMessage === '' || processedMessage === ' ') {
       setEmpty(true)
     }
     contentRef.current.innerHTML = processedMessage
