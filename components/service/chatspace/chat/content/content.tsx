@@ -27,7 +27,6 @@ export const renderMessage = (
       renderElementList.push(<Boundary text={messageList[i].time.split(' ')[0]} />)
     }
 
-    console.log(messageList[i])
 
     renderElementList.push(
       <MessageBox

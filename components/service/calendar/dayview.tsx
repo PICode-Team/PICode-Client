@@ -7,12 +7,12 @@ export default function DayView(props: IDate) {
   let scheduleDay: string = checkDate(props.tmpViewDay)
   return (
     <div className={classes.day}>
-      {console.log(scheduleDay, props.schedule)}
+
       {props.schedule !== undefined &&
         props.schedule[scheduleDay] !== undefined &&
         props.schedule[scheduleDay].map((v) => {
           return (
-            <div key={v.scheduleId} className={classes.dayContainer} draggable={true} onDragStart={() => {}}>
+            <div key={v.scheduleId} className={classes.dayContainer} draggable={true} onDragStart={() => { }}>
               <div className={classes.titleName}>{v.title}</div>
               <div style={{ width: '100%', height: 'calc(100% - 40px)' }}>
                 <div style={{ width: '100%', height: '100%' }}>{v.content}</div>

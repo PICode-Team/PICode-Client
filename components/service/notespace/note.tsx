@@ -64,10 +64,10 @@ function Note(props: INoteProps) {
             const splitedPath = note.path.split('/')
             splitedPath.splice(0, 1)
             pushToOutput(note.path, splitedPath, output, note)
-            console.log(...(fileViewList ?? []), note)
+
             setFileViewList([...(fileViewList ?? []), note])
           } else {
-            console.log(message.data)
+
             setFileViewList(message.data)
           }
           break
