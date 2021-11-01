@@ -16,16 +16,36 @@ const exportStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       width: '100%',
       height: '100%',
+      '@media screen and (max-width: 960px)': {
+        flexDirection: 'column',
+      },
     },
     node: {
       backgroundColor: theme.backgroundColor.step2,
-      width: '120px',
-      height: '120px',
+      width: '150px',
+      height: '150px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       cursor: 'pointer',
+      color: theme.font.high.color,
+      textAlign: 'center',
+      padding: '10px',
+      '@media screen and (max-width: 1920px)': {
+        margin: '60px 0px',
+        marginBottom: '30px',
+      },
+      '@media screen and (max-width: 1280px)': {
+        margin: '40px 0px',
+        width: '100px',
+        height: '100px',
+        marginBottom: '20px',
+      },
+      '@media screen and (max-width: 960px)': {
+        margin: '10px 0px',
+        width: '100%',
+      },
     },
   })
 )
@@ -91,7 +111,15 @@ function ExportWorkspace(props: IExportWorkspaceProps) {
       }
     }
 
-    await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
+    const response = await fetchSet('/workspace/export', 'POST', true, JSON.stringify(payload))
+    const { code } = await response.json()
+
+    if (code / 2 === 100) {
+      setModal(false)
+    } else {
+      alert('workspace export failed.')
+      setModal(false)
+    }
   }
 
   const handleTypeClick = (type: IExportType) => () => {
