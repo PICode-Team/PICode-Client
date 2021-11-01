@@ -24,8 +24,17 @@ function IssueDetail() {
   const router = useRouter()
   const { issueUUID } = router.query
   const [issueInfo, setIssueInfo] = useState<IIssueDetail | null>(null)
+  const [milestoneName, setMilestoneName] = useState<string>('')
+  const [kanbanName, setKanbanName] = useState<string>('')
   const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
+
+  useEffect(() => {
+    if (issueInfo !== null) {
+      getKanban(issueInfo.kanban)
+      getMilestone(issueInfo.milestone)
+    }
+  }, [issueInfo])
 
   const getIssueDetail = (issueUUID: string) => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
@@ -41,6 +50,34 @@ function IssueDetail() {
     }
   }
 
+  const getKanban = (uuid: string) => {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'kanban',
+          type: 'getKanban',
+          data: {
+            uuid,
+          },
+        })
+      )
+    }
+  }
+
+  const getMilestone = (uuid: string) => {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'milestone',
+          type: 'getMilestone',
+          data: {
+            uuid,
+          },
+        })
+      )
+    }
+  }
+
   const issueWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
 
@@ -50,6 +87,24 @@ function IssueDetail() {
           if (message.data !== undefined) {
             setIssueInfo(message.data)
           }
+          break
+      }
+    } else if (message.category === 'kanban') {
+      switch (message.type) {
+        case 'getKanban':
+          if (message.data.kanbans.length > 0) {
+            setKanbanName(message.data.kanbans[0].title)
+          }
+
+          break
+      }
+    } else if (message.category === 'milestone') {
+      switch (message.type) {
+        case 'getMilestone':
+          if (message.data !== undefined) {
+            setMilestoneName(message.data.title)
+          }
+
           break
       }
     }
@@ -92,7 +147,7 @@ function IssueDetail() {
         </div>
         <div className={classes.item}>
           <div className={classes.key}>Kanban Board</div>
-          <div className={classes.value}>{issueInfo !== null && issueInfo.kanban}</div>
+          <div className={classes.value}>{issueInfo !== null && issueInfo.kanban === '' ? 'Empty' : kanbanName === '' ? 'Empty' : kanbanName}</div>
         </div>
         <div className={classes.item}>
           <div className={classes.key}>Column</div>
@@ -100,7 +155,7 @@ function IssueDetail() {
         </div>
         <div className={classes.item}>
           <div className={classes.key}>Milestone</div>
-          <div className={classes.value}>{issueInfo !== null && (issueInfo.milestone === '' ? 'Empty' : issueInfo.milestone)}</div>
+          <div className={classes.value}>{issueInfo !== null && (issueInfo.milestone === '' ? 'Empty' : milestoneName === '' ? 'Empty' : milestoneName)}</div>
         </div>
 
         <div className={classes.divider} />
