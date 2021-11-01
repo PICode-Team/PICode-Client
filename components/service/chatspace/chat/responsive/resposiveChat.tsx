@@ -13,7 +13,7 @@ interface IResponsiveProps {
   channelList: IChannel[]
   messageList: IChat[]
   newMessage: boolean
-  particiapntList: IUser[]
+  participantList: IUser[]
   toggle: boolean
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
   setModal: React.Dispatch<React.SetStateAction<boolean>>

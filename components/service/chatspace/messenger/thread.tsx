@@ -16,20 +16,19 @@ interface IThreadProps {
   newMessage: boolean
   userId: string
   thread: IThread
-  particiapntList: IUser[]
+  participantList: IUser[]
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 }
 
 function Thread(props: IThreadProps) {
-  const { setOpen, newMessage, userId, thread, setThread, particiapntList, setMediaViewData } = props
+  const { setOpen, newMessage, userId, thread, setThread, participantList, setMediaViewData } = props
   const classes = messengerStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
   const [onMention, setOnMention] = useState<boolean>(false)
   const [mentionLeft, setMentionLeft] = useState<string>('')
-  const [participantList, setParticipantList] = useState<IUser[]>([])
   const [messageContent, setMessageContent] = useState<string>('')
   const [mentionIndex, setMentionIndex] = useState<number>(0)
   const [userImage, setUserImage] = useState<any>(null)
@@ -53,15 +52,6 @@ function Thread(props: IThreadProps) {
   useEffect(() => {
     makeImageUuid()
   }, [userImage])
-
-  const getParticipantList = async () => {
-    const response = await fetchSet('/userList', 'GET', false)
-    const { user, code } = await response.json()
-
-    if (code === 200) {
-      setParticipantList(user)
-    }
-  }
 
   const sendMessage = (target: string, message: string) => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
@@ -344,10 +334,6 @@ function Thread(props: IThreadProps) {
     setOpen(false)
   }
 
-  useEffect(() => {
-    getParticipantList()
-  }, [])
-
   return (
     <div className={classes.messenger} style={{ boxShadow: 'none' }}>
       <div className={classes.wrapper}>
@@ -371,9 +357,9 @@ function Thread(props: IThreadProps) {
         </div>
         <div className={classes.body}>
           <div className={classes.content}>
-            <MessageBox messageInfo={messageInfo} reverse={thread.parentUser === userId} setThread={setThread} particiapntList={particiapntList} target={null} setMediaViewData={setMediaViewData} />
+            <MessageBox messageInfo={messageInfo} reverse={thread.parentUser === userId} setThread={setThread} participantList={participantList} target={null} setMediaViewData={setMediaViewData} />
             {thread.messageList.length > 0 && <Boundary text={`${thread.messageList.length} replies`} />}
-            {renderMessage(thread.messageList, userId, true, setThread, null, particiapntList, setMediaViewData)}
+            {renderMessage(thread.messageList, userId, true, setThread, null, participantList, setMediaViewData)}
             <div ref={endRef}></div>
           </div>
         </div>
@@ -384,7 +370,7 @@ function Thread(props: IThreadProps) {
               .map((v, i) => {
                 if (v === 'here') {
                   return (
-                    <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('here')}>
+                    <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('here')}>
                       @ here
                     </div>
                   )
@@ -392,7 +378,7 @@ function Thread(props: IThreadProps) {
 
                 if (v === 'channel') {
                   return (
-                    <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('channel')}>
+                    <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('channel')}>
                       @ channel
                     </div>
                   )

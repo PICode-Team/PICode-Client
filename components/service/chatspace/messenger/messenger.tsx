@@ -38,6 +38,7 @@ function Messenger(props: IMessengerProps) {
   const [getChannelCheck, setGetChannelCheck] = useState<boolean>(false)
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null)
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
+  const [participantList, setParticipantList] = useState<IUser[]>([])
   const ws: any = useWs()
 
   const getUserId = async () => {
@@ -216,6 +217,15 @@ function Messenger(props: IMessengerProps) {
     }
   }
 
+  const getParticipantList = async () => {
+    const response = await fetchSet('/userList', 'GET', false)
+    const { user, code } = await response.json()
+
+    if (code === 200) {
+      setParticipantList(user)
+    }
+  }
+
   useEffect(() => {
     setMessageList([])
 
@@ -257,7 +267,7 @@ function Messenger(props: IMessengerProps) {
             messageList={messageList}
             newMessage={newMessage}
             thread={thread}
-            particiapntList={[]}
+            participantList={participantList}
             setNewMessage={setNewMessage}
             setTarget={setTarget}
             setOpen={setOpen}
@@ -265,7 +275,9 @@ function Messenger(props: IMessengerProps) {
             setMediaViewData={setMediaViewData}
           />
         )}
-        {thread !== null && <Thread userId={userId.userId} newMessage={false} thread={thread} particiapntList={[]} setOpen={setOpen} setThread={setThread} setMediaViewData={setMediaViewData} />}
+        {thread !== null && (
+          <Thread userId={userId.userId} newMessage={false} thread={thread} participantList={participantList} setOpen={setOpen} setThread={setThread} setMediaViewData={setMediaViewData} />
+        )}
         {mediaViewData !== null && <MediaView mediaViewData={mediaViewData} setMediaViewData={setMediaViewData} />}
       </React.Fragment>
     )

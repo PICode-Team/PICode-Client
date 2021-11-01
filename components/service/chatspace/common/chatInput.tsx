@@ -409,7 +409,7 @@ function ChatInput(props: IChatInputProps) {
             .map((v, i) => {
               if (v === 'here') {
                 return (
-                  <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('here')}>
+                  <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('here')}>
                     @ here
                   </div>
                 )
@@ -417,7 +417,7 @@ function ChatInput(props: IChatInputProps) {
 
               if (v === 'channel') {
                 return (
-                  <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('channel')}>
+                  <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('channel')}>
                     @ channel
                   </div>
                 )

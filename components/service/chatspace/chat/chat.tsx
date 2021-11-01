@@ -266,18 +266,18 @@ function Chat(props: IChatProps) {
             messageList={messageList}
             typingUserList={typingUserList}
             setThread={setThread}
-            particiapntList={userList}
+            participantList={userList}
             setMediaViewData={setMediaViewData}
           />
         ) : (
           <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
         )}
-        {thread !== null && <Activitybar setNewMessage={setNewMessage} newMessage={newMessage} thread={thread} setThread={setThread} particiapntList={userList} setMediaViewData={setMediaViewData} />}
+        {thread !== null && <Activitybar setNewMessage={setNewMessage} newMessage={newMessage} thread={thread} setThread={setThread} participantList={userList} setMediaViewData={setMediaViewData} />}
         <ResponsiveChat
           setNewMessage={setNewMessage}
           messageList={messageList}
           newMessage={newMessage}
-          particiapntList={userList}
+          participantList={userList}
           target={target}
           thread={thread}
           channelList={channelList}

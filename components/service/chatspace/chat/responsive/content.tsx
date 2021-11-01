@@ -16,7 +16,7 @@ interface IContentProps {
   newMessage: boolean
   userId: string
   thread: IThread | null
-  particiapntList: IUser[]
+  participantList: IUser[]
   toggle: boolean
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
@@ -25,13 +25,12 @@ interface IContentProps {
 }
 
 function Content(props: IContentProps) {
-  const { setNewMessage, target, messageList, newMessage, userId, thread, particiapntList, setTarget, setThread, toggle, setMediaViewData } = props
+  const { setNewMessage, target, messageList, newMessage, userId, thread, participantList, setTarget, setThread, toggle, setMediaViewData } = props
   const classes = responsiveContentStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLInputElement>(null)
   const [onMention, setOnMention] = useState<boolean>(false)
   const [mentionLeft, setMentionLeft] = useState<string>('')
-  const [participantList, setParticipantList] = useState<IUser[]>([])
   const [messageContent, setMessageContent] = useState<string>('')
   const [mentionIndex, setMentionIndex] = useState<number>(0)
   const [userImage, setUserImage] = useState<any>(null)
@@ -55,15 +54,6 @@ function Content(props: IContentProps) {
   useEffect(() => {
     makeImageUuid()
   }, [userImage])
-
-  const getParticipantList = async () => {
-    const response = await fetchSet('/userList', 'GET', false)
-    const { user, code } = await response.json()
-
-    if (code === 200) {
-      setParticipantList(user)
-    }
-  }
 
   const sendMessage = (target: string, message: string) => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
@@ -340,10 +330,6 @@ function Content(props: IContentProps) {
     }
   }, [target])
 
-  useEffect(() => {
-    getParticipantList()
-  }, [])
-
   const handleClickBack = () => {
     setTarget(null)
   }
@@ -378,7 +364,7 @@ function Content(props: IContentProps) {
         </div>
         <div className={classes.body}>
           <div className={classes.contentBox}>
-            {renderMessage(messageList, userId, false, setThread, target, particiapntList, setMediaViewData)}
+            {renderMessage(messageList, userId, false, setThread, target, participantList, setMediaViewData)}
             <div ref={endRef} />
           </div>
         </div>
@@ -390,7 +376,7 @@ function Content(props: IContentProps) {
               .map((v, i) => {
                 if (v === 'here') {
                   return (
-                    <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('here')}>
+                    <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('here')}>
                       @ here
                     </div>
                   )
@@ -398,7 +384,7 @@ function Content(props: IContentProps) {
 
                 if (v === 'channel') {
                   return (
-                    <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('channel')}>
+                    <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('channel')}>
                       @ channel
                     </div>
                   )

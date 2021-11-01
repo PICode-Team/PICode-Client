@@ -13,7 +13,7 @@ interface IMessageBoxProps {
   reverse: boolean
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   target: IChannel | null
-  particiapntList: IUser[]
+  participantList: IUser[]
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 }
 
@@ -42,10 +42,10 @@ const getTimeText = (time: string) => {
 }
 
 function MessageBox(props: IMessageBoxProps) {
-  const { messageInfo, reverse, target, particiapntList, setThread, setMediaViewData } = props
+  const { messageInfo, reverse, target, participantList, setThread, setMediaViewData } = props
   const { sender, message, time, chatId, threadList } = messageInfo
   const classes = messageBoxStyle()
-  const thumbnailUrl = particiapntList.find((v) => v.userId === sender)?.userThumbnail
+  const thumbnailUrl = participantList.find((v) => v.userId === sender)?.userThumbnail
   const [url, setUrl] = useState<string | null>(null)
   const [preview, setPreview] = useState<IOpenGraph | null>(null)
   const [imageList, setImageList] = useState<string[]>([])

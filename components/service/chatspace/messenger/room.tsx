@@ -16,7 +16,7 @@ interface IRoomProps {
   newMessage: boolean
   userId: string
   thread: IThread | null
-  particiapntList: IUser[]
+  participantList: IUser[]
   toggle: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
@@ -26,13 +26,12 @@ interface IRoomProps {
 }
 
 function Room(props: IRoomProps) {
-  const { target, messageList, newMessage, userId, thread, particiapntList, toggle, setOpen, setTarget, setThread, setMediaViewData, setNewMessage } = props
+  const { target, messageList, newMessage, userId, thread, participantList, toggle, setOpen, setTarget, setThread, setMediaViewData, setNewMessage } = props
   const classes = messengerStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLInputElement>(null)
   const [onMention, setOnMention] = useState<boolean>(false)
   const [mentionLeft, setMentionLeft] = useState<string>('')
-  const [participantList, setParticipantList] = useState<IUser[]>([])
   const [messageContent, setMessageContent] = useState<string>('')
   const [mentionIndex, setMentionIndex] = useState<number>(0)
   const [userImage, setUserImage] = useState<any>(null)
@@ -56,15 +55,6 @@ function Room(props: IRoomProps) {
   useEffect(() => {
     makeImageUuid()
   }, [userImage])
-
-  const getParticipantList = async () => {
-    const response = await fetchSet('/userList', 'GET', false)
-    const { user, code } = await response.json()
-
-    if (code === 200) {
-      setParticipantList(user)
-    }
-  }
 
   const sendMessage = (target: string, message: string) => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
@@ -322,10 +312,6 @@ function Room(props: IRoomProps) {
     }
   }, [target])
 
-  useEffect(() => {
-    getParticipantList()
-  }, [])
-
   const handleChatInputPaste = (event: any) => {
     const items = (event.clipboardData || event.originalEvent.clipboardData).items
 
@@ -393,7 +379,7 @@ function Room(props: IRoomProps) {
         </div>
         <div className={classes.body}>
           <div className={classes.content}>
-            {renderMessage(messageList, userId, false, setThread, target, particiapntList, setMediaViewData)}
+            {renderMessage(messageList, userId, false, setThread, target, participantList, setMediaViewData)}
             <div ref={endRef}></div>
           </div>
         </div>
@@ -405,7 +391,7 @@ function Room(props: IRoomProps) {
               .map((v, i) => {
                 if (v === 'here') {
                   return (
-                    <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('here')}>
+                    <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('here')}>
                       @ here
                     </div>
                   )
@@ -413,7 +399,7 @@ function Room(props: IRoomProps) {
 
                 if (v === 'channel') {
                   return (
-                    <div className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('channel')}>
+                    <div key={`mention-helper-${i}`} className={`${classes.mentionTarget} ${mentionIndex === i && classes.active}`} onClick={handleMentionTargetClick('channel')}>
                       @ channel
                     </div>
                   )

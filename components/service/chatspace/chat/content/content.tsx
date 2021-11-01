@@ -15,7 +15,7 @@ export const renderMessage = (
   isThread: boolean,
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>,
   target: IChannel | null,
-  particiapntList: IUser[],
+  participantList: IUser[],
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
 ) => {
   const renderElementList = []
@@ -33,7 +33,7 @@ export const renderMessage = (
         key={`messagebox-${i}`}
         reverse={messageList[i].sender === userId}
         target={target}
-        particiapntList={particiapntList}
+        participantList={participantList}
         setThread={setThread}
         setMediaViewData={setMediaViewData}
       />
@@ -48,7 +48,7 @@ interface IContentProps {
   messageList: IChat[]
   typingUserList: IUser[]
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
-  particiapntList: IUser[]
+  participantList: IUser[]
   newMessage: boolean
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
   setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
@@ -56,7 +56,7 @@ interface IContentProps {
 }
 
 function Content(props: IContentProps) {
-  const { target, messageList, typingUserList, particiapntList, newMessage, setThread, setMediaViewData, setNewMessage, toggle } = props
+  const { target, messageList, typingUserList, participantList, newMessage, setThread, setMediaViewData, setNewMessage, toggle } = props
   const classes = contentStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
@@ -80,7 +80,7 @@ function Content(props: IContentProps) {
       <Header target={target} />
       <div className={classes.content}>
         <div className={classes.contentBox}>
-          {userInfo !== null && renderMessage(messageList, userInfo.userId, false, setThread, target, particiapntList, setMediaViewData)}
+          {userInfo !== null && renderMessage(messageList, userInfo.userId, false, setThread, target, participantList, setMediaViewData)}
           <div ref={endRef} />
         </div>
       </div>

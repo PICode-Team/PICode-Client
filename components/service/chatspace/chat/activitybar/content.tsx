@@ -11,7 +11,7 @@ interface IContentProps {
   userId: string
   threadMessageRef: React.RefObject<HTMLInputElement>
   threadEndRef: React.RefObject<HTMLDivElement>
-  particiapntList: IUser[]
+  participantList: IUser[]
   newMessage: boolean
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
@@ -20,7 +20,7 @@ interface IContentProps {
 }
 
 function Content(props: IContentProps) {
-  const { setNewMessage, thread, userId, threadEndRef, threadMessageRef, particiapntList, setThread, setMediaViewData, newMessage, toggle } = props
+  const { setNewMessage, thread, userId, threadEndRef, threadMessageRef, participantList, setThread, setMediaViewData, newMessage, toggle } = props
   const classes = activitybarContentStyle()
 
   const messageInfo = {
@@ -44,9 +44,9 @@ function Content(props: IContentProps) {
   return (
     <div className={classes.activitybarContent}>
       <div className={classes.contentBox}>
-        <MessageBox messageInfo={messageInfo} reverse={thread.parentUser === userId} setThread={setThread} particiapntList={particiapntList} target={null} setMediaViewData={setMediaViewData} />
+        <MessageBox messageInfo={messageInfo} reverse={thread.parentUser === userId} setThread={setThread} participantList={participantList} target={null} setMediaViewData={setMediaViewData} />
         {thread.messageList.length > 0 && <Boundary text={`${thread.messageList.length} replies`} />}
-        {renderMessage(thread.messageList, userId, true, setThread, null, particiapntList, setMediaViewData)}
+        {renderMessage(thread.messageList, userId, true, setThread, null, participantList, setMediaViewData)}
         <div ref={threadEndRef} />
       </div>
       <ChatInput

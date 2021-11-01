@@ -9,14 +9,14 @@ import Header from './header'
 interface IActivitybarProps {
   thread: IThread
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
-  particiapntList: IUser[]
+  participantList: IUser[]
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
   newMessage: boolean
   setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function Activitybar(props: IActivitybarProps) {
-  const { newMessage, setNewMessage, thread, setThread, particiapntList, setMediaViewData } = props
+  const { newMessage, setNewMessage, thread, setThread, participantList, setMediaViewData } = props
   const classes = activitybarStyle()
   const threadMessageRef = useRef<HTMLInputElement>(null)
   const threadEndRef = useRef<HTMLInputElement>(null)
@@ -48,7 +48,7 @@ function Activitybar(props: IActivitybarProps) {
           threadMessageRef={threadMessageRef}
           threadEndRef={threadEndRef}
           setThread={setThread}
-          particiapntList={particiapntList}
+          participantList={participantList}
           setMediaViewData={setMediaViewData}
         />
       )}
