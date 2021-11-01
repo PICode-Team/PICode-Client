@@ -113,7 +113,7 @@ function CustomPortInput(props: IPortInputProps) {
   const [portState, setPortState] = useState<IPortState>(initialState)
 
   const handleChangeState = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPortState({ ...portState, [event.target.id]: event.target.value })
+    setPortState({ ...portState, [event.target.id]: event.target.value.replace(/[^0-9]/g, '').slice(0, 5) })
   }
 
   const handleEnterPort = () => {
