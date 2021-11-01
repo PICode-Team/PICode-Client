@@ -7,7 +7,6 @@ export default function DayView(props: IDate) {
   let scheduleDay: string = checkDate(props.tmpViewDay)
   return (
     <div className={classes.day}>
-      {console.log(scheduleDay, props.schedule)}
       {props.schedule !== undefined &&
         props.schedule[scheduleDay] !== undefined &&
         props.schedule[scheduleDay].map((v) => {
