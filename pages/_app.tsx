@@ -10,32 +10,6 @@ import { fetchSet } from '../components/context/fetch'
 
 function App({ Component, pageProps }: AppProps) {
   const theme = useSelector((state: any) => state.theme)
-  const [checkLogin, setCheckLogin] = useState<number>(0);
-
-
-  let checkCookie = async () => {
-    const response = await fetchSet('/user', 'GET', true)
-    const { user, code } = await response.json()
-    if (code !== 200) {
-      localStorage.removeItem("userId")
-      if (pageProps.path !== "/") {
-        window.location.href = "/"
-      }
-      setCheckLogin(-1);
-    } else {
-      setCheckLogin(1);
-    }
-  }
-
-  useEffect(() => {
-    checkCookie();
-  }, [pageProps.cookie])
-
-  useEffect(() => {
-    if (checkLogin < 0) {
-      setCheckLogin(0)
-    }
-  }, [checkLogin])
 
   return (
     <React.Fragment>
