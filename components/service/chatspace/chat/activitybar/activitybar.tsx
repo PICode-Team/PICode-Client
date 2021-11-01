@@ -11,10 +11,12 @@ interface IActivitybarProps {
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   particiapntList: IUser[]
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
+  newMessage: boolean
+  setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function Activitybar(props: IActivitybarProps) {
-  const { thread, setThread, particiapntList, setMediaViewData } = props
+  const { newMessage, setNewMessage, thread, setThread, particiapntList, setMediaViewData } = props
   const classes = activitybarStyle()
   const threadMessageRef = useRef<HTMLInputElement>(null)
   const threadEndRef = useRef<HTMLInputElement>(null)
@@ -38,6 +40,8 @@ function Activitybar(props: IActivitybarProps) {
       <Header thread={thread} setThread={setThread} />
       {userInfo !== null && (
         <Content
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
           thread={thread}
           userId={userInfo.userId}
           threadMessageRef={threadMessageRef}

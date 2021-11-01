@@ -14,7 +14,13 @@ function MediaView(props: IMediaViewProps) {
   const [index, setIndex] = useState<number>(0)
 
   const handleExpandClick = (url: string) => () => {
-    window.location.href = url
+    const downloadTag = document.createElement('a')
+    downloadTag.style.display = 'none'
+    downloadTag.href = url
+
+    document.body.append(downloadTag)
+    downloadTag.click()
+    document.body.removeChild(downloadTag)
   }
 
   const handleCloseClick = () => {
@@ -24,7 +30,6 @@ function MediaView(props: IMediaViewProps) {
   const handleDownloadClick = (url: string) => () => {
     const downloadTag = document.createElement('a')
     downloadTag.style.display = 'none'
-    downloadTag.download = `테스트.jpg`
     downloadTag.href = url
 
     document.body.append(downloadTag)

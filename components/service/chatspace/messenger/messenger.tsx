@@ -35,7 +35,23 @@ function Messenger(props: IMessengerProps) {
   const [thread, setThread] = useState<IThread | null>(null)
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
+  const [getChannelCheck, setGetChannelCheck] = useState<boolean>(false)
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null)
+  const [userInfo, setUserInfo] = useState<IUser | null>(null)
   const ws: any = useWs()
+
+  const getUserId = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { code, user } = await response.json()
+
+    if (code === 200) {
+      setUserInfo(user)
+    }
+  }
+
+  useEffect(() => {
+    getUserId()
+  }, [])
 
   const handleOpenMessenger = () => {
     setOpen(true)
@@ -104,18 +120,19 @@ function Messenger(props: IMessengerProps) {
           break
 
         case 'getChatLog':
-          const messages: IChat[] = []
-          message.data.forEach((v: any) => {
-            messages.push({
-              sender: v.sender,
-              message: v.message,
-              time: v.time,
-              chatId: v.chatId,
-              threadList: v.threadList,
+          if (message.data !== undefined) {
+            const messages: IChat[] = message.data.map((v: any) => {
+              return {
+                sender: v.sender,
+                message: v.message,
+                time: v.time,
+                chatId: v.chatId,
+                threadList: v.threadList,
+              }
             })
-          })
 
-          setMessageList([...messageList, ...messages])
+            setMessageList([...messageList, ...messages])
+          }
 
           break
 
@@ -127,6 +144,23 @@ function Messenger(props: IMessengerProps) {
           break
 
         case 'sendMessage':
+          setChannelList(
+            channelList.map((v, i) => {
+              if (v.chatName === message.data.chatName) {
+                return {
+                  ...v,
+                  recentMessage: message.data.message,
+                  recentTime: message.data.time,
+                }
+              }
+
+              return v
+            })
+          )
+
+          if (target === null) return
+          if (target!.chatName !== message.data.chatName) return
+
           if (message.data.parentChatId !== undefined) {
             const messages: IChat[] = messageList.map((v) => {
               if (v.chatId === message.data.parentChatId) {
@@ -153,11 +187,16 @@ function Messenger(props: IMessengerProps) {
 
             setMessageList(messages)
           } else {
-            if (message.data.sender !== userId) {
+            if (message.data.sender !== userInfo?.userId) {
               setNewMessage(true)
-              setTimeout(() => {
+              if (timerId !== null) {
+                clearTimeout(timerId)
+              }
+              const timer = setTimeout(() => {
                 setNewMessage(false)
+                setTimerId(null)
               }, 3000)
+              setTimerId(timer)
             }
 
             setMessageList([
@@ -177,14 +216,6 @@ function Messenger(props: IMessengerProps) {
     }
   }
 
-  const handleResize = () => {
-    // if (document.getElementsByClassName(classes.newMessage).length > 0) {
-    //   (
-    //     document.getElementsByClassName(classes.newMessage)[0] as HTMLElement
-    //   ).style.top = `${(Number(messageRef.current?.offsetTop) ?? 0) - 44}px`;
-    // }
-  }
-
   useEffect(() => {
     setMessageList([])
 
@@ -195,17 +226,15 @@ function Messenger(props: IMessengerProps) {
 
   useEffect(() => {
     getUserList()
-
-    window.addEventListener('resize', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
   }, [])
 
   useEffect(() => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', chatWebSocketHandler)
-      getChat()
+      if (getChannelCheck === false) {
+        getChat()
+        setGetChannelCheck(true)
+      }
 
       return () => {
         ws.removeEventListener('message', chatWebSocketHandler)
@@ -222,12 +251,14 @@ function Messenger(props: IMessengerProps) {
           <Home channelList={channelList} setOpen={setOpen} setTarget={setTarget} />
         ) : (
           <Room
+            toggle={false}
             userId={userId.userId}
             target={target}
             messageList={messageList}
             newMessage={newMessage}
             thread={thread}
             particiapntList={[]}
+            setNewMessage={setNewMessage}
             setTarget={setTarget}
             setOpen={setOpen}
             setThread={setThread}

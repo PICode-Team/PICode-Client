@@ -119,7 +119,7 @@ function Milestone(props: IMilestoneProps) {
                   <div>
                     {v.startDate} ~ {v.endDate}
                   </div>
-                  <div>{v.content ?? 'this milestone is no have description.'}</div>
+                  <div className={classes.description}>{v.content ?? 'this milestone is no have description.'}</div>
                 </div>
               )
             })}

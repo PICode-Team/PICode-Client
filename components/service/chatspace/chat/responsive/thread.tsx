@@ -45,7 +45,7 @@ function Thread(props: IThreadProps) {
 
     if (code === 200) {
       if (messageRef.current !== null) {
-        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="${process.env.NEXT_FE_API_URL}/api/temp/${uploadFileId}">`
+        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="/api/temp/${uploadFileId}">`
       }
     }
   }
@@ -99,7 +99,7 @@ function Thread(props: IThreadProps) {
           type: 'createAlarm',
           data: {
             type: 'chat',
-            location: '/chatspace/',
+            location: `/chatspace?target=${thread.chatName}`,
             content: 'mention you',
             checkAlarm,
           },

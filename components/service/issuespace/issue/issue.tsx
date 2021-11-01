@@ -97,7 +97,7 @@ function Issue(props: IIssueProps) {
   }
 
   const handleLinkKanban = () => {
-    window.location.href = `/issuespace?workspaceId=${router.query.workspaceId}`
+    router.back()
   }
 
   useEffect(() => {

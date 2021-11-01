@@ -3,13 +3,12 @@ import { noteStyle } from '../../../styles/service/dashboard/dashboard'
 import { IFileView } from '../../../types/note.types'
 import { useWs } from '../../context/websocket'
 
-interface INoteViewProps { }
+interface INoteViewProps {}
 
 function NoteView(props: INoteViewProps) {
-  const { } = props
+  const {} = props
   const classes = noteStyle()
   const [fileView, setFileView] = useState<IFileView[] | null>(null)
-  const [userId, setUserId] = useState<string>('')
   const [wsCheck, setWsCheck] = useState<number>(0)
   const ws: any = useWs()
 
@@ -19,9 +18,7 @@ function NoteView(props: INoteViewProps) {
         JSON.stringify({
           category: 'note',
           type: 'getNote',
-          data: {
-            userId,
-          },
+          data: {},
         })
       )
     }
@@ -42,11 +39,6 @@ function NoteView(props: INoteViewProps) {
   const handleLinkNote = () => {
     window.location.href = '/notespace/'
   }
-
-  useEffect(() => {
-    const value = window.localStorage.getItem('userId')
-    setUserId(value ?? '')
-  }, [])
 
   useEffect(() => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {

@@ -19,6 +19,8 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '12px',
       display: 'flex',
       flexDirection: 'column',
+      height: 'fit-content',
+      width: '30%',
     },
     overlay: {
       width: '100%',
@@ -33,15 +35,10 @@ const modalStyle = makeStyles((theme: IThemeStyle) =>
     xs: {},
     sm: {},
     md: {
-      width: '30%',
       height: '30%',
-      marginTop: '22.5%',
     },
     lg: {
       height: '61%',
-      width: '40%',
-      marginLeft: '32.5% !important',
-      marginTop: '15%',
     },
     xl: {},
     xxl: {},

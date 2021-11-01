@@ -97,6 +97,30 @@ export default function CalanderSpace(props: any) {
 
           break
         }
+        case 'editSchedule': {
+          if (message.data.code === 200) {
+            ws.send(
+              JSON.stringify({
+                category: 'calendar',
+                type: 'getCalendar',
+                data: {},
+              })
+            )
+          }
+          break
+        }
+        case 'deleteSchedule': {
+          if (message.data.code === 200) {
+            ws.send(
+              JSON.stringify({
+                category: 'calendar',
+                type: 'getCalendar',
+                data: {},
+              })
+            )
+          }
+          break
+        }
       }
     } else if (message.category === 'kanban') {
       switch (message.type) {

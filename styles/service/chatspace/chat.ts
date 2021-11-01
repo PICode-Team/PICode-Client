@@ -471,6 +471,53 @@ export const chatInputStyle = makeStyles((theme: IThemeStyle) =>
     active: {
       backgroundColor: '#525252',
     },
+    newMessage: {
+      color: theme.font.high.color,
+      width: 'calc(100% - 550px)',
+      height: '30px',
+      position: 'absolute',
+      top: '0px',
+      display: 'flex',
+      alignItems: 'center',
+      pointerEvents: 'none',
+      justifyContent: 'center',
+      '&>div': {
+        backgroundColor: theme.backgroundColor.step2,
+        width: '130px',
+        height: '30px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '15px',
+        cursor: 'pointer',
+        opacity: 0,
+        pointerEvents: 'none',
+        transition: 'ease-in 0.4s opacity',
+        '&:after': {
+          content: "''",
+          position: 'absolute',
+          top: '100%',
+          left: '50%',
+          marginLeft: '-8px',
+          marginBottom: '-6px',
+          border: '8px solid transparent',
+          borderTopColor: theme.backgroundColor.step2,
+        },
+      },
+    },
+    visible: {
+      pointerEvents: 'auto !important' as any,
+      '&>div': {
+        opacity: '1 !important',
+        pointerEvents: 'auto !important' as any,
+      },
+    },
+    togglePosition: {
+      width: 'calc(100% - 414px) !important',
+      '@media screen and (min-width: 600px)': {
+        width: 'calc(100% - 414px) !important',
+      },
+    },
   })
 )
 
@@ -630,10 +677,13 @@ export const chatHeaderStyle = makeStyles((theme: IThemeStyle) =>
 export const responsiveChatStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
     responsiveChat: {
-      width: '100%',
+      width: 'calc(100% - 350px)',
       display: 'none',
       '@media screen and (max-width: 1280px)': {
         display: 'flex',
+      },
+      '@media screen and (max-width: 600px)': {
+        width: '100%',
       },
     },
     emptyWrapper: {
@@ -1034,6 +1084,51 @@ export const responsiveContentStyle = makeStyles((theme: IThemeStyle) =>
 
     active: {
       backgroundColor: '#525252',
+    },
+    newMessage: {
+      color: theme.font.high.color,
+      width: '100%',
+      height: '30px',
+      position: 'absolute',
+      top: '0px',
+      display: 'flex',
+      alignItems: 'center',
+      pointerEvents: 'none',
+      justifyContent: 'center',
+      paddingBottom: '15px',
+      '&>div': {
+        backgroundColor: theme.backgroundColor.step2,
+        width: '130px',
+        height: '30px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '15px',
+        cursor: 'pointer',
+        opacity: 0,
+        pointerEvents: 'none',
+        transition: 'ease-in 0.4s opacity',
+        '&:after': {
+          content: "''",
+          position: 'absolute',
+          top: 'calc(100% - 7px)',
+          left: '50%',
+          marginLeft: '-8px',
+          marginBottom: '9px',
+          border: '8px solid transparent',
+          borderTopColor: theme.backgroundColor.step2,
+        },
+      },
+    },
+    visible: {
+      pointerEvents: 'auto !important' as any,
+      '&>div': {
+        opacity: '1 !important',
+        pointerEvents: 'auto !important' as any,
+      },
+    },
+    togglePosition: {
+      width: '100%',
     },
   })
 )

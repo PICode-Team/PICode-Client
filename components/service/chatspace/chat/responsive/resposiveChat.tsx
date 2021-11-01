@@ -19,10 +19,11 @@ interface IResponsiveProps {
   setModal: React.Dispatch<React.SetStateAction<boolean>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
+  setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function ResponsiveChat(props: IResponsiveProps) {
-  const { target, thread } = props
+  const { target, thread, setNewMessage } = props
   const classes = responsiveChatStyle()
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
 

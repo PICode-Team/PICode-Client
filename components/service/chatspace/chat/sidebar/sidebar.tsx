@@ -76,7 +76,7 @@ function Sidebar(props: ISidebarProps) {
                   style={
                     thumbnailUrl !== undefined
                       ? {
-                          backgroundImage: `url('${process.env.NEXT_FE_API_URL}/api/temp/${thumbnailUrl}')`,
+                          backgroundImage: `url('/api/temp/${thumbnailUrl}')`,
                           backgroundSize: 'cover',
                         }
                       : {}
@@ -85,7 +85,7 @@ function Sidebar(props: ISidebarProps) {
                 <div className={classes.channelBody}>
                   <div className={classes.channelInfo}>
                     <span className={classes.channelName}>{v.chatName ?? v.userId!}</span>
-                    <span className={classes.channelParticipant}>{v.chatName?.includes('#') && `(${v.chatParticipant.join(', ')})`}</span>
+                    <span className={classes.channelParticipant}>{v.chatName?.includes('#') && v.chatParticipant.length}</span>
                   </div>
                   <div className={classes.lastContent}>{recentText}</div>
                 </div>

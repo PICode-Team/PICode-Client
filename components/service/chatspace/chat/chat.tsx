@@ -32,8 +32,8 @@ function Chat(props: IChatProps) {
   const [mediaViewData, setMediaViewData] = useState<string[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
   const [queryCheck, setQueryCheck] = useState<boolean>(false)
-  const [inputValue, setInputValue] = useState<string>('')
-  const [threadValue, setThreadValue] = useState<string>('')
+  const [getChannelCheck, setGetChannelCheck] = useState<boolean>(false)
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null)
   const ws: any = useWs()
   const router = useRouter()
 
@@ -182,9 +182,14 @@ function Chat(props: IChatProps) {
           } else {
             if (message.data.sender !== userInfo?.userId) {
               setNewMessage(true)
-              setTimeout(() => {
+              if (timerId !== null) {
+                clearTimeout(timerId)
+              }
+              const timer = setTimeout(() => {
                 setNewMessage(false)
+                setTimerId(null)
               }, 3000)
+              setTimerId(timer)
             }
 
             setMessageList([
@@ -204,14 +209,6 @@ function Chat(props: IChatProps) {
     }
   }
 
-  const handleResize = () => {
-    // if (document.getElementsByClassName(classes.newMessage).length > 0) {
-    //   (
-    //     document.getElementsByClassName(classes.newMessage)[0] as HTMLElement
-    //   ).style.top = `${(Number(messageRef.current?.offsetTop) ?? 0) - 44}px`;
-    // }
-  }
-
   useEffect(() => {
     setMessageList([])
 
@@ -222,18 +219,14 @@ function Chat(props: IChatProps) {
 
   useEffect(() => {
     getUserList()
-
-    window.addEventListener('resize', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
   }, [])
 
   useEffect(() => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.addEventListener('message', chatWebSocketHandler)
-      if (channelList.length === 0) {
+      if (getChannelCheck === false) {
         getChat()
+        setGetChannelCheck(true)
       }
 
       return () => {
@@ -265,12 +258,23 @@ function Chat(props: IChatProps) {
       <div className={classes.chat}>
         <Sidebar channelList={channelList} setTarget={setTarget} setModal={setModal} />
         {target !== null ? (
-          <Content target={target} messageList={messageList} typingUserList={typingUserList} setThread={setThread} particiapntList={userList} setMediaViewData={setMediaViewData} />
+          <Content
+            toggle={toggle}
+            newMessage={newMessage}
+            setNewMessage={setNewMessage}
+            target={target}
+            messageList={messageList}
+            typingUserList={typingUserList}
+            setThread={setThread}
+            particiapntList={userList}
+            setMediaViewData={setMediaViewData}
+          />
         ) : (
           <div className={classes.emptyWrapper}>Select a channel and start the conversation.</div>
         )}
-        {thread !== null && <Activitybar thread={thread} setThread={setThread} particiapntList={userList} setMediaViewData={setMediaViewData} />}
+        {thread !== null && <Activitybar setNewMessage={setNewMessage} newMessage={newMessage} thread={thread} setThread={setThread} particiapntList={userList} setMediaViewData={setMediaViewData} />}
         <ResponsiveChat
+          setNewMessage={setNewMessage}
           messageList={messageList}
           newMessage={newMessage}
           particiapntList={userList}

@@ -30,10 +30,13 @@ interface IChatInputProps {
   typingUserList: IUser[]
   target: IChannel
   parentChatId?: string
+  newMessage: boolean
+  setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
+  toggle: boolean
 }
 
 function ChatInput(props: IChatInputProps) {
-  const { messageRef, endRef, typingUserList, target, parentChatId } = props
+  const { messageRef, endRef, typingUserList, target, parentChatId, newMessage, setNewMessage, toggle } = props
   const classes = chatInputStyle()
   const [onMention, setOnMention] = useState<boolean>(false)
   const [mentionLeft, setMentionLeft] = useState<string>('')
@@ -53,7 +56,7 @@ function ChatInput(props: IChatInputProps) {
 
     if (code === 200) {
       if (messageRef.current !== null) {
-        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="${process.env.NEXT_FE_API_URL}/api/temp/${uploadFileId}">`
+        messageRef.current.innerHTML = messageRef.current.innerHTML + ' ' + `<img src="/api/temp/${uploadFileId}">`
       }
     }
   }
@@ -99,7 +102,7 @@ function ChatInput(props: IChatInputProps) {
           type: 'createAlarm',
           data: {
             type: 'chat',
-            location: '/chatspace/',
+            location: `/chatspace?target=${target.chatName}`,
             content: 'mention you',
             checkAlarm,
           },
@@ -344,7 +347,31 @@ function ChatInput(props: IChatInputProps) {
 
   const handleChatInputChange = (event: any) => {}
 
-  const handleRichTextClick = (tag: string) => () => {}
+  const handleRichTextClick = (tag: string) => () => {
+    const selection = document.getSelection()
+
+    if (selection === null) return
+    if (messageRef.current === null) return
+
+    const newRange = selection.getRangeAt(0)
+    selection.addRange(newRange)
+
+    // let tmpNode = document.createElement('span')
+    // tmpNode.innerHTML = `<b>웹이즈프리</b>`
+    // newRange.deleteContents()
+    // newRange.insertNode(tmpNode)
+
+    // console.log(selection.getRangeAt(0).toString())
+    // console.log(selection.getRangeAt(0))
+    // console.log(selection)
+    // console.log(messageRef.current.innerHTML)
+
+    // if (selection.anchorNode === selection.extentNode) {
+    // } else {
+    // }
+  }
+
+  const handleMentionClick = () => {}
 
   useEffect(() => {
     document.addEventListener('click', clickHandler)
@@ -352,6 +379,22 @@ function ChatInput(props: IChatInputProps) {
       document.removeEventListener('click', clickHandler)
     }
   }, [target])
+
+  const handleResize = () => {
+    const targetList = document.getElementsByClassName(classes.newMessage)
+    if (targetList.length > 0) {
+      for (let i = 0; i < targetList.length; i++) {
+        ;(targetList[i] as HTMLElement).style.top = `${(Number(messageRef.current?.offsetTop) ?? 0) - 44}px`
+      }
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   useEffect(() => {
     getParticipantList()
@@ -402,33 +445,33 @@ function ChatInput(props: IChatInputProps) {
           ></div>
           <div className={classes.interaction}>
             <div>
-              <div>
+              <div onClick={handleRichTextClick('b')}>
                 <FormatBold className={classes.formatBold} />
               </div>
-              <div>
+              <div onClick={handleRichTextClick('i')}>
                 <FormatItalic className={classes.formatItalic} />
               </div>
-              <div>
+              <div onClick={handleRichTextClick('s')}>
                 <FormatStrikethrough className={classes.formatStrikethrough} />
               </div>
-              <div>
+              {/* <div>
                 <Code className={classes.code} />
               </div>
               <div>
                 <Link className={classes.link} />
-              </div>
-              <div>
+              </div> */}
+              <div onClick={handleRichTextClick('ol')}>
                 <FormatListNumbered className={classes.formatListNumbered} />
               </div>
-              <div>
+              <div onClick={handleRichTextClick('ul')}>
                 <FormatListBulleted className={classes.formatListBulleted} />
               </div>
             </div>
             <div>
-              <div>
+              {/* <div>
                 <TextFormatOutlined className={classes.textFormat} />
-              </div>
-              <div>
+              </div> */}
+              <div onClick={handleMentionClick}>
                 <AlternateEmail className={classes.alternateEmail} />
               </div>
               <div>
@@ -444,6 +487,21 @@ function ChatInput(props: IChatInputProps) {
           </div>
         </div>
         {typingUserList.length > 0 && <Entering typingUserList={typingUserList} />}
+      </div>
+      <div
+        style={{
+          top: `${(Number(messageRef.current?.offsetTop) ?? 0) - 44}px`,
+        }}
+        className={`${classes.newMessage} ${newMessage && classes.visible} ${toggle && classes.togglePosition}`}
+      >
+        <div
+          onClick={() => {
+            endRef.current?.scrollIntoView({ behavior: 'smooth' })
+            setNewMessage(false)
+          }}
+        >
+          New Message
+        </div>
       </div>
     </React.Fragment>
   )
