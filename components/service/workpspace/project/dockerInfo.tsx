@@ -119,8 +119,8 @@ function DockerInfo(props: IDockerInfoProps) {
       <div className={classes.subTitle}>{edit ? 'Edit' : 'Create'} Container</div>
       <div className={classes.sectionTitle}>Basic Info</div>
       <CustomTextInput id="containerName" value={dockerInfo.containerName ?? ''} label="Container Name" placeholder="Input Container Name" onChange={onChangeInfo} />
-      <CustomTextInput id="image" value={dockerInfo.image} label="Image" placeholder="Input Image" required={true} onChange={onChangeInfo} />
-      <CustomTextInput id="tag" value={dockerInfo.tag ?? ''} label="Tag" placeholder="Input Tag" onChange={onChangeInfo} />
+      {edit === false && <CustomTextInput id="image" value={dockerInfo.image} label="Image" placeholder="Input Image" required={true} onChange={onChangeInfo} />}
+      {edit === false && <CustomTextInput id="tag" value={dockerInfo.tag ?? ''} label="Tag" placeholder="Input Tag" onChange={onChangeInfo} />}
       <div className={classes.divider}>
         <div></div>
       </div>
