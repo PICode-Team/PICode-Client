@@ -309,12 +309,16 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
       width: '40px',
       height: '40px',
       backgroundColor: theme.font.high.color,
-      borderRadius: '8px',
+      borderRadius: '20px',
       marginRight: '12px',
+      backgroundImage: "url('/images/picode-7.svg')",
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
     },
 
     titleWrapper: {
-      width: '260px',
+      flex: 1,
     },
     title: {
       display: 'flex',
@@ -441,6 +445,52 @@ export const messengerStyle = makeStyles((theme: IThemeStyle) =>
 
     active: {
       backgroundColor: '#525252',
+    },
+
+    newMessage: {
+      color: theme.font.high.color,
+      width: '100%',
+      height: '30px',
+      position: 'absolute',
+      top: '0px',
+      display: 'flex',
+      alignItems: 'center',
+      pointerEvents: 'none',
+      justifyContent: 'center',
+      paddingBottom: '15px',
+      '&>div': {
+        backgroundColor: theme.backgroundColor.step3,
+        width: '130px',
+        height: '30px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '15px',
+        cursor: 'pointer',
+        opacity: 0,
+        pointerEvents: 'none',
+        transition: 'ease-in 0.4s opacity',
+        '&:after': {
+          content: "''",
+          position: 'absolute',
+          top: 'calc(100% - 7px)',
+          left: '50%',
+          marginLeft: '-8px',
+          marginBottom: '9px',
+          border: '8px solid transparent',
+          borderTopColor: theme.backgroundColor.step3,
+        },
+      },
+    },
+    visible: {
+      pointerEvents: 'auto !important' as any,
+      '&>div': {
+        opacity: '1 !important',
+        pointerEvents: 'auto !important' as any,
+      },
+    },
+    togglePosition: {
+      width: '100%',
     },
   })
 )

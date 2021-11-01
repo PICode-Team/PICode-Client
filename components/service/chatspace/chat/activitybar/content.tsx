@@ -12,12 +12,15 @@ interface IContentProps {
   threadMessageRef: React.RefObject<HTMLInputElement>
   threadEndRef: React.RefObject<HTMLDivElement>
   particiapntList: IUser[]
+  newMessage: boolean
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
+  setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
+  toggle: boolean
 }
 
 function Content(props: IContentProps) {
-  const { thread, userId, threadEndRef, threadMessageRef, particiapntList, setThread, setMediaViewData } = props
+  const { setNewMessage, thread, userId, threadEndRef, threadMessageRef, particiapntList, setThread, setMediaViewData, newMessage, toggle } = props
   const classes = activitybarContentStyle()
 
   const messageInfo = {
@@ -46,7 +49,16 @@ function Content(props: IContentProps) {
         {renderMessage(thread.messageList, userId, true, setThread, null, particiapntList, setMediaViewData)}
         <div ref={threadEndRef} />
       </div>
-      <ChatInput messageRef={threadMessageRef} endRef={threadEndRef} typingUserList={[]} target={threadTarget} parentChatId={thread.parentId} />
+      <ChatInput
+        toggle={toggle}
+        setNewMessage={setNewMessage}
+        newMessage={false}
+        messageRef={threadMessageRef}
+        endRef={threadEndRef}
+        typingUserList={[]}
+        target={threadTarget}
+        parentChatId={thread.parentId}
+      />
     </div>
   )
 }

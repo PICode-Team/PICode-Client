@@ -17,14 +17,16 @@ interface IRoomProps {
   userId: string
   thread: IThread | null
   particiapntList: IUser[]
+  toggle: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
+  setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function Room(props: IRoomProps) {
-  const { target, messageList, newMessage, userId, thread, particiapntList, setOpen, setTarget, setThread, setMediaViewData } = props
+  const { target, messageList, newMessage, userId, thread, particiapntList, toggle, setOpen, setTarget, setThread, setMediaViewData, setNewMessage } = props
   const classes = messengerStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLInputElement>(null)
@@ -91,7 +93,7 @@ function Room(props: IRoomProps) {
           type: 'createAlarm',
           data: {
             type: 'chat',
-            location: '/chatspace/',
+            location: `/chatspace?target=${target.chatName}`,
             content: 'mention you',
             checkAlarm,
           },
@@ -355,6 +357,22 @@ function Room(props: IRoomProps) {
     setOpen(false)
   }
 
+  const handleResize = () => {
+    const targetList = document.getElementsByClassName(classes.newMessage)
+    if (targetList.length > 0) {
+      for (let i = 0; i < targetList.length; i++) {
+        ;(targetList[i] as HTMLElement).style.top = `${(Number(messageRef.current?.offsetTop) ?? 0) - 44}px`
+      }
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   return (
     <div className={classes.messenger}>
       <div className={classes.wrapper}>
@@ -428,6 +446,21 @@ function Room(props: IRoomProps) {
           <div className={classes.send} onClick={handleSendMessage}>
             <Send />
           </div>
+        </div>
+      </div>
+      <div
+        style={{
+          top: `${(Number(messageRef.current?.offsetTop) ?? 0) - 44}px`,
+        }}
+        className={`${classes.newMessage} ${newMessage && classes.visible} ${toggle && classes.togglePosition}`}
+      >
+        <div
+          onClick={() => {
+            endRef.current?.scrollIntoView({ behavior: 'smooth' })
+            setNewMessage(false)
+          }}
+        >
+          New Message
         </div>
       </div>
     </div>

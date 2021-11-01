@@ -27,8 +27,6 @@ export const renderMessage = (
       renderElementList.push(<Boundary text={messageList[i].time.split(' ')[0]} />)
     }
 
-    console.log(messageList[i])
-
     renderElementList.push(
       <MessageBox
         messageInfo={messageList[i]}
@@ -51,11 +49,14 @@ interface IContentProps {
   typingUserList: IUser[]
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   particiapntList: IUser[]
+  newMessage: boolean
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
+  setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
+  toggle: boolean
 }
 
 function Content(props: IContentProps) {
-  const { target, messageList, typingUserList, particiapntList, setThread, setMediaViewData } = props
+  const { target, messageList, typingUserList, particiapntList, newMessage, setThread, setMediaViewData, setNewMessage, toggle } = props
   const classes = contentStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
@@ -83,7 +84,7 @@ function Content(props: IContentProps) {
           <div ref={endRef} />
         </div>
       </div>
-      <ChatInput messageRef={messageRef} endRef={endRef} typingUserList={typingUserList} target={target} />
+      <ChatInput toggle={toggle} setNewMessage={setNewMessage} newMessage={newMessage} messageRef={messageRef} endRef={endRef} typingUserList={typingUserList} target={target} />
     </div>
   )
 }

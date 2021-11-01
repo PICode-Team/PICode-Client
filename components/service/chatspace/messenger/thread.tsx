@@ -91,7 +91,7 @@ function Thread(props: IThreadProps) {
           type: 'createAlarm',
           data: {
             type: 'chat',
-            location: '/chatspace/',
+            location: `/chatspace?target=${thread.chatName}`,
             content: 'mention you',
             checkAlarm,
           },

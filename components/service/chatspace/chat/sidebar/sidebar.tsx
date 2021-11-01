@@ -85,7 +85,7 @@ function Sidebar(props: ISidebarProps) {
                 <div className={classes.channelBody}>
                   <div className={classes.channelInfo}>
                     <span className={classes.channelName}>{v.chatName ?? v.userId!}</span>
-                    <span className={classes.channelParticipant}>{v.chatName?.includes('#') && `(${v.chatParticipant.join(', ')})`}</span>
+                    <span className={classes.channelParticipant}>{v.chatName?.includes('#') && v.chatParticipant.length}</span>
                   </div>
                   <div className={classes.lastContent}>{recentText}</div>
                 </div>

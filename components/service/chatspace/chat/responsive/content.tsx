@@ -21,10 +21,11 @@ interface IContentProps {
   setTarget: React.Dispatch<React.SetStateAction<IChannel | null>>
   setThread: React.Dispatch<React.SetStateAction<IThread | null>>
   setMediaViewData: React.Dispatch<React.SetStateAction<string[] | null>>
+  setNewMessage: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function Content(props: IContentProps) {
-  const { target, messageList, newMessage, userId, thread, particiapntList, setTarget, setThread, toggle, setMediaViewData } = props
+  const { setNewMessage, target, messageList, newMessage, userId, thread, particiapntList, setTarget, setThread, toggle, setMediaViewData } = props
   const classes = responsiveContentStyle()
   const messageRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLInputElement>(null)
@@ -91,7 +92,7 @@ function Content(props: IContentProps) {
           type: 'createAlarm',
           data: {
             type: 'chat',
-            location: '/chatspace/',
+            location: `/chatspace?target=${target.chatName}`,
             content: 'mention you',
             checkAlarm,
           },
@@ -347,6 +348,22 @@ function Content(props: IContentProps) {
     setTarget(null)
   }
 
+  const handleResize = () => {
+    const targetList = document.getElementsByClassName(classes.newMessage)
+    if (targetList.length > 0) {
+      for (let i = 0; i < targetList.length; i++) {
+        ;(targetList[i] as HTMLElement).style.top = `${(Number(messageRef.current?.offsetTop) ?? 0) - 44}px`
+      }
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   return (
     <div className={`${classes.content} ${toggle && classes.toggleContent}`}>
       <div className={classes.wrapper}>
@@ -414,6 +431,21 @@ function Content(props: IContentProps) {
           <div className={classes.send} onClick={handleSendMessage}>
             <Send />
           </div>
+        </div>
+      </div>
+      <div
+        style={{
+          top: `${(Number(messageRef.current?.offsetTop) ?? 0) - 44}px`,
+        }}
+        className={`${classes.newMessage} ${newMessage && classes.visible} ${toggle && classes.togglePosition}`}
+      >
+        <div
+          onClick={() => {
+            endRef.current?.scrollIntoView({ behavior: 'smooth' })
+            setNewMessage(false)
+          }}
+        >
+          New Message
         </div>
       </div>
     </div>
