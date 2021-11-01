@@ -113,10 +113,11 @@ interface IUserInputProps {
   value: string[]
   setValue: React.Dispatch<React.SetStateAction<string[]>>
   label: string
+  placeholder: string
 }
 
 function CustomUserInput(props: IUserInputProps) {
-  const { value, label, setValue } = props
+  const { value, label, setValue, placeholder } = props
   const classes = userInputStyle()
   const [participantList, setParticipantList] = useState<IUser[]>([])
   const [visible, setVisible] = useState<boolean>(false)
@@ -186,7 +187,7 @@ function CustomUserInput(props: IUserInputProps) {
           {participantList.length > 0 && value.length > 0 ? (
             <React.Fragment>
               {value.map((v, i) => (
-                <div className={classes.item} key={`workspace-participant-${i}`}>
+                <div className={classes.item} key={`participant-input-user-${i}`}>
                   {participantList.map((item) => {
                     if (item.userId === v) return item.userName
                   })}
@@ -197,7 +198,7 @@ function CustomUserInput(props: IUserInputProps) {
               ))}
             </React.Fragment>
           ) : (
-            `input workspace participant`
+            placeholder
           )}
         </div>
       </div>

@@ -164,7 +164,7 @@ function CreateIssue(props: ICreateIssueProps) {
       <React.Fragment>
         <CustomTextInput id="title" value={payload.title} label="Title" placeholder="title" onChange={handlePayload} />
         <CustomTextarea id="content" value={payload.content} label="Content" placeholder="content" onChange={handlePayload} />
-        <CustomUserInput value={userList} setValue={setUserList} label="Assignees" />
+        <CustomUserInput value={userList} setValue={setUserList} label="Assignees" placeholder="input issue assignees" />
         <CustomTextInput id="label" value={payload.label} label="Label" placeholder="label" onChange={handlePayload} />
         {kanbanUUID === undefined && kanbanList !== undefined && (
           <CustomSelect
@@ -172,6 +172,7 @@ function CreateIssue(props: ICreateIssueProps) {
             value={tempUUID}
             label="Kanban"
             onChange={handleTempUUID}
+            placeholder="select kanban"
             optionList={kanbanList.reduce((a: { name: string; value: string }[], c) => {
               if (c === null) {
                 return a

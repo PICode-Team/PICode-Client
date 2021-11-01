@@ -266,7 +266,7 @@ function WorkspaceInfo(props: IWorkspaceInfoProps) {
       <div className={classes.divider}>
         <div />
       </div>
-      <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" />
+      <CustomUserInput value={userList} setValue={setUserList} label="Project Participant" placeholder="input workspace participant" />
       {type === 'gitUrl' && (
         <React.Fragment>
           <div className={classes.divider}>
