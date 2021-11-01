@@ -96,7 +96,7 @@ function Board(props: IBoardProps) {
                         ></div>
                       </div>
                     </div>
-                    <div>{v.description ?? 'this kanbanboard is no have description.'}</div>
+                    <div className={classes.description}>{v.description ?? 'this kanbanboard is no have description.'}</div>
                   </div>
                 )
               })}
