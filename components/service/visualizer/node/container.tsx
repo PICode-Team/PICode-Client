@@ -29,7 +29,7 @@ export default function ContainerNode(data: any) {
                             containerId: contextInformation.containerId,
                             dockerCommand: "start",
                         };
-                        let data = await fetchSet(`http://localhost:8000/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
+                        let data = await fetchSet(`/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
                         if (data.code === 200) {
                             setTimeout(() => { getDockerData() }, 2000)
                         }
@@ -48,7 +48,7 @@ export default function ContainerNode(data: any) {
                             containerId: contextInformation.containerId,
                             dockerCommand: "stop",
                         };
-                        let data = await fetchSet(`http://localhost:8000/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
+                        let data = await fetchSet(`/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
                         if (data.code === 200) {
                             setTimeout(() => { getDockerData() }, 2000)
                         }
@@ -67,7 +67,7 @@ export default function ContainerNode(data: any) {
                         containerId: contextInformation.containerId,
                         dockerCommand: "restart",
                     };
-                    let data = await fetchSet(`http://localhost:8000/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
+                    let data = await fetchSet(`/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
                     if (data.code === 200) {
                         setTimeout(() => { getDockerData() }, 2000)
                     }
