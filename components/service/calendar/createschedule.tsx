@@ -13,6 +13,7 @@ import CustomTextarea from '../../items/input/textarea'
 import Modal from '../../items/modal/modal'
 import moment from 'moment'
 import { useWs } from '../../context/websocket'
+import CustomUserInput from '../../items/input/userInput'
 
 const createCalenderStyle = makeStyles((theme: IThemeStyle) =>
   createStyles({
@@ -77,8 +78,10 @@ export default function CreateSchedule(props: ICreateSchedule) {
   const classes = createCalenderStyle()
   const [payload, setPayload] = useState<IPayload>(initialState)
   const [isPublic, setIsPublic] = useState<boolean>(true)
-  const kanbanData: IOptionData[] = [{ name: 'Select kanban', value: '' }]
-  const mileData: IOptionData[] = [{ name: 'Select milestone', value: '' }]
+  const [userList, setUserList] = useState<string[]>([])
+  const [label, setLabel] = useState<string>('')
+  const kanbanData: IOptionData[] = []
+  const mileData: IOptionData[] = []
   const ws: any = useWs()
 
   const handlePayload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,6 +142,8 @@ export default function CreateSchedule(props: ICreateSchedule) {
             dueDate: payload.dueDate.slice(2),
             milestone: payload.milestoneId === '' ? undefined : payload.milestoneId,
             kanban: payload.kanbanId === '' ? undefined : payload.kanbanId,
+            label: payload.kanbanId === '' ? undefined : label === '' ? undefined : label,
+            assigner: payload.kanbanId === '' ? undefined : userList,
           },
         })
       )
@@ -157,6 +162,10 @@ export default function CreateSchedule(props: ICreateSchedule) {
     }
   }
 
+  const handleLabel = (event: any) => {
+    setLabel(event.target.value)
+  }
+
   return (
     <Modal modal={modal} setModal={setModal} title={'Create schedule'} onSubmit={handleSubmit}>
       <React.Fragment>
@@ -172,8 +181,10 @@ export default function CreateSchedule(props: ICreateSchedule) {
         <CustomDate id="dueDate" onChange={handleDueDate} value={payload.dueDate} label="Due Date" placeholder="Due Date" />
         <CustomTextarea id="content" label="content" value={payload.content} placeholder="Content" onChange={handlePayload} />
         <label style={{ color: '#fff' }}>Optional</label>
-        <CustomSelect id="milestoneId" value={payload.milestoneId} label={'Milestone'} optionList={mileData} onChange={handlePayload} />
-        <CustomSelect id="kanbanId" value={payload.kanbanId} label={'Kanban'} optionList={kanbanData} onChange={handlePayload} />
+        <CustomSelect id="milestoneId" placeholder="select milestone" value={payload.milestoneId} label={'Milestone'} optionList={mileData} onChange={handlePayload} />
+        <CustomSelect id="kanbanId" placeholder="select kanban" value={payload.kanbanId} label={'Kanban'} optionList={kanbanData} onChange={handlePayload} />
+        {payload.kanbanId !== '' && <CustomUserInput value={userList} setValue={setUserList} label="Assignees" placeholder="input issue assignees" />}
+        {payload.kanbanId !== '' && <CustomTextInput id="label" value={label} label="Label" placeholder="label" onChange={handleLabel} />}
       </React.Fragment>
     </Modal>
   )
