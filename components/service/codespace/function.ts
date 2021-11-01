@@ -211,12 +211,14 @@ export const dropElement = (
                     },
                 ];
             } else {
-                tmpViewState.children!.push({
-                    data: "",
-                    path: dragId,
-                    name: fileName[fileName.length - 1],
-                    focus: true,
-                });
+                if(!tmpViewState.children.some((v)=>v.path===dragId)){
+                    tmpViewState.children!.push({
+                        data: "",
+                        path: dragId,
+                        name: fileName[fileName.length - 1],
+                        focus: true,
+                    });
+                }
             }
             setViewState(tmpViewState);
         }

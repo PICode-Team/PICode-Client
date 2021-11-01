@@ -55,7 +55,6 @@ export default function ViewSpace({ position, children, setParentState,
             }
             setParentState(tmpParent)
         }
-
     }, [viewState, moveCheck])
 
     useEffect(() => {

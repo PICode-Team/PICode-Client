@@ -3,9 +3,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { IconButton } from "@material-ui/core";
 import { CloseOutlined } from "@material-ui/icons";
-import Editor from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 import { cloneDeep, debounce, throttle } from "lodash";
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import { codeStyle } from "../../../styles/service/codespace/code";
 import { ICodeContent, IWraper } from "./types";
 import clsx from "clsx"
@@ -40,12 +40,13 @@ export default function CodeContent(props: {
     const [onlyChange, setOnlyChange] = React.useState<boolean>(false);
     const [openWs, setOpenWs] = React.useState<number>(0);
     const [changeValue, setChangeValue] = React.useState<boolean>(false);
-    const [editLine, setEditLine] = React.useState<number>(0);
     const isRunning = React.useRef<boolean>(false);
-
-    const test = React.useRef<any>();
-
-    const tmpQueue = React.useRef<TQueueItem[]>([]);
+    const monaco = useMonaco();
+    const beforeData = useRef<any>();
+    const onlyCursor = useRef<boolean>(false);
+    const serverLineRef = useRef<number>();
+    const lineRef = useRef<{ lineNumber: number, column: number }>({ lineNumber: 0, column: 0 })
+    const editorRef = useRef<any>(null);
 
     useEffect(() => {
         let target = props.viewState!.children!.length;
@@ -54,12 +55,37 @@ export default function CodeContent(props: {
         }
     }, [props.viewState])
 
+    function handleEditorDidMount(editor: any, monaco: any) {
+        // here is the editor instance
+        // you can store it in `useRef` for further usage
+        editorRef.current = editor;
+
+        editor.onDidChangeCursorPosition((e: any) => {
+            if (e.source !== "modelChange") {
+                lineRef.current = e.position
+            }
+        })
+
+    }
+
     const fileWebsocketHanlder = (msg: any) => {
         const message = JSON.parse(msg.data)
         if (message.category === 'code') {
             switch (message.type) {
                 case "getCode": {
-                    setOriginData(message.data.fileContent)
+                    if (message.data.rowInfo !== undefined) {
+                        let userId = localStorage.getItem("userId");
+                        for (let i in message.data.rowInfo) {
+                            if (i === userId) {
+                                serverLineRef.current = message.data.rowInfo[i]
+                                break;
+                            }
+                            let alreadyHaveOwner = document.querySelectorAll(".line-numbers");
+                        }
+                    }
+                    if (message.data.filePath === selectFile?.path) {
+                        setOriginData(message.data.fileContent)
+                    }
                     break;
                 }
             }
@@ -75,63 +101,35 @@ export default function CodeContent(props: {
             if (selectFile === undefined) return;
             if (tmpWorkSpaceId === undefined) return;
             if (openWs < 0) {
-                ws.send(
-                    JSON.stringify({
-                        category: 'code',
-                        type: 'getCode',
-                        data: {
-                            workspaceId: tmpWorkSpaceId,
-                            filePath: selectFile.path
-                        }
-                    })
-                );
+                if (props.focusId !== selectFile.path) {
+                    ws.send(
+                        JSON.stringify({
+                            category: 'code',
+                            type: 'getCode',
+                            data: {
+                                workspaceId: tmpWorkSpaceId,
+                                filePath: props.focusId
+                            }
+                        })
+                    );
+                } else {
+                    ws.send(
+                        JSON.stringify({
+                            category: 'code',
+                            type: 'getCode',
+                            data: {
+                                workspaceId: tmpWorkSpaceId,
+                                filePath: selectFile.path
+                            }
+                        })
+                    );
+                }
             }
         }, 1000);
-        const changer = setInterval(() => {
-            if (isRunning.current) { return; };
-            isRunning.current = true;
-            const queue = tmpQueue.current;
-            if (queue.length === 0) {
-                isRunning.current = false;
-                return;
-            }
-
-            if (selectFile === undefined) return;
-
-            const updateContent: TQueueItem[] = []
-
-            while (queue.length > 0) {
-                const data = queue.shift()!;
-                const updateData = updateContent.find(v => v.line === data.line);
-
-                if (updateData === undefined) {
-                    updateContent.push(data);
-                } else {
-                    updateData.updateContent = data.updateContent;
-                }
-            }
-
-            const payload = {
-                category: "code",
-                type: "updateCode",
-                data: {
-                    workspaceId: getQuery(),
-                    updateContent: {
-                        path: selectFile.path,
-                        content: updateContent
-                    }
-                }
-            }
-            if (openWs < 0) {
-                ws.send(JSON.stringify(payload));
-            }
-            isRunning.current = false;
-        }, 1000)
         return () => {
             clearInterval(timer);
-            clearInterval(changer);
         };
-    }, [selectFile])
+    }, [selectFile, props.focusId])
 
     useEffect(() => {
         if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
@@ -163,6 +161,19 @@ export default function CodeContent(props: {
     }, [selectFile, openWs])
 
     useEffect(() => {
+        if (openWs < 0 && props.focusId !== undefined) {
+            const tmpWorkSpaceId = router.query.workspaceId;
+            ws.send(
+                JSON.stringify({
+                    category: 'code',
+                    type: 'getCode',
+                    data: {
+                        workspaceId: tmpWorkSpaceId,
+                        filePath: props.focusId
+                    }
+                })
+            );
+        }
         setFocusIdChange(true);
     }, [props.focusId])
 
@@ -170,8 +181,29 @@ export default function CodeContent(props: {
         if (originData === undefined) {
             return;
         }
-        setFileData(originData)
-
+        let tmpOriginData = cloneDeep(originData);
+        if (fileData !== undefined && !focusIdChange) {
+            let defaultLine = lineRef.current.lineNumber;
+            if (defaultLine > 0 && onlyCursor.current) {
+                let tmpArrData = tmpOriginData.split("\n")
+                let tmpFileData = fileData.split("\n");
+                let toHigh = defaultLine - 1;
+                let toLow = tmpFileData.length + 1 - defaultLine;
+                let maxValue = Math.max(toHigh, toLow);
+                if (serverLineRef.current !== undefined) {
+                    tmpArrData[serverLineRef.current - 1] = tmpFileData[lineRef.current.lineNumber - 1];
+                    lineRef.current.lineNumber = serverLineRef.current;
+                }
+                tmpOriginData = tmpArrData.join('\n');
+            } else if (!onlyCursor.current && serverLineRef.current === lineRef.current.lineNumber) {
+                let tmpArrData = tmpOriginData.split("\n")
+                let tmpFileData = fileData.split("\n");
+                tmpArrData[lineRef.current.lineNumber - 1] = tmpFileData[lineRef.current.lineNumber - 1];
+                tmpOriginData = tmpArrData.join('\n');
+            }
+        }
+        beforeData.current = originData;
+        setFileData(tmpOriginData)
     }, [originData])
 
     useEffect(() => {
@@ -186,7 +218,7 @@ export default function CodeContent(props: {
                     type: 'getCode',
                     data: {
                         workspaceId: tmpWorkSpaceId,
-                        filePath: selectFile.path
+                        filePath: props.focusId
                     }
                 })
             );
@@ -198,6 +230,10 @@ export default function CodeContent(props: {
     useEffect(() => {
         if (fileData === undefined) {
             return;
+        }
+        if (editorRef.current !== null) {
+            editorRef.current.setPosition(lineRef.current)
+            editorRef.current.focus()
         }
         if (focusIdChange) {
             setFocusIdChange(false);
@@ -268,9 +304,14 @@ export default function CodeContent(props: {
             }}>
             {props.viewState?.children?.map((v, idx) => {
                 let fileType = v.path.split("/");
+                let checkName = props.focusId?.split("/");
+                let resultName = "";
+                if (checkName !== undefined) {
+                    resultName = checkName[checkName.length - 1]
+                }
                 return <div key={v.path}
                     draggable
-                    className={clsx(classes.topFile, selectFile.name === v.name && classes.activeTopFile)}
+                    className={clsx(classes.topFile, resultName === v.name && classes.activeTopFile)}
                     onClick={() => {
                         setSelectFile(v)
                     }}
@@ -329,31 +370,77 @@ export default function CodeContent(props: {
                 options={{ selectOnLineNumbers: true }}
                 defaultValue={fileData === undefined ? "" : fileData}
                 value={fileData === undefined ? "" : fileData}
+                onMount={handleEditorDidMount}
                 onChange={(v, e) => {
-                    let lineNum = 0;
-                    let isDel = false;
-                    if (originData !== undefined && v !== undefined) {
-                        let divideOriginContent: string[] = originData?.split("\n");
-                        let divideNewContent: string[] | undefined = v?.split("\n");
-                        for (let i = 0; i < Math.max(divideOriginContent.length, divideNewContent.length); i++) {
-                            if (divideOriginContent?.[i] !== divideNewContent?.[i]) {
-                                lineNum = i;
+                    if (e.changes?.[0]?.forceMoveMarkers ?? true) {
+                        return;
+                    }
+                    let tmpText = v?.split("\n");
 
-                                if (divideNewContent.length < divideOriginContent.length) {
-                                    isDel = true;
-                                }
-                                break;
+                    if (e.changes[0].range.startLineNumber !== e.changes[0].range.endLineNumber) {
+                        onlyCursor.current = true;
+                        lineRef.current = {
+                            lineNumber: e.changes[0].range.startLineNumber,
+                            column: tmpText !== undefined ? tmpText[e.changes[0].range.startLineNumber]?.length ?? 0 : 0
+                        }
+                    }
+                    else if (e.changes[0].text === "\r\n" || e.changes[0].text === "\n") {
+                        onlyCursor.current = true;
+                        lineRef.current = {
+                            lineNumber: e.changes[0].range.endLineNumber,
+                            column: lineRef.current.column > 0 ? 0 : lineRef.current.column
+                        }
+                    }
+                    else if (e.changes[0].text === "") {
+                        onlyCursor.current = true;
+                        lineRef.current = {
+                            lineNumber: e.changes[0].range.endLineNumber,
+                            column: e.changes[0].range.endColumn - e.changes[0].rangeLength
+                        }
+                    } else if (e.changes[0].text.length !== 1) {
+                        onlyCursor.current = true;
+                        lineRef.current = {
+                            lineNumber: e.changes[0].range.endLineNumber,
+                            column: lineRef.current.column + e.changes[0].text.length
+                        }
+                    } else {
+                        lineRef.current = {
+                            lineNumber: e.changes[0].range.endLineNumber,
+                            column: e.changes[0].range.endColumn + 1
+                        }
+                    }
+                    let enterLine = e.changes[0].text.split("\n").length;
+                    if (serverLineRef.current !== lineRef.current.lineNumber) {
+                        onlyCursor.current = true
+                    }
+                    const payload = {
+                        category: "code",
+                        type: "updateCode",
+                        data: {
+                            workspaceId: getQuery(),
+                            updateContent: {
+                                path: selectFile.path,
+                                content: (e.changes ?? []).map((v: any) => {
+                                    const range = v.range;
+                                    return {
+                                        startRow: range.startLineNumber,
+                                        endRow: range.endLineNumber,
+                                        startCol: range.startColumn,
+                                        endCol: range.endColumn,
+                                        data: v.text,
+                                        rowInfo: {
+                                            isUpdate: onlyCursor.current,
+                                            lineNumber: lineRef.current.lineNumber + (enterLine - 1)
+                                        }
+                                    }
+                                })
                             }
                         }
                     }
-
-                    setEditLine(lineNum)
-
-                    tmpQueue.current.push({
-                        line: lineNum + 1,
-                        updateContent: isDel ? undefined : (v?.split('\n')?.[lineNum] ?? '')
-                    });
-
+                    if (openWs < 0) {
+                        ws.send(JSON.stringify(payload));
+                    }
+                    onlyCursor.current = false;
                     setFileData(v);
                 }}
             />

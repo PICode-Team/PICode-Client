@@ -160,7 +160,12 @@ const UpdatableEdge = () => {
 
     useEffect(() => {
         if (!modal) {
-            getDockerData();
+            const timer = setInterval(() => {
+                getDockerData();
+            }, 30000);
+            return () => {
+                clearInterval(timer);
+            };
         }
     }, [modal])
 

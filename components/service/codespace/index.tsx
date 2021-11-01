@@ -31,37 +31,36 @@ export default function CodeSpace() {
     const [openId, setOpenId] = React.useState<string>();
     const [focusId, setFocusId] = React.useState<string>();
     const [height, setHeight] = React.useState<number>(300);
-    const [terminalUuid, setTerminalUuid] = React.useState<string[]>([]);
-    const [openTerminalCount, setOpenTerminalCount] = React.useState<number>(0);
-    const [terminalContent, setTerminalContent] = React.useState<{ [key: string]: string[] }>({});
     const router = useRouter();
     const [firstSocket, setFirstSocket] = React.useState<boolean>(false);
     const [moveCheck, setMoveCheck] = React.useState<boolean>(false);
     const [workspaceId, setWorkspaceId] = React.useState<string>();
     const [test, setTest] = React.useState<number>(0);
-    const tmpTerminalTest = React.useRef(terminalContent);
+    const terminalUuid = React.useRef<string[]>([])
+    const [openTerminalCount, setOpenTerminalCount] = React.useState<number>(0);
+    const [terminalContent, setTerminalContent] = React.useState<Record<string, string[]>>({});
+    const tmpTerminalTest = React.useRef<Record<string, string[]>>({});
+    const [termialUpdate, setTerminalUpdate] = React.useState<number>(0);
 
     const clickToChildren = (viewState: any, name: string[]) => {
         let tmpViewState: any = cloneDeep(viewState);
         for (let i in tmpViewState.wrapper) {
             if (tmpViewState.wrapper[i].children !== undefined) {
-                tmpViewState.wrapper[i].children.push({
-                    data: "",
-                    path: openId,
-                    name: name[name.length - 1],
-                    focus: true,
-                });
-                break;
+                if (!tmpViewState.wrapper[i].children.some((v: any) => v.path === name.join("/"))) {
+                    tmpViewState.wrapper[i].children.push({
+                        data: "",
+                        path: openId,
+                        name: name[name.length - 1],
+                        focus: true,
+                    });
+                    break;
+                }
             } else {
                 tmpViewState.wrapper[i] = clickToChildren(tmpViewState.wrapper[i], name);
             }
         }
         return tmpViewState;
     };
-
-    useEffect(() => {
-        // console.log(viewState)
-    }, [viewState]);
 
     useEffect(() => {
         if (openId === undefined) return;
@@ -82,13 +81,15 @@ export default function CodeSpace() {
         } else {
             if (viewState.children !== undefined) {
                 let tmpViewState = cloneDeep(viewState);
-                tmpViewState.children?.push({
-                    data: "",
-                    path: openId,
-                    name: name[name.length - 1],
-                    focus: true,
-                });
-                setViewState(tmpViewState);
+                if (!tmpViewState.children?.some((v) => v.path === openId)) {
+                    tmpViewState.children?.push({
+                        data: "",
+                        path: openId,
+                        name: name[name.length - 1],
+                        focus: true,
+                    });
+                    setViewState(tmpViewState);
+                }
             } else if (viewState.wrapper !== undefined) {
                 let forFunctionState = cloneDeep(viewState);
                 setViewState(clickToChildren(forFunctionState, name));
@@ -125,29 +126,6 @@ export default function CodeSpace() {
         }
     }, []);
 
-    useEffect(() => {
-        tmpTerminalTest.current = terminalContent;
-    }, [terminalContent]);
-
-    useEffect(() => {
-        if (openTerminalCount > 0) {
-            if (test < 0) {
-                let payload = {
-                    category: "terminal",
-                    type: "createTerminal",
-                    data: {
-                        workspaceId: workspaceId,
-                        size: {
-                            cols: 150,
-                            rows: 100,
-                        }
-                    }
-                }
-                ws.send(JSON.stringify(payload))
-            }
-        }
-    }, [openTerminalCount])
-
     const fileWebsocketHanlder = (msg: any) => {
         const message = JSON.parse(msg.data);
         if (message.category === "code") {
@@ -162,33 +140,37 @@ export default function CodeSpace() {
                 case "createTerminal": {
                     let tmp = [];
                     let tmpTerminal = cloneDeep(terminalUuid);
-                    for (let i of tmpTerminal) {
+                    for (let i of terminalUuid.current) {
                         tmp.push(i);
                     }
-                    tmp.push(message.data.uuid);
-                    setTerminalUuid(tmp);
+                    if (!terminalUuid.current.some((v) => v === message.data.uuid)) {
+                        tmp.push(message.data.uuid);
+                    }
+                    terminalUuid.current = tmp
+                    setOpenTerminalCount(openTerminalCount + 1);
                     break;
                 }
                 case "commandTerminal": {
                     let tmpContent = cloneDeep(tmpTerminalTest.current);
                     if (tmpContent[message.data.uuid as string] === undefined) {
                         tmpContent[message.data.uuid as string] = [message.data.message];
-                        setTerminalContent(tmpContent);
+                        tmpTerminalTest.current = tmpContent
                     } else {
                         tmpContent[message.data.uuid as string].push(message.data.message);
-                        setTerminalContent(tmpContent);
+                        tmpTerminalTest.current = tmpContent
                     }
+                    setTerminalUpdate(termialUpdate + 1);
                     break;
                 }
                 case "deleteTerminal": {
                     let tmp = [];
-                    for (let i of terminalUuid) {
+                    for (let i of terminalUuid.current) {
                         if (i !== message.data.uuid) {
                             tmp.push(i);
                         }
                     }
                     setOpenTerminalCount(tmp.length);
-                    setTerminalUuid(tmp);
+                    terminalUuid.current = tmp;
                     break;
                 }
             }
@@ -197,10 +179,10 @@ export default function CodeSpace() {
 
     useEffect(() => {
         if (workspaceId === undefined) return;
-        if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
+        if (test > 0 && ws !== undefined && ws?.readyState === WebSocket.OPEN) {
             ws.addEventListener("message", fileWebsocketHanlder);
             setTest(-1);
-        } else {
+        } else if (test != -1) {
             setTest(test + 1);
         }
     }, [workspaceId, test]);
@@ -241,7 +223,20 @@ export default function CodeSpace() {
                 <IconButton
                     onClick={(e) => {
                         e.stopPropagation();
-                        setOpenTerminalCount(openTerminalCount + 1);
+                        if (test < 0 && openTerminalCount < 1) {
+                            let payload = {
+                                category: "terminal",
+                                type: "createTerminal",
+                                data: {
+                                    workspaceId: workspaceId,
+                                    size: {
+                                        cols: 150,
+                                        rows: 100,
+                                    }
+                                }
+                            }
+                            ws.send(JSON.stringify(payload))
+                        }
                     }}
                     style={{
                         position: "absolute",
@@ -333,11 +328,11 @@ export default function CodeSpace() {
                     </div>
                     {openTerminalCount > 0 && (
                         <TerminalContent
-                            setOpenContent={setOpenTerminalCount}
-                            terminalCount={openTerminalCount}
-                            content={terminalContent}
+                            openTerminalCount={openTerminalCount}
+                            content={tmpTerminalTest.current}
                             height={height}
-                            uuid={terminalUuid}
+                            uuid={terminalUuid.current}
+                            ws={ws}
                             setHeight={setHeight}
                             projectName={projectName}
                         />

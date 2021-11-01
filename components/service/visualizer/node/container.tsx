@@ -5,6 +5,7 @@ import PowerOutlinedIcon from "@material-ui/icons/PowerOutlined";
 import PowerOffOutlinedIcon from "@material-ui/icons/PowerOffOutlined";
 import SettingsBackupRestoreOutlinedIcon from "@material-ui/icons/SettingsBackupRestoreOutlined";
 import { visualizerStyle } from "../../../../styles/service/dockerspace/visualspace";
+import { fetchSet } from "../../../context/fetch";
 
 
 export default function ContainerNode(data: any) {
@@ -13,7 +14,7 @@ export default function ContainerNode(data: any) {
         let data = await fetch(`/api/docker/visualization`, {
             method: "GET"
         }).then((res) => res.json())
-        // setDockerData(data.dockerVisualInfo);
+        data.setDockerData(data.dockerVisualInfo);
     };
     let contextInformation = data.data
     return <NodeContainer data={data}>
@@ -24,24 +25,14 @@ export default function ContainerNode(data: any) {
                     onClick={async (e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        // let payload = {
-                        //     containerId: contextInformation.containerId,
-                        //     dockerCommand: "start",
-                        // };
-                        // let data = await fetch(
-                        //     `http://localhost:8000/api/docker`,
-                        //     {
-                        //         method: "POST",
-                        //         mode: "cors",
-                        //         headers: {
-                        //             "Content-Type": "application/json",
-                        //         },
-                        //         body: JSON.stringify(payload),
-                        //     }
-                        // ).then((res) => res.json());
-                        // if (data.code === 200) {
-                        //     getDockerData();
-                        // }
+                        let payload = {
+                            containerId: contextInformation.containerId,
+                            dockerCommand: "start",
+                        };
+                        let data = await fetchSet(`/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
+                        if (data.code === 200) {
+                            setTimeout(() => { getDockerData() }, 2000)
+                        }
                     }}
                 >
                     <PowerOutlinedIcon />
@@ -53,24 +44,14 @@ export default function ContainerNode(data: any) {
                     onClick={async (e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        // let payload = {
-                        //     containerId: contextInformation.containerId,
-                        //     dockerCommand: "stop",
-                        // };
-                        // let data = await fetch(
-                        //     `http://localhost:8000/api/docker`,
-                        //     {
-                        //         method: "POST",
-                        //         mode: "cors",
-                        //         headers: {
-                        //             "Content-Type": "application/json",
-                        //         },
-                        //         body: JSON.stringify(payload),
-                        //     }
-                        // ).then((res) => res.json());
-                        // if (data.code === 200) {
-                        //     getDockerData();
-                        // }
+                        let payload = {
+                            containerId: contextInformation.containerId,
+                            dockerCommand: "stop",
+                        };
+                        let data = await fetchSet(`/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
+                        if (data.code === 200) {
+                            setTimeout(() => { getDockerData() }, 2000)
+                        }
                     }}
                 >
                     <PowerOffOutlinedIcon />
@@ -82,24 +63,14 @@ export default function ContainerNode(data: any) {
                 onClick={async (e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    // let payload = {
-                    //     containerId: contextInformation.containerId,
-                    //     dockerCommand: "restart",
-                    // };
-                    // let data = await fetch(
-                    //     `http://localhost:8000/api/docker`,
-                    //     {
-                    //         method: "POST",
-                    //         mode: "cors",
-                    //         headers: {
-                    //             "Content-Type": "application/json",
-                    //         },
-                    //         body: JSON.stringify(payload),
-                    //     }
-                    // ).then((res) => res.json());
-                    // if (data.code === 200) {
-                    //     getDockerData();
-                    // }
+                    let payload = {
+                        containerId: contextInformation.containerId,
+                        dockerCommand: "restart",
+                    };
+                    let data = await fetchSet(`/api/docker`, "POST", true, JSON.stringify(payload)).then((res) => res.json());
+                    if (data.code === 200) {
+                        setTimeout(() => { getDockerData() }, 2000)
+                    }
                 }}
             >
                 <SettingsBackupRestoreOutlinedIcon />
