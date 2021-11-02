@@ -21,6 +21,7 @@ export interface IInputProps {
   onKeyPress?: () => void
   onClick?: () => void
   onTextAreaChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onlyContent?: boolean
 }
 
 type IButtonColor = 'primary' | 'secondary'

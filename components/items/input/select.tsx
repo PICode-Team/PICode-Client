@@ -39,8 +39,25 @@ const selectStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function CustomSelect(props: IItemDefautlProps & IInputProps) {
-  const { label, placeholder, optionList, onChange, id } = props
+  const { label, placeholder, optionList, onChange, id, onlyContent } = props
   const classes = selectStyle()
+
+  if (onlyContent === true) {
+    return (
+      <select id={id} defaultValue="" className={classes.select} onChange={onChange as any}>
+        {placeholder !== undefined && placeholder !== '' && (
+          <option value="" className={classes.option} disabled>
+            {placeholder}
+          </option>
+        )}
+        {optionList?.map((v, i) => (
+          <option key={`${v.value}-option-${i}`} value={v.value} className={classes.option}>
+            {v.name}
+          </option>
+        ))}
+      </select>
+    )
+  }
 
   return (
     <div className={classes.wrapper}>

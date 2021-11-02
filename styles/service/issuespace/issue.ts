@@ -425,11 +425,20 @@ export const issueDetailStyle = makeStyles((theme: IThemeStyle) =>
       color: theme.font.high.color,
       marginBottom: '20px',
       height: '85px',
+      '@media screen and (max-width: 400px)': {
+        height: '160px',
+        marginBottom: '20px',
+      },
     },
     wrapper: {
       backgroundColor: theme.backgroundColor.step1,
       padding: '30px',
       height: 'calc(100% - 105px)',
+      display: 'flex',
+      flexDirection: 'column',
+      '@media screen and (max-width: 400px)': {
+        height: 'calc(100% - 180px)',
+      },
     },
 
     title: {},
@@ -454,19 +463,30 @@ export const issueDetailStyle = makeStyles((theme: IThemeStyle) =>
     creation: {
       fontSize: '16px',
       opacity: 0.9,
+      '@media screen and (max-width: 400px)': {
+        marginTop: '10px',
+      },
     },
 
     item: {
       color: theme.font.high.color,
       fontSize: '16px',
-      marginBottom: '15px',
+      marginBottom: '10px',
       display: 'flex',
+      height: '32px',
+      alignItems: 'center',
     },
     key: {
       width: '150px',
     },
     value: {
       flex: 1,
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      '&>select': {
+        width: '50%',
+      },
     },
 
     divider: {
@@ -481,6 +501,82 @@ export const issueDetailStyle = makeStyles((theme: IThemeStyle) =>
       fontSize: '14px',
       whiteSpace: 'pre-line',
       wordBreak: 'break-word',
+      height: '100%',
+      flex: 1,
+    },
+
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      height: '45px',
+      marginBottom: '10px',
+      '@media screen and (max-width: 400px)': {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        height: 'fit-content',
+      },
+    },
+
+    buttonWrapper: {
+      display: 'flex',
+      '@media screen and (max-width: 400px)': {
+        marginTop: '10px',
+      },
+    },
+    infoWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      '@media screen and (max-width: 400px)': {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        marginTop: '15px',
+      },
+    },
+
+    input: {
+      width: '100%',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: theme.brightness.step0,
+      padding: '4px 8px',
+      border: 'none',
+      borderRadius: '2px',
+      color: theme.font.high.color,
+      height: '32px',
+      lineHeight: '32px',
+      flex: 1,
+      outline: 'none',
+      '@media screen and (max-width: 600px)': {
+        fontSize: '10px',
+      },
+      marginRight: '15px',
+    },
+    textarea: {
+      width: '100%',
+      backgroundColor: theme.backgroundColor.step1,
+      filter: theme.brightness.step0,
+      padding: '6px 12px',
+      border: 'none',
+      borderRadius: '2px',
+      color: theme.font.high.color,
+      marginTop: '8px',
+      lineHeight: '17px',
+      fontFamily: 'Arial',
+      resize: 'none',
+      outline: 'none',
+      height: '100%',
+      flex: 1,
+    },
+
+    titleContent: {
+      display: 'flex',
+      flex: 1,
+      width: '100%',
+    },
+
+    width50: {
+      width: '50%',
     },
   })
 )

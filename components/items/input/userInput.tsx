@@ -114,10 +114,12 @@ interface IUserInputProps {
   setValue: React.Dispatch<React.SetStateAction<string[]>>
   label: string
   placeholder: string
+  onlyContent?: boolean
+  style?: React.CSSProperties
 }
 
 function CustomUserInput(props: IUserInputProps) {
-  const { value, label, setValue, placeholder } = props
+  const { value, label, setValue, placeholder, onlyContent, style } = props
   const classes = userInputStyle()
   const [participantList, setParticipantList] = useState<IUser[]>([])
   const [visible, setVisible] = useState<boolean>(false)
@@ -178,6 +180,58 @@ function CustomUserInput(props: IUserInputProps) {
       setVisible(false)
     }
   }, [value])
+
+  if (onlyContent === true) {
+    return (
+      <React.Fragment>
+        <div className={classes.input} onClick={handleClickInput} style={style}>
+          {participantList.length > 0 && value.length > 0 ? (
+            <React.Fragment>
+              {value.map((v, i) => (
+                <div className={classes.item} key={`participant-input-user-${i}`}>
+                  {participantList.map((item) => {
+                    if (item.userId === v) return item.userName
+                  })}
+                  <div className={classes.icon} onClick={handleDeleteItem(v)}>
+                    <Close className={classes.delete} />
+                  </div>
+                </div>
+              ))}
+            </React.Fragment>
+          ) : (
+            placeholder
+          )}
+        </div>
+        {visible && (
+          <div className={classes.userList}>
+            {participantList
+              .filter((item) => {
+                let check = true
+                value.forEach((v) => {
+                  if (v === item.userId) check = false
+                })
+                return check
+              })
+              .map((v, i) => (
+                <div
+                  className={classes.user}
+                  key={`participant-${i}`}
+                  onClick={() => {
+                    setValue([...value, v.userId])
+                  }}
+                >
+                  <div className={classes.userInfo}>
+                    <div className={classes.thumbnail}></div>
+                    <div className={classes.userName}>{v.userName}</div>
+                  </div>
+                  <div className={classes.privileges}></div>
+                </div>
+              ))}
+          </div>
+        )}
+      </React.Fragment>
+    )
+  }
 
   return (
     <React.Fragment>
