@@ -108,6 +108,9 @@ export default function WeekView(props: IDate & { setModalDate: React.Dispatch<R
                       }}
                     >
                       <div className={classes.titleName}>{v.title}</div>
+                      <div style={{ padding: '7px' }} className={classes.contentWrapper}>
+                        <div className={classes.content}>{v.content}</div>
+                      </div>
                     </div>
                   )
                 })}

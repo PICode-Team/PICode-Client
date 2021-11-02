@@ -29,8 +29,8 @@ export default function DayView(props: IDate & { setModalDate: React.Dispatch<Re
               }}
             >
               <div className={classes.titleName}>{v.title}</div>
-              <div style={{ width: '100%', height: 'calc(100% - 40px)' }}>
-                <div style={{ width: '100%', height: '100%' }}>{v.content}</div>
+              <div className={classes.contentWrapper}>
+                <div className={classes.content}>{v.content}</div>
               </div>
             </div>
           )
