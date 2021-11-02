@@ -35,6 +35,16 @@ function Layout(props: IPageProps) {
     }
   }
 
+  const checkLogin = async () => {
+    const response = await fetchSet('/user', 'GET', true)
+    const { code, user } = await response.json()
+
+    if (code !== 200) {
+      localStorage.removeItem("userId")
+      window.location.href="/"
+    }
+  }
+
   const getLoginUserData = () => {
     if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
       ws.send(
@@ -73,12 +83,13 @@ function Layout(props: IPageProps) {
   }, [ws?.readyState, wsCheck])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const checkId = localStorage.getItem('userId')
-      if (checkId === null) {
-        window.location.href = '/'
-      }
-    }
+    checkLogin();
+    const timer = setInterval(() => {
+      checkLogin();
+    }, 5000);
+    return () => {
+        clearInterval(timer);
+    };
   }, [])
 
   const userMouseMoveCapture = useCallback(
