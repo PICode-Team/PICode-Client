@@ -61,7 +61,10 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       alignItems: 'flex-end',
     },
-    bottom: {},
+    bottom: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     thumbnail: {
       width: '32px',
       height: '32px',
@@ -84,6 +87,19 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
       alignItems: 'center',
       fontSize: '11px',
       flex: 1,
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      width: '400px',
+      '@media screen and (max-width: 1920px)': {
+        width: '180px',
+      },
+      '@media screen and (max-width: 1280px)': {
+        width: '100px',
+      },
+      '@media screen and (max-width: 960px)': {
+        width: '70px',
+      },
     },
 
     labelWrapper: {
@@ -99,6 +115,8 @@ export const issueStyle = makeStyles((theme: IThemeStyle) =>
       borderRadius: '6px',
       padding: '3px 0px',
       color: theme.font.high.color,
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
     },
   })
 )
