@@ -63,7 +63,7 @@ function IssueDetail() {
   const labelData: IOptionData[] = []
   const ws: any = useWs()
 
-  if (kanbanList !== undefined) {
+  if (kanbanList !== undefined && kanbanList !== null) {
     kanbanList.map((v) => {
       if (v === null) return
       kanbanData.push({
@@ -73,7 +73,7 @@ function IssueDetail() {
     })
   }
 
-  if (mileList !== undefined) {
+  if (mileList !== undefined && mileList !== null) {
     mileList.map((v) => {
       if (v === null) return
       mileData.push({
@@ -84,11 +84,13 @@ function IssueDetail() {
   }
 
   if (kanbanList !== undefined) {
-    kanbanList
-      .find((v) => v.uuid === issueInfo?.kanban)
-      ?.columns.map((x) => {
+    const columns = kanbanList.find((v) => v.uuid === issueInfo?.kanban)?.columns
+
+    if (columns !== undefined) {
+      columns.map((x) => {
         labelData.push({ name: x, value: x })
       })
+    }
   }
 
   useEffect(() => {
