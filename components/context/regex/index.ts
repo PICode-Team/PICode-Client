@@ -7,4 +7,8 @@ export const imageRegex = /<img((\n|\r|.)*?)>/gim
 export const trimRegex = /(src=|")/gi
 export const allTagRegex = /(<([^>]+)>)/gi
 
-export const fontTagRegex = /<(\/font|font)([^>]*)>/gi
+export const fontTagRegex = /(<([^>]+)>)/gi
+
+export const bTagRegex = /<(\/b|b)([^>]*)>/gi
+export const iTagRegex = /<(\/i|i)([^>]*)>/gi
+export const sTagRegex = /<(\/s|s)([^>]*)>/gi

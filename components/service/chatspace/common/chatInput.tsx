@@ -20,7 +20,7 @@ import { chatInputStyle } from '../../../../styles/service/chatspace/chat'
 import { IChannel } from '../../../../types/chat.types'
 import { IUser } from '../../../../types/user.types'
 import { fetchSet } from '../../../context/fetch'
-import { fontTagRegex, mentionRegex } from '../../../context/regex'
+import { bTagRegex, fontTagRegex, iTagRegex, mentionRegex, sTagRegex } from '../../../context/regex'
 import { useWs } from '../../../context/websocket'
 import Entering from './entering'
 
@@ -213,7 +213,7 @@ function ChatInput(props: IChatInputProps) {
     }
     if (event.key === 'Shift') return
 
-    if (fontTagRegex.exec(messageRef.current!.innerHTML) !== null) {
+    if (messageRef.current!.textContent?.length === 0 && fontTagRegex.exec(messageRef.current!.innerHTML) !== null) {
       messageRef.current!.innerHTML = messageRef.current!.innerHTML.replace(fontTagRegex, '')
 
       const { focusNode } = window.getSelection()!
@@ -356,22 +356,23 @@ function ChatInput(props: IChatInputProps) {
     const newRange = selection.getRangeAt(0)
     selection.addRange(newRange)
 
-    // let tmpNode = document.createElement('span')
-    // tmpNode.innerHTML = `<b>웹이즈프리</b>`
-    // newRange.deleteContents()
-    // newRange.insertNode(tmpNode)
+    const content = newRange.cloneContents()
 
-    // console.log(selection.getRangeAt(0).toString())
-    // console.log(selection.getRangeAt(0))
-    // console.log(selection)
-    // console.log(messageRef.current.innerHTML)
+    const node = document.createElement(tag)
+    node.appendChild(content)
 
-    // if (selection.anchorNode === selection.extentNode) {
-    // } else {
-    // }
+    newRange.deleteContents()
+    newRange.insertNode(node)
   }
 
-  const handleMentionClick = () => {}
+  const handleMentionClick = () => {
+    const selection = document.getSelection()
+
+    if (selection === null) return
+    if (messageRef.current === null) return
+
+    const newRange = selection.getRangeAt(0)
+  }
 
   useEffect(() => {
     document.addEventListener('click', clickHandler)

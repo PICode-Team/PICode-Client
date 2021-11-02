@@ -179,7 +179,7 @@ function Thread(props: IThreadProps) {
     }
     if (event.key === 'Shift') return
 
-    if (fontTagRegex.exec(messageRef.current!.innerHTML) !== null) {
+    if (messageRef.current!.textContent?.length === 0 && fontTagRegex.exec(messageRef.current!.innerHTML) !== null) {
       messageRef.current!.innerHTML = messageRef.current!.innerHTML.replace(fontTagRegex, '')
 
       const { focusNode } = window.getSelection()!
