@@ -152,7 +152,7 @@ function ExportWorkspace(props: IExportWorkspaceProps) {
         )}
         {type === 'codespace' && (
           <div>
-            <CustomTextInput value={workspaceOption.extension} id="extension" label="extension" placeholder="extension" onChange={handleWorkspaceOption} />
+            <CustomTextInput value={workspaceOption.extension} id="extension" label="extension" placeholder="extension (e.g. zip, tar...)" onChange={handleWorkspaceOption} />
           </div>
         )}
         {type === 'container' && (
