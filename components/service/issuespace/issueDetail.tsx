@@ -180,7 +180,7 @@ function IssueDetail() {
         case 'getKanban':
           if (message.data.kanbans.length > 0) {
             setKanbanList(message.data.kanbans)
-            setKanbanName(message.data.kanbans.find((v: any) => v.uuid).title)
+            setKanbanName(message.data.kanbans.find((v: any) => v.uuid)?.title ?? '')
           }
 
           break
@@ -190,7 +190,7 @@ function IssueDetail() {
         case 'getMilestone':
           if (message.data !== undefined) {
             setMileList(message.data)
-            setMilestoneName(message.data.find((v: any) => v.uuid).title)
+            setMilestoneName(message.data.find((v: any) => v.uuid)?.title ?? '')
           }
 
           break
