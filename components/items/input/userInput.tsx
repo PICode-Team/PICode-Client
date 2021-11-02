@@ -106,6 +106,11 @@ const userInputStyle = makeStyles((theme: IThemeStyle) =>
       color: theme.font.high.color,
     },
     privileges: {},
+
+    onlyContentUserList: {
+      marginLeft: '0px',
+      width: '100%',
+    },
   })
 )
 
@@ -203,7 +208,7 @@ function CustomUserInput(props: IUserInputProps) {
           )}
         </div>
         {visible && (
-          <div className={classes.userList}>
+          <div className={`${classes.userList} ${classes.onlyContentUserList}`}>
             {participantList
               .filter((item) => {
                 let check = true

@@ -63,6 +63,10 @@ function IssueDetail() {
   const labelData: IOptionData[] = []
   const ws: any = useWs()
 
+  useEffect(() => {
+    setEditPayload({ ...editPayload, assigner: value })
+  }, [value])
+
   if (kanbanList !== undefined && kanbanList !== null) {
     kanbanList.map((v) => {
       if (v === null) return
