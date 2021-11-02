@@ -86,8 +86,6 @@ export default function CalanderSpace(props: any) {
     if (message.category === 'calendar') {
       switch (message.type) {
         case 'getCalendar': {
-          console.log(message.data.schedules)
-
           setCalendarData(message.data.schedules)
           break
         }
@@ -104,7 +102,7 @@ export default function CalanderSpace(props: any) {
 
           break
         }
-        case 'editSchedule': {
+        case 'updateSchedule': {
           if (message.data.code === 200) {
             ws.send(
               JSON.stringify({

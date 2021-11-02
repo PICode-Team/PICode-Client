@@ -43,8 +43,6 @@ function CustomSelect(props: IItemDefautlProps & IInputProps) {
   const { value, label, placeholder, optionList, onChange, id, onlyContent } = props
   const classes = selectStyle()
 
-  console.log(value)
-
   if (onlyContent === true) {
     return (
       <select id={id} defaultValue={value as string} className={classes.select} onChange={onChange as any}>
