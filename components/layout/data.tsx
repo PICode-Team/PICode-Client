@@ -1,20 +1,31 @@
-import { DashboardOutlined, DescriptionOutlined, ChatOutlined, SettingsOutlined, DnsOutlined, ComputerOutlined, WorkOutlineOutlined, Description, CalendarViewDayOutlined, CalendarTodayOutlined } from '@material-ui/icons'
+import {
+  DashboardOutlined,
+  DescriptionOutlined,
+  ChatOutlined,
+  SettingsOutlined,
+  DnsOutlined,
+  ComputerOutlined,
+  WorkOutlineOutlined,
+  Description,
+  CalendarViewDayOutlined,
+  CalendarTodayOutlined,
+} from '@material-ui/icons'
 
 interface ISidebarData {
   [key: string]: {
-    url?: string,
-    icon: JSX.Element,
-    title: string,
-    children?: INodeData[],
+    url?: string
+    icon: JSX.Element
+    title: string
+    children?: INodeData[]
     subUrl?: string[]
   }
 }
 
 interface INodeData {
-  url: string,
-  icon: JSX.Element,
-  title: string,
-  children?: ISidebarData[],
+  url: string
+  icon: JSX.Element
+  title: string
+  children?: ISidebarData[]
   subUrl?: string[]
 }
 
@@ -38,7 +49,7 @@ export const sidebarData: ISidebarData = {
         url: '/workspace/container',
         icon: <ComputerOutlined />,
         title: 'Container',
-        subUrl: ["/workspace/visualization"],
+        subUrl: ['/workspace/visualization'],
       },
     ],
     subUrl: ['/workspace/container', '/workspace/codespace', '/workspace/visualization', '/codespace', '/codeview', '/container'],
@@ -51,7 +62,7 @@ export const sidebarData: ISidebarData = {
   calendarspace: {
     url: '/calendarspace',
     icon: <CalendarTodayOutlined />,
-    title: 'CalendarSpace',
+    title: 'Calendarspace',
   },
   notespace: {
     url: '/notespace',
