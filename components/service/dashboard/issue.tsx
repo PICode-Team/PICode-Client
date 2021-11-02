@@ -11,6 +11,7 @@ function IssueView(props: IIssueViewProps) {
   const [kanbanList, setKanbanList] = useState<string[]>([])
   const [issueList, setIssueList] = useState<IIssue[] | null>(null)
   const [wsCheck, setWsCheck] = useState<number>(0)
+  const [firstCheck, setFirstCheck] = useState<boolean>(false)
   const ws: any = useWs()
 
   const getKanban = () => {
@@ -56,7 +57,16 @@ function IssueView(props: IIssueViewProps) {
     } else if (message.category === 'issue') {
       switch (message.type) {
         case 'getIssue':
-          if (message.data.issues.length > 0) setIssueList((issueList) => [...(issueList ?? []), ...message.data.issues])
+          if (message.data.issues.length > 0) {
+            setIssueList((issueList) => [...(issueList ?? []), ...message.data.issues])
+          }
+          break
+        case 'createIssue':
+          if (message.data.code === 200) {
+            setIssueList((issueList) => [...(issueList ?? []), message.data.issue])
+          }
+          break
+        default:
           break
       }
     }
@@ -75,20 +85,19 @@ function IssueView(props: IIssueViewProps) {
   }, [ws?.readyState, wsCheck])
 
   useEffect(() => {
+    if (firstCheck === true) return
+
+    if (kanbanList.length > 0) {
+      setFirstCheck(true)
+    }
+
     kanbanList.map((v: any) => {
+      console.log(v)
       if (v !== null) {
         getIssue(v.uuid)
       }
     })
   }, [kanbanList])
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (issueList === null) {
-        setIssueList([])
-      }
-    }, 100)
-  }, [])
 
   const handleLinkIssue = (issueUUID: string) => () => {
     window.location.href = `/issuespace/detail?issueUUID=${issueUUID}`

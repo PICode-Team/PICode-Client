@@ -1,10 +1,11 @@
 import React from 'react'
 import { viewStyle } from '../../../styles/service/calendarspace/day'
 import { checkDate, ICalendarData, IDate } from './calendar'
+import moment from 'moment'
 
 export default function DayView(props: IDate & { setModalDate: React.Dispatch<React.SetStateAction<Date>>; setDetailData: React.Dispatch<React.SetStateAction<ICalendarData | null>> }) {
   const classes = viewStyle()
-  let scheduleDay: string = checkDate(props.tmpViewDay)
+  let scheduleDay: string = moment(props.tmpViewDay).format('YY-MM-DD')
   return (
     <div
       className={classes.day}

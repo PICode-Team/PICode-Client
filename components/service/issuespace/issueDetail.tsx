@@ -104,6 +104,8 @@ function IssueDetail() {
     if (issueInfo !== null) {
       getKanbanList()
       getMileList()
+      setEditPayload(issueInfo)
+      setValue(issueInfo.assigner)
     }
   }, [issueInfo])
 

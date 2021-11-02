@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash'
 import React from 'react'
 import { viewStyle } from '../../../styles/service/calendarspace/day'
 import { calDay, checkDate, getToday, ICalendarData, IDate } from './calendar'
+import moment from 'moment'
 
 export const getWeek = (date: Date) => {
   let today = cloneDeep(date).getDay()
@@ -44,7 +45,7 @@ export default function WeekView(props: IDate & { setModalDate: React.Dispatch<R
       {calDay.map((v, idx) => {
         let startDate = cloneDeep(weekData.startDate)
         startDate.setDate(weekData.startDate.getDate() + idx)
-        let scheduleDay: string = checkDate(startDate)
+        let scheduleDay: string = moment(startDate).format('YY-MM-DD')
         let id = calDay[weekData.startDate.getDay() + idx]
         let checkToday = false
         return (

@@ -135,9 +135,17 @@ function ScheduleDetail(props: IScheduleDetail) {
   const { modal, setModal, detailData, kanbanList, milestoneList } = props
   const classes = calenderDetailStyle()
   const [editing, setEditing] = useState<boolean>(false)
-  const [payload, setPayload] = useState<IPayload>(initialState)
-  const [userList, setUserList] = useState<string[]>([])
-  const [label, setLabel] = useState<string>('')
+  const [payload, setPayload] = useState<IPayload>({
+    type: detailData.type,
+    title: detailData.title,
+    content: detailData.content,
+    startDate: `20${detailData.startDate}`,
+    dueDate: `20${detailData.dueDate}`,
+    milestoneId: detailData?.milestone ?? '',
+    kanbanId: detailData?.kanban ?? '',
+  })
+  const [userList, setUserList] = useState<string[]>(detailData?.assigner ?? [])
+  const [label, setLabel] = useState<string>(detailData?.label ?? '')
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const kanbanData: IOptionData[] = []
   const mileData: IOptionData[] = []
@@ -277,6 +285,9 @@ function ScheduleDetail(props: IScheduleDetail) {
             <ModalBody>
               {editing === true ? (
                 <React.Fragment>
+                  {console.log(payload.kanbanId)}
+                  {console.log(detailData.kanban)}
+
                   <CustomTextInput label="Title" value={payload.title} id="title" onChange={handlePayload} placeholder="Title" required={true} />
                   <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="Start Date" placeholder="Start Date" />
                   <CustomDate id="dueDate" onChange={handleDueDate} value={payload.dueDate} label="Due Date" placeholder="Due Date" />
