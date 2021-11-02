@@ -237,6 +237,7 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       paddingLeft: '4px',
       lineHeight: '24px',
+      userSelect:"none"
     },
     contextIcon: {
       height: '20px',
