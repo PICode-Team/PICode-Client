@@ -106,7 +106,7 @@ function EditProject() {
           <div className={classes.content}>
             <div className={classes.inputContent}>
               <div className={classes.buttonBox}>
-                <CustomButton text="PREV" color="secondary" onClick={handlePreviousButton} disable={step === 2} />
+                {step !== 2 && <CustomButton text="PREV" color="secondary" onClick={handlePreviousButton} disable={step === 2} />}
                 <CustomButton text={step === 3 ? 'SUBMIT' : 'NEXT'} color="primary" onClick={handleNextButton} />
               </div>
             </div>
