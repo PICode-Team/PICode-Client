@@ -56,7 +56,7 @@ function IssueView(props: IIssueViewProps) {
     } else if (message.category === 'issue') {
       switch (message.type) {
         case 'getIssue':
-          if (message.data.issues.length > 0) setIssueList(message.data.issues)
+          if (message.data.issues.length > 0) setIssueList((issueList) => [...(issueList ?? []), ...message.data.issues])
           break
       }
     }

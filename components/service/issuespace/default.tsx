@@ -34,6 +34,7 @@ function DefaultIssue() {
   const [behaviorType, setBehaviorType] = useState<string>('')
   const [wsCheck, setWsCheck] = useState<number>(0)
   const [search, setSearch] = useState<string>('')
+  const [firstCheck, setFirstCheck] = useState<boolean>(false)
   const router = useRouter()
   const ws: any = useWs()
   const { type } = router.query
@@ -139,12 +140,12 @@ function DefaultIssue() {
       switch (message.type) {
         case 'getIssue':
           if (message.data.issues.length > 0) {
-            setIssueList([...(issueList ?? []), ...message.data.issues])
+            setIssueList((issueList) => [...(issueList ?? []), ...message.data.issues])
           }
           break
         case 'createIssue':
           if (message.data.code === 200) {
-            setIssueList([...(issueList ?? []), message.data.issue])
+            setIssueList((issueList) => [...(issueList ?? []), message.data.issue])
           }
           break
         default:
@@ -178,7 +179,14 @@ function DefaultIssue() {
   }
 
   useEffect(() => {
+    if (firstCheck === true) return
+
+    if (kanbanList.length > 0) {
+      setFirstCheck(true)
+    }
+
     kanbanList.map((v: any) => {
+      console.log(v)
       if (v !== null) {
         getIssue(v.uuid)
       }
