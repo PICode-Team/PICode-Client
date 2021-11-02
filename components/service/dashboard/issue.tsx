@@ -92,7 +92,6 @@ function IssueView(props: IIssueViewProps) {
     }
 
     kanbanList.map((v: any) => {
-      console.log(v)
       if (v !== null) {
         getIssue(v.uuid)
       }

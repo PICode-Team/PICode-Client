@@ -186,7 +186,6 @@ function DefaultIssue() {
     }
 
     kanbanList.map((v: any) => {
-      console.log(v)
       if (v !== null) {
         getIssue(v.uuid)
       }

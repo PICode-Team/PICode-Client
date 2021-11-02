@@ -285,9 +285,6 @@ function ScheduleDetail(props: IScheduleDetail) {
             <ModalBody>
               {editing === true ? (
                 <React.Fragment>
-                  {console.log(payload.kanbanId)}
-                  {console.log(detailData.kanban)}
-
                   <CustomTextInput label="Title" value={payload.title} id="title" onChange={handlePayload} placeholder="Title" required={true} />
                   <CustomDate id="startDate" onChange={handleStartDate} value={payload.startDate} label="Start Date" placeholder="Start Date" />
                   <CustomDate id="dueDate" onChange={handleDueDate} value={payload.dueDate} label="Due Date" placeholder="Due Date" />
