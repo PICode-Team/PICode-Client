@@ -210,4 +210,4 @@ function CustomMonoUserInput(props: IUserInputProps) {
   )
 }
 
-export default CustomMonoUserInput
+export default React.memo(CustomMonoUserInput)
