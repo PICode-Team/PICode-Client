@@ -136,6 +136,8 @@ export const cardStyle = makeStyles((theme: IThemeStyle) =>
       marginRight: '6px',
       borderRadius: '6px',
       padding: '3px 0px',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
     },
   })
 )

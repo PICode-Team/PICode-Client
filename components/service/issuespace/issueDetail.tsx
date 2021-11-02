@@ -331,7 +331,9 @@ function IssueDetail() {
 
         <div className={classes.divider} />
 
-        <div className={classes.description}>{editing === false ? issueInfo !== null && issueInfo.content : <textarea className={classes.textarea}></textarea>}</div>
+        <div className={classes.description}>
+          {editing === false ? issueInfo !== null && issueInfo.content : <textarea id="content" className={classes.textarea} value={editPayload.content} onChange={handleEditPayload}></textarea>}
+        </div>
       </div>
     </div>
   )
