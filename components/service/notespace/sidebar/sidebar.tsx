@@ -159,7 +159,7 @@ function Sidebar(props: INoteSidebar) {
     setSelectFile(tmpFile)
 
     if (output[key].content) {
-      setContentList(output[key].content)
+      setContentList(output[key].content.data)
     } else {
       setContentList([])
     }
