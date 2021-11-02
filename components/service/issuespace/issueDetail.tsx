@@ -7,6 +7,7 @@ import CustomButton from '../../items/button/button'
 import CustomSelect from '../../items/input/select'
 import CustomTextInput from '../../items/input/text'
 import CustomUserInput from '../../items/input/userInput'
+import DeleteModal from '../../items/modal/detail/delete'
 
 interface IIssueDetail {
   assigner: string[]
@@ -57,6 +58,7 @@ function IssueDetail() {
   const [wsCheck, setWsCheck] = useState<number>(0)
   const [editing, setEditing] = useState<boolean>(false)
   const [editPayload, setEditPayload] = useState<IIssueDetail>(initialEditState)
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [value, setValue] = useState<string[]>([])
   const kanbanData: IOptionData[] = []
   const mileData: IOptionData[] = []
@@ -239,6 +241,28 @@ function IssueDetail() {
     setEditPayload({ ...editPayload, [event.target.id]: event.target.value })
   }
 
+  const handleDeleteSubmit = (issueUUID: string) => () => {
+    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          category: 'issue',
+          type: 'deleteIssue',
+          data: {
+            kanbanUUID: issueInfo?.kanban,
+            issueUUID,
+          },
+        })
+      )
+    }
+
+    setOpenDelete(false)
+    router.back()
+  }
+
+  const handleDeleteButtonClick = () => {
+    setOpenDelete(true)
+  }
+
   return (
     <div className={classes.detail}>
       <div className={classes.header}>
@@ -255,7 +279,10 @@ function IssueDetail() {
           </div>
           <div>
             {editing === false ? (
-              <CustomButton text="Edit" color="secondary" onClick={handleEditButtonClick} />
+              <div className={classes.buttonWrapper}>
+                <CustomButton text="Edit" color="secondary" onClick={handleEditButtonClick} />
+                <CustomButton text="Delete" onClick={handleDeleteButtonClick} />
+              </div>
             ) : (
               <div className={classes.buttonWrapper}>
                 <CustomButton text="Save" color="secondary" onClick={handleSaveButtonClick} />
@@ -335,6 +362,9 @@ function IssueDetail() {
           {editing === false ? issueInfo !== null && issueInfo.content : <textarea id="content" className={classes.textarea} value={editPayload.content} onChange={handleEditPayload}></textarea>}
         </div>
       </div>
+      {openDelete && issueInfo !== null && (
+        <DeleteModal name={issueInfo.title} uuid={issueInfo.uuid} modal={openDelete} setModal={setOpenDelete} handleSubmit={handleDeleteSubmit} type="issue" title="Delete Issue" />
+      )}
     </div>
   )
 }
