@@ -60,35 +60,36 @@ function IssueDetail() {
   const [value, setValue] = useState<string[]>([])
   const kanbanData: IOptionData[] = []
   const mileData: IOptionData[] = []
+  const labelData: IOptionData[] = []
   const ws: any = useWs()
 
-  useEffect(() => {
-    if (kanbanList !== undefined) {
-      kanbanList.map((v) => {
-        if (v === null) return
-        kanbanData.push({
-          name: v.title,
-          value: v.uuid,
-        })
+  if (kanbanList !== undefined) {
+    kanbanList.map((v) => {
+      if (v === null) return
+      kanbanData.push({
+        name: v.title,
+        value: v.uuid,
       })
-    }
-  }, [kanbanList])
+    })
+  }
 
-  useEffect(() => {
-    setEditPayload({ ...editPayload, assigner: value })
-  }, [value])
-
-  useEffect(() => {
-    if (mileList !== undefined) {
-      mileList.map((v) => {
-        if (v === null) return
-        mileData.push({
-          name: v.title,
-          value: v.uuid,
-        })
+  if (mileList !== undefined) {
+    mileList.map((v) => {
+      if (v === null) return
+      mileData.push({
+        name: v.title,
+        value: v.uuid,
       })
-    }
-  }, [mileList])
+    })
+  }
+
+  if (kanbanList !== undefined) {
+    kanbanList
+      .find((v) => v.uuid === issueInfo?.kanban)
+      ?.columns.map((x) => {
+        labelData.push({ name: x, value: x })
+      })
+  }
 
   useEffect(() => {
     if (issueInfo === null) return
@@ -99,8 +100,8 @@ function IssueDetail() {
 
   useEffect(() => {
     if (issueInfo !== null) {
-      getKanban(issueInfo.kanban)
-      getMilestone(issueInfo.milestone)
+      getKanbanList()
+      getMileList()
     }
   }, [issueInfo])
 
@@ -136,34 +137,6 @@ function IssueDetail() {
           type: 'getIssueDetail',
           data: {
             issueUUID,
-          },
-        })
-      )
-    }
-  }
-
-  const getKanban = (uuid: string) => {
-    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
-      ws.send(
-        JSON.stringify({
-          category: 'kanban',
-          type: 'getKanban',
-          data: {
-            uuid,
-          },
-        })
-      )
-    }
-  }
-
-  const getMilestone = (uuid: string) => {
-    if (ws !== undefined && ws?.readyState === WebSocket.OPEN) {
-      ws.send(
-        JSON.stringify({
-          category: 'milestone',
-          type: 'getMilestone',
-          data: {
-            uuid,
           },
         })
       )
@@ -207,6 +180,7 @@ function IssueDetail() {
         case 'getKanban':
           if (message.data.kanbans.length > 0) {
             setKanbanList(message.data.kanbans)
+            setKanbanName(message.data.kanbans.find((v: any) => v.uuid).title)
           }
 
           break
@@ -216,6 +190,7 @@ function IssueDetail() {
         case 'getMilestone':
           if (message.data !== undefined) {
             setMileList(message.data)
+            setMilestoneName(message.data.find((v: any) => v.uuid).title)
           }
 
           break
@@ -321,7 +296,7 @@ function IssueDetail() {
                 kanbanName
               )
             ) : (
-              <CustomSelect id="kanban" placeholder="select kanban" value={editPayload.milestone} label={'Kanban'} optionList={kanbanData} onChange={handleEditPayload} onlyContent={true} />
+              <CustomSelect id="kanban" placeholder="select kanban" value={editPayload.kanban} label={'Kanban'} optionList={kanbanData} onChange={handleEditPayload} onlyContent={true} />
             )}
           </div>
         </div>
@@ -331,7 +306,7 @@ function IssueDetail() {
             {editing === false ? (
               issueInfo !== null && issueInfo.column
             ) : (
-              <CustomSelect id="milestone" placeholder="select milestone" value={editPayload.milestone} label={'Milestone'} optionList={mileData} onChange={handleEditPayload} onlyContent={true} />
+              <CustomSelect id="milestone" placeholder="select column" value={editPayload.column} label={'Column'} optionList={labelData} onChange={handleEditPayload} onlyContent={true} />
             )}
           </div>
         </div>
