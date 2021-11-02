@@ -203,6 +203,13 @@ function DefaultIssue() {
     setWsCheck(0)
   }, [issueList])
 
+  useEffect(() => {
+    if (modal === false) {
+      setModalMile(null)
+      setModalKanban(null)
+    }
+  }, [modal])
+
   return (
     <div className={classes.manage}>
       <div className={classes.title}>

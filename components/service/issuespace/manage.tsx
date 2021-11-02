@@ -134,6 +134,13 @@ export default function ManageSpace(props: IManageSpaceProps) {
     setMenu(name)
   }
 
+  useEffect(() => {
+    if (modal === false) {
+      setModalMile(null)
+      setModalKanban(null)
+    }
+  }, [modal])
+
   return (
     <div className={classes.manage}>
       <div className={classes.title}>

@@ -32,7 +32,7 @@ function Card(props: ICardProps) {
     }
   }
 
-  const handleDradStartCard = () => { }
+  const handleDradStartCard = () => {}
 
   const handleDradEndCard = (event: any) => {
     for (const column of columnList!) {
@@ -61,7 +61,7 @@ function Card(props: ICardProps) {
         </div>
       </div>
       <div className={classse.content}>{issue.content}</div>
-      <div className={classse.labelWrapper}>{issue.label !== '' && <div className={classse.label}>{issue.label}</div>}</div>
+      <div className={classse.labelWrapper}>{issue.label !== '' && issue.label !== undefined && <div className={classse.label}>{issue.label}</div>}</div>
     </div>
   )
 }
