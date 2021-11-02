@@ -11,6 +11,7 @@ import CustomSelect from '../../items/input/select'
 import { viewData } from './constant'
 import CreateSchedule from './createschedule'
 import DayView from './dayview'
+import ScheduleDetail from './detail'
 import MonthView from './monthview'
 import WeekView, { getWeek } from './weekview'
 
@@ -18,16 +19,19 @@ interface ICalendarType {
   [key: string]: ICalendarData[]
 }
 
-interface ICalendarData {
+export interface ICalendarData {
   type: string
   title: string
   content: string
   startDate: string
   dueDate: string
-  milestone: string
+  milestone?: string
   creator: string
   issue: string
   scheduleId: string
+  kanban?: string
+  label?: string
+  assigner?: string[]
 }
 
 export const checkDate = (date: Date) => {
@@ -75,12 +79,15 @@ export default function CalanderSpace(props: any) {
   const [modalDate, setModalDate] = React.useState<Date>(new Date())
   const [openNum, setOpenNum] = React.useState<number>(0)
   const [scheduleDay, setScheduleDay] = React.useState<Date>()
+  const [detailData, setDetailData] = React.useState<ICalendarData | null>(null)
 
   const calendarWebsocketHanlder = (msg: any) => {
     const message = JSON.parse(msg.data)
     if (message.category === 'calendar') {
       switch (message.type) {
         case 'getCalendar': {
+          console.log(message.data.schedules)
+
           setCalendarData(message.data.schedules)
           break
         }
@@ -180,12 +187,51 @@ export default function CalanderSpace(props: any) {
     }
   }, [view])
 
+  useEffect(() => {
+    if (modal === false) {
+      setDetailData(null)
+    }
+  }, [modal])
+
   const returnValue: {
     [key: string]: JSX.Element
   } = {
-    day: <DayView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setView={setView} setModal={setModal} />,
-    week: <WeekView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setView={setView} setModal={setModal} />,
-    month: <MonthView today={today} tmpViewDay={tmpViewDay} schedule={calendarData} setTmpViewDay={setTmpViewDay} setModalDate={setModalDate} setView={setView} setModal={setModal} />,
+    day: (
+      <DayView
+        setModalDate={setModalDate}
+        setDetailData={setDetailData}
+        today={today}
+        tmpViewDay={tmpViewDay}
+        schedule={calendarData}
+        setTmpViewDay={setTmpViewDay}
+        setView={setView}
+        setModal={setModal}
+      />
+    ),
+    week: (
+      <WeekView
+        setModalDate={setModalDate}
+        setDetailData={setDetailData}
+        today={today}
+        tmpViewDay={tmpViewDay}
+        schedule={calendarData}
+        setTmpViewDay={setTmpViewDay}
+        setView={setView}
+        setModal={setModal}
+      />
+    ),
+    month: (
+      <MonthView
+        setDetailData={setDetailData}
+        today={today}
+        tmpViewDay={tmpViewDay}
+        schedule={calendarData}
+        setTmpViewDay={setTmpViewDay}
+        setModalDate={setModalDate}
+        setView={setView}
+        setModal={setModal}
+      />
+    ),
   }
 
   return (
@@ -264,7 +310,8 @@ export default function CalanderSpace(props: any) {
         </div>
         <div className={classes.calendar}>{calendarData !== undefined && returnValue[view]}</div>
       </div>
-      <CreateSchedule modal={modal} setModal={setModal} kanbanList={kanbanList} tmpDay={modalDate} milestoneList={milestoneList} />
+      {detailData === null && <CreateSchedule modal={modal} setModal={setModal} kanbanList={kanbanList} tmpDay={modalDate} milestoneList={milestoneList} />}
+      {detailData !== null && <ScheduleDetail modal={modal} setModal={setModal} detailData={detailData} kanbanList={kanbanList} milestoneList={milestoneList} />}
     </div>
   )
 }

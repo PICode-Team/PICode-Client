@@ -1,4 +1,5 @@
 import { makeStyles, createStyles } from '@material-ui/core'
+import { useEffect } from 'react'
 
 import { IThemeStyle } from '../../../styles/theme'
 import { IItemDefautlProps, IInputProps } from '../../../types/item.types'
@@ -39,12 +40,14 @@ const selectStyle = makeStyles((theme: IThemeStyle) =>
 )
 
 function CustomSelect(props: IItemDefautlProps & IInputProps) {
-  const { label, placeholder, optionList, onChange, id, onlyContent } = props
+  const { value, label, placeholder, optionList, onChange, id, onlyContent } = props
   const classes = selectStyle()
+
+  console.log(value)
 
   if (onlyContent === true) {
     return (
-      <select id={id} defaultValue="" className={classes.select} onChange={onChange as any}>
+      <select id={id} defaultValue={value as string} className={classes.select} onChange={onChange as any}>
         {placeholder !== undefined && placeholder !== '' && (
           <option value="" className={classes.option} disabled>
             {placeholder}

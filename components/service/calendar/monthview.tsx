@@ -3,11 +3,10 @@ import { cloneDeep } from 'lodash'
 import moment from 'moment'
 import React from 'react'
 import { viewStyle } from '../../../styles/service/calendarspace/day'
-import { calDay, checkDate, getToday, IDate } from './calendar'
-import CreateSchedule from './createschedule'
+import { calDay, getToday, ICalendarData, IDate } from './calendar'
 import { getWeek } from './weekview'
 
-export default function MonthView(props: IDate & { setModalDate: React.Dispatch<React.SetStateAction<Date>> }) {
+export default function MonthView(props: IDate & { setModalDate: React.Dispatch<React.SetStateAction<Date>>; setDetailData: React.Dispatch<React.SetStateAction<ICalendarData | null>> }) {
   const classes = viewStyle()
   const [dragId, setDragId] = React.useState<string>()
   let weekNum = [0, 1, 2, 3, 4, 5]
@@ -81,7 +80,17 @@ export default function MonthView(props: IDate & { setModalDate: React.Dispatch<
                       props.schedule[scheduleDay] !== undefined &&
                       props.schedule[scheduleDay].map((v) => {
                         return (
-                          <div key={v.scheduleId} className={classes.monthschedule} draggable={true} onDragStart={() => {}}>
+                          <div
+                            style={{ cursor: 'pointer' }}
+                            key={v.scheduleId}
+                            className={classes.monthschedule}
+                            draggable={true}
+                            onDragStart={() => {}}
+                            onClick={(e: any) => {
+                              props.setDetailData(v)
+                              props.setModal(true)
+                            }}
+                          >
                             {v.title}
                           </div>
                         )

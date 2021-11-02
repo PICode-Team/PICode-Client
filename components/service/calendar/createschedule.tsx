@@ -96,29 +96,25 @@ export default function CreateSchedule(props: ICreateSchedule) {
     setPayload({ ...payload, dueDate: event.target.value })
   }
 
-  useEffect(() => {
-    if (kanbanList !== undefined) {
-      kanbanList.map((v) => {
-        if (v === null) return
-        kanbanData.push({
-          name: v.title,
-          value: v.uuid,
-        })
+  if (kanbanList !== undefined) {
+    kanbanList.map((v) => {
+      if (v === null) return
+      kanbanData.push({
+        name: v.title,
+        value: v.uuid,
       })
-    }
-  }, [kanbanList])
+    })
+  }
 
-  useEffect(() => {
-    if (milestoneList !== undefined) {
-      milestoneList.map((v) => {
-        if (v === null) return
-        mileData.push({
-          name: v.title,
-          value: v.uuid,
-        })
+  if (milestoneList !== undefined) {
+    milestoneList.map((v) => {
+      if (v === null) return
+      mileData.push({
+        name: v.title,
+        value: v.uuid,
       })
-    }
-  }, [milestoneList])
+    })
+  }
 
   useEffect(() => {
     const date = moment(tmpDay).format('YYYY-MM-DD')
