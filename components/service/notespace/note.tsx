@@ -173,18 +173,19 @@ function Note(props: INoteProps) {
   function drawChildren(number: number, checkParent?: string) {
     if (sideFileList === undefined) return <></>
     if (sideFileList[`depth${number}`] === undefined) return <></>
-    return sideFileList[`depth${number}`].map((v: any) => {
+    return sideFileList[`depth${number}`].map((v: any, i: number) => {
       if (number !== 1) {
         let realId = v.noteId.split('/')
         let findParent = realId.slice(0, realId.length - 1).join('/')
         if (checkParent !== findParent) {
-          return <></>
+          return <React.Fragment key={`test-${i}`}></React.Fragment>
         }
       }
       let realName = v.noteId.split('/')
       return (
         <>
           <div
+            key={v.noteId}
             className={classes.fileRow}
             style={{
               paddingLeft: `${16 * number + (checkChildren(v.noteId) === 'file' ? 24 : 0)}px`,
@@ -391,10 +392,35 @@ function Note(props: INoteProps) {
                   contentEditable={true}
                   id={selectFile.noteId + 'NoteContent'}
                   className={clsx(classes.defaultInput)}
-                  onKeyDown={(event) => {}}
+                  onKeyUp={(event: any) => {
+                    if (event.target.innerHTML === '/h1 ') {
+                      event.target.innerHTML = ''
+                      const h1 = document.createElement('h1')
+                      h1.classList.add(classes.h1Input)
+                      const parent = event.target.parentElement
+                      h1.appendChild(event.target)
+                      parent.appendChild(h1)
+
+                      document.getElementById(selectFile.noteId + 'NoteContent')?.focus()
+
+                      ws.send(
+                        JSON.stringify({
+                          category: 'note',
+                          type: 'saveNote',
+                          data: {
+                            noteData: {
+                              noteId: selectFile.noteId,
+                              content: '',
+                            },
+                          },
+                        })
+                      )
+                    }
+                  }}
                   onInput={(e) => {
                     let node = document.getElementById(selectFile.noteId)?.focus()
-                    let result = e.currentTarget.innerText
+                    let result = e.currentTarget.innerHTML
+
                     ws.send(
                       JSON.stringify({
                         category: 'note',

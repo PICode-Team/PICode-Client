@@ -91,6 +91,7 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
     },
     defaultInput: {
       background: 'inherit',
+      fontSize: 'inherit',
       border: 'none',
       '&:focus': {
         border: 'none',
@@ -103,7 +104,6 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
       height: 'fit-content',
       overflowWrap: 'break-word',
       width: '100%',
-      fontSize: '14px',
       overflowY: 'hidden',
       boxSizing: 'border-box',
       whiteSpace: 'pre-wrap',
@@ -237,7 +237,7 @@ export const noteStyle = makeStyles((theme: IThemeStyle) =>
       display: 'flex',
       paddingLeft: '4px',
       lineHeight: '24px',
-      userSelect:"none"
+      userSelect: 'none',
     },
     contextIcon: {
       height: '20px',
