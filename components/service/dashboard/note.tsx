@@ -30,8 +30,6 @@ function NoteView(props: INoteViewProps) {
     if (message.category === 'note') {
       switch (message.type) {
         case 'getNote':
-          console.log(message.data)
-
           setFileView(message.data)
           break
       }
