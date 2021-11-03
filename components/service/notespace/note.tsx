@@ -21,27 +21,27 @@ const initialContextPositionState: IContextPosition = {
   target: '',
 }
 
-interface INoteProps { }
+interface INoteProps {}
 
-function getLastPath(path:string){
-  let result = path.split("/");
-  return result[result.length-1]
+function getLastPath(path: string) {
+  let result = path.split('/')
+  return result[result.length - 1]
 }
 
 function Note(props: INoteProps) {
-  const { } = props
+  const {} = props
   const classes = noteStyle()
   const [contextPosition, setContextPosition] = useState<IContextPosition>(initialContextPositionState)
   const [selectFile, setSelectFile] = useState<any>(undefined)
-  const [noteList,setNoteList] = React.useState<any>();
-  const [sideFileList,setSideFileList] = React.useState<any>();
-  const [openNote,setOpenNote] = React.useState<string[]>([]);
-  const [addFile,setAddFile] = React.useState<boolean>();
+  const [noteList, setNoteList] = React.useState<any>()
+  const [sideFileList, setSideFileList] = React.useState<any>()
+  const [openNote, setOpenNote] = React.useState<string[]>([])
+  const [addFile, setAddFile] = React.useState<boolean>()
   const [openContext, setOpenContext] = useState<boolean>(false)
-  const [contextName,setContextName] = useState<string>();
+  const [contextName, setContextName] = useState<string>()
   const [openNum, setOpenNum] = React.useState<number>(0)
-  const selectFileRef=React.useRef<any>();
-  const dragId=React.useRef<string>("");
+  const selectFileRef = React.useRef<any>()
+  const dragId = React.useRef<string>('')
   const ws: any = useWs()
 
   const handleFileRowDragOver = (key: any) => (event: any) => {
@@ -59,22 +59,22 @@ function Note(props: INoteProps) {
     }
   }
 
-  useEffect(()=>{
-    selectFileRef.current=selectFile
-    if(selectFile!==undefined){
+  useEffect(() => {
+    selectFileRef.current = selectFile
+    if (selectFile !== undefined) {
       let node = document.getElementById(`${selectFile.noteId}NoteContent`)
-      if(node!==null){
-        node.textContent=selectFile.content;
+      if (node !== null) {
+        node.textContent = selectFile.content
       }
     }
-    
+
     const timer = setInterval(() => {
-      getNote(selectFile?.noteId);
-    }, 1000);
+      getNote(selectFile?.noteId)
+    }, 1000)
     return () => {
-        clearInterval(timer);
-    };
-  },[selectFile])
+      clearInterval(timer)
+    }
+  }, [selectFile])
 
   const noteWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
@@ -82,9 +82,9 @@ function Note(props: INoteProps) {
     if (message.category === 'note') {
       switch (message.type) {
         case 'getNote':
-          if(selectFileRef.current===undefined){
+          if (selectFileRef.current === undefined) {
             setNoteList(message.data)
-          }else{
+          } else {
             setSelectFile(message.data[0])
           }
           break
@@ -129,166 +129,176 @@ function Note(props: INoteProps) {
     }
   }, [openNum])
 
-  useEffect(()=>{
-    let result:any ={};
-    if(noteList!==undefined){
-      noteList.map((v:any)=>{
-        let realId = v.noteId.split("/");
-        if(result[`depth${realId.length-1}`]===undefined){
-          result[`depth${realId.length-1}`]=[v]
-        }else{
-          result[`depth${realId.length-1}`].push(v)
+  useEffect(() => {
+    let result: any = {}
+    if (noteList !== undefined) {
+      noteList.map((v: any) => {
+        let realId = v.noteId.split('/')
+        if (result[`depth${realId.length - 1}`] === undefined) {
+          result[`depth${realId.length - 1}`] = [v]
+        } else {
+          result[`depth${realId.length - 1}`].push(v)
         }
       })
-      setSideFileList(result);
+      setSideFileList(result)
     }
-  },[noteList])
+  }, [noteList])
 
-  function checkChildren(path:string){
-    let realPath=path.split("/");
-    let count = realPath.length;
-    if(sideFileList[`depth${count}`]===undefined){
-      return "file"
-    }else{
-      let result =false;
-      sideFileList[`depth${count}`].map((v:any)=>{
-        let childPath = v.noteId.split("/");
-        let tmpResult =true;
-        for(let i=0;i<count;i++){
-          if(realPath[i]!==childPath[i]){
-            tmpResult=false;
-            break;
+  function checkChildren(path: string) {
+    let realPath = path.split('/')
+    let count = realPath.length
+    if (sideFileList[`depth${count}`] === undefined) {
+      return 'file'
+    } else {
+      let result = false
+      sideFileList[`depth${count}`].map((v: any) => {
+        let childPath = v.noteId.split('/')
+        let tmpResult = true
+        for (let i = 0; i < count; i++) {
+          if (realPath[i] !== childPath[i]) {
+            tmpResult = false
+            break
           }
         }
-        result=result||tmpResult;
+        result = result || tmpResult
       })
-      if(result){
-        return "folder"
-      }else{
-        return "file"
+      if (result) {
+        return 'folder'
+      } else {
+        return 'file'
       }
     }
-
   }
 
-  function drawChildren(number:number,checkParent?:string){
-    if(sideFileList===undefined) return <></>
-    if(sideFileList[`depth${number}`]===undefined) return <></>
-    return sideFileList[`depth${number}`].map((v:any)=>{
-        if(number!==1){
-            let realId = v.noteId.split("/");
-            let findParent = realId.slice(0,realId.length-1).join("/")
-            if(checkParent!==findParent){
-                return <></>
-            }
+  function drawChildren(number: number, checkParent?: string) {
+    if (sideFileList === undefined) return <></>
+    if (sideFileList[`depth${number}`] === undefined) return <></>
+    return sideFileList[`depth${number}`].map((v: any) => {
+      if (number !== 1) {
+        let realId = v.noteId.split('/')
+        let findParent = realId.slice(0, realId.length - 1).join('/')
+        if (checkParent !== findParent) {
+          return <></>
         }
-        let realName = v.noteId.split("/");
-        return <>
-        <div className={classes.fileRow}
-        style={{
-          paddingLeft:`${16*number+(checkChildren(v.noteId) === "file" ? 24 : 0)}px`
-        }}
-        draggable={true}
-        id={v.noteId}
-        onDragOver={handleFileRowDragOver(v)}
-        onDragStart={()=>{
-          dragId.current=v.noteId;
-        }}
-        onDrop={(e)=>{
-          if(dragId.current!==""){
-            const node = document.getElementById(`${v.noteId}`)
-              if (node) {
-                node.style.border = '0px'
-              }
-          }
-          let dragNote = dragId.current.split("/");
-          let dropNote = v.noteId.split("/");
-          let tmpResult = true;
-          for(let i=0;i<dragNote.length;i++){
-            if(dragNote[i]!==dropNote[i]){
-              tmpResult=false;
-            }
-          }
-          if(!tmpResult){
-            ws.send(JSON.stringify({
-              category:"note",
-              type:"updateNote",
-              data:{
-                noteId:dragId.current,
-                newNotePath:v.noteId+"/"+dragNote[dragNote.length-1]
-              }
-            }))
-            getNote();
-          }
-        }}
-        onContextMenu={(event)=>{
-          event.preventDefault();
-          setOpenContext(true);
-          setContextPosition({
-              x: event.currentTarget.getBoundingClientRect().left,
-              y: event.currentTarget.getBoundingClientRect().top,
-              target:v.noteId,
-            }
-          )
-        }}
-        onDragLeave={handleFileRowDragLeave(v)}
-        onClick={()=>{
-          let tmpOpenNote=cloneDeep(openNote);
-          let check = tmpOpenNote.findIndex((open)=>open===v.noteId);
-          if(check<0){
-            tmpOpenNote.push(v.noteId)
-          }else{
-            tmpOpenNote.splice(check,1)
-          }
-          setSelectFile(v)
-          setOpenNote(tmpOpenNote)
-        }}>
-            {checkChildren(v.noteId) === "folder" &&
-            <ExpandMoreRounded style={{ transform: `${! openNote.some((openCheck)=>openCheck===v.noteId) ? 'rotate(-90deg)' : 'rotate(0deg)'}` }} />}
-            <Description 
-            className={classes.description}/>
-            <div className={classes.key}>
-            {realName[realName.length-1]}
-            </div>
-        </div>
+      }
+      let realName = v.noteId.split('/')
+      return (
         <>
-            {openNote.some((v1)=>v1===v.noteId)&&drawChildren(number+1,v.noteId)}
-        </>
-        {(addFile && contextPosition.target===v.noteId) && 
-            <div className={classes.fileRow}  style={{
-              paddingLeft:`${16*number+(checkChildren(v.noteId) === "file" ? 24 : 0)}px`
-            }}>
-              <input placeholder={'untitled'} autoFocus onBlur={(e)=>{
-                if(e.target.value!==""){
-                  ws.send(JSON.stringify({
-                    category:"note",
-                    type:"createNote",
-                    data:{
-                      path:v.noteId+"/"+e.target.value
-                    }
-                  }))
-                  getNote();
+          <div
+            className={classes.fileRow}
+            style={{
+              paddingLeft: `${16 * number + (checkChildren(v.noteId) === 'file' ? 24 : 0)}px`,
+            }}
+            draggable={true}
+            id={v.noteId}
+            onDragOver={handleFileRowDragOver(v)}
+            onDragStart={() => {
+              dragId.current = v.noteId
+            }}
+            onDrop={(e) => {
+              if (dragId.current !== '') {
+                const node = document.getElementById(`${v.noteId}`)
+                if (node) {
+                  node.style.border = '0px'
                 }
-                setAddFile(false)
-              }} onKeyDown={(e)=>{
-                if(e.key==="Enter"){
-                  ws.send(JSON.stringify({
-                    category:"note",
-                    type:"createNote",
-                    data:{
-                      path:v.noteId+"/"+e.currentTarget.value
-                    }
-                  }))
-                  getNote();
+              }
+              let dragNote = dragId.current.split('/')
+              let dropNote = v.noteId.split('/')
+              let tmpResult = true
+              for (let i = 0; i < dragNote.length; i++) {
+                if (dragNote[i] !== dropNote[i]) {
+                  tmpResult = false
+                }
+              }
+              if (!tmpResult) {
+                ws.send(
+                  JSON.stringify({
+                    category: 'note',
+                    type: 'updateNote',
+                    data: {
+                      noteId: dragId.current,
+                      newNotePath: v.noteId + '/' + dragNote[dragNote.length - 1],
+                    },
+                  })
+                )
+                getNote()
+              }
+            }}
+            onContextMenu={(event) => {
+              event.preventDefault()
+              setOpenContext(true)
+              setContextPosition({
+                x: event.currentTarget.getBoundingClientRect().left,
+                y: event.currentTarget.getBoundingClientRect().top,
+                target: v.noteId,
+              })
+            }}
+            onDragLeave={handleFileRowDragLeave(v)}
+            onClick={() => {
+              let tmpOpenNote = cloneDeep(openNote)
+              let check = tmpOpenNote.findIndex((open) => open === v.noteId)
+              if (check < 0) {
+                tmpOpenNote.push(v.noteId)
+              } else {
+                tmpOpenNote.splice(check, 1)
+              }
+              setSelectFile(v)
+              setOpenNote(tmpOpenNote)
+            }}
+          >
+            {checkChildren(v.noteId) === 'folder' && <ExpandMoreRounded style={{ transform: `${!openNote.some((openCheck) => openCheck === v.noteId) ? 'rotate(-90deg)' : 'rotate(0deg)'}` }} />}
+            <Description className={classes.description} />
+            <div className={classes.key}>{realName[realName.length - 1]}</div>
+          </div>
+          <>{openNote.some((v1) => v1 === v.noteId) && drawChildren(number + 1, v.noteId)}</>
+          {addFile && contextPosition.target === v.noteId && (
+            <div
+              className={classes.fileRow}
+              style={{
+                paddingLeft: `${16 * number + (checkChildren(v.noteId) === 'file' ? 24 : 0)}px`,
+              }}
+            >
+              <input
+                placeholder={'untitled'}
+                autoFocus
+                onBlur={(e) => {
+                  if (e.target.value !== '') {
+                    ws.send(
+                      JSON.stringify({
+                        category: 'note',
+                        type: 'createNote',
+                        data: {
+                          path: v.noteId + '/' + e.target.value,
+                        },
+                      })
+                    )
+                    getNote()
+                  }
                   setAddFile(false)
-                }
-              }} />
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    ws.send(
+                      JSON.stringify({
+                        category: 'note',
+                        type: 'createNote',
+                        data: {
+                          path: v.noteId + '/' + e.currentTarget.value,
+                        },
+                      })
+                    )
+                    getNote()
+                    setAddFile(false)
+                  }
+                }}
+              />
               <IconButton className={classes.delete} onClick={handleDeleteClick}>
                 <Delete className={classes.buttonColor} />
               </IconButton>
-            </div> 
-          }
+            </div>
+          )}
         </>
+      )
     })
   }
 
@@ -307,55 +317,67 @@ function Note(props: INoteProps) {
       <div className={classes.fileView}>
         <div className={classes.fileEdit}>
           <IconButton className={classes.addFile}>
-            <Add className={classes.buttonColor} onClick={()=>{
-              setAddFile(true)
-            }}/>
+            <Add
+              className={classes.buttonColor}
+              onClick={() => {
+                setAddFile(true)
+              }}
+            />
           </IconButton>
         </div>
-        <div style={{width:"100%",height:"calc(100% - 50px)",overflow:"hidden",overflowY:"auto"}}>
-           {drawChildren(1)}
-           {(addFile && contextPosition.target==="") && 
+        <div style={{ width: '100%', height: 'calc(100% - 50px)', overflow: 'hidden', overflowY: 'auto' }}>
+          {drawChildren(1)}
+          {addFile && contextPosition.target === '' && (
             <div className={classes.fileRow}>
-              <input placeholder={'untitled'} autoFocus onBlur={(e)=>{
-                if(e.target.value!==""){
-                  ws.send(JSON.stringify({
-                    category:"note",
-                    type:"createNote",
-                    data:{
-                      path:"/"+e.currentTarget.value
-                    }
-                  }))
-                  getNote();
-                }
-                setAddFile(false)
-              }} onKeyDown={(e)=>{
-                if(e.key==="Enter"){
-                  ws.send(JSON.stringify({
-                    category:"note",
-                    type:"createNote",
-                    data:{
-                      path:"/"+e.currentTarget.value
-                    }
-                  }))
-                  getNote();
-                  setAddFile(false);
-                }
-              }} />
+              <input
+                placeholder={'untitled'}
+                autoFocus
+                onBlur={(e) => {
+                  if (e.target.value !== '') {
+                    ws.send(
+                      JSON.stringify({
+                        category: 'note',
+                        type: 'createNote',
+                        data: {
+                          path: '/' + e.currentTarget.value,
+                        },
+                      })
+                    )
+                    getNote()
+                  }
+                  setAddFile(false)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    ws.send(
+                      JSON.stringify({
+                        category: 'note',
+                        type: 'createNote',
+                        data: {
+                          path: '/' + e.currentTarget.value,
+                        },
+                      })
+                    )
+                    getNote()
+                    setAddFile(false)
+                  }
+                }}
+              />
               <IconButton className={classes.delete} onClick={handleDeleteClick}>
                 <Delete className={classes.buttonColor} />
               </IconButton>
-            </div> 
-          }
+            </div>
+          )}
         </div>
       </div>
       {selectFile !== undefined && (
         <div id="writeSomeThing" className={classes.content}>
           <div className={classes.title}>
             <div className={classes.titleContent}>
-               <input id="title" className={clsx(classes.defaultTitle, classes.h1Input)} placeholder="title" onChange={()=>{}} value={getLastPath(selectFile.noteId)} />
-              <input id="creator" className={clsx(classes.defaultTitle, classes.h2Input)} placeholder="author" onChange={()=>{}} value={selectFile.creator} />
-              <input id="type" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="category" onChange={()=>{}} value={selectFile.type} />
-              <input id="createTime" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="creation" onChange={()=>{}} value={selectFile.createTime} /> 
+              <input id="title" className={clsx(classes.defaultTitle, classes.h1Input)} placeholder="title" onChange={() => {}} value={getLastPath(selectFile?.noteId ?? '')} />
+              <input id="creator" className={clsx(classes.defaultTitle, classes.h2Input)} placeholder="author" onChange={() => {}} value={selectFile.creator} />
+              <input id="type" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="category" onChange={() => {}} value={selectFile.type} />
+              <input id="createTime" className={clsx(classes.defaultTitle, classes.h3Input)} placeholder="creation" onChange={() => {}} value={selectFile.createTime} />
             </div>
           </div>
           {selectFile.path.split('/').some((v: string | string[]) => v.includes('.io')) ? (
@@ -363,15 +385,14 @@ function Note(props: INoteProps) {
               <DrawDiagram selectFile={selectFile} />
             </div>
           ) : (
-            <div  className={clsx(classes.contentWrapper)}>
+            <div className={clsx(classes.contentWrapper)}>
               <div className={classes.write}>
-                <div 
+                <div
                   contentEditable={true}
-                  id={selectFile.noteId+"NoteContent"}
+                  id={selectFile.noteId + 'NoteContent'}
                   className={clsx(classes.defaultInput)}
-                  onKeyDown={(event) => {
-                  }}
-                  onInput={(e)=>{
+                  onKeyDown={(event) => {}}
+                  onInput={(e) => {
                     let node = document.getElementById(selectFile.noteId)?.focus()
                     let result = e.currentTarget.innerText
                     ws.send(
@@ -379,30 +400,24 @@ function Note(props: INoteProps) {
                         category: 'note',
                         type: 'saveNote',
                         data: {
-                          noteData:{
-                            noteId:selectFile.noteId,
-                            content:result
-                          }
+                          noteData: {
+                            noteId: selectFile.noteId,
+                            content: result,
+                          },
                         },
                       })
                     )
                     getNote(selectFile.noteId)
                   }}
-                  >
-                  </div>
+                ></div>
               </div>
             </div>
           )}
         </div>
       )}
-      {openContext  && <NoteContext 
-      contextPosition={contextPosition} 
-      setOpenContext={setOpenContext} 
-      setSelectFile={setSelectFile} 
-      setAddFile={setAddFile}/>}
+      {openContext && <NoteContext contextPosition={contextPosition} setOpenContext={setOpenContext} setSelectFile={setSelectFile} setAddFile={setAddFile} />}
     </div>
   )
 }
 
 export default Note
-
