@@ -7,13 +7,17 @@ import { IconButton } from '@material-ui/core'
 import { CancelOutlined, Close, DeleteForeverOutlined } from '@material-ui/icons'
 
 function Terminal(props: any): JSX.Element {
+  const terminalUserName = React.useRef<string>();
+  let terminal = document.getElementById(`terminal${props.terminalCount}`)
+
   return (
     <div
       contentEditable={false}
       draggable={false}
       style={{
         height: '300px',
-        width: `${props.width}`,
+        width: `100%`,
+        minWidth:`${props.width}`,
         display: 'inline-block',
         overflow: 'auto',
         outline: 'none',
@@ -25,13 +29,18 @@ function Terminal(props: any): JSX.Element {
           terminal.focus()
         }
       }}
+
     >
-      {props.content[props.id]?.map((v: string, idx: number) => (
-        <>
-          <Ansi key={v}>{v}</Ansi>
-          {(props.content[props.id].length - 1 !== idx || idx !== 0) && <br />}
+      {props.content[props.id]?.map((v: string, idx: number) => {
+        if(idx===0){
+          terminalUserName.current=v
+        }
+        let terminal = document.getElementById(`terminal${props.terminalCount}`)
+        return <>
+          <Ansi key={v} >{v}</Ansi>
+          {(v!==terminalUserName.current) && <br />}
         </>
-      ))}
+      })}
       <span
         id={`terminal${props.terminalCount}`}
         contentEditable={true}
@@ -76,7 +85,7 @@ export default function TerminalContent(props: any): JSX.Element {
     <div className={classes.terminal} style={{ height: `${props.height}px` }}>
       <div draggable={false} className={classes.resizerBar} />
       <IconButton
-        style={{ position: 'absolute', top: '6px', right: '6px', width: '12px', height: '12px' }}
+        style={{ position: 'absolute', top: '48px', right: '24px', width: '12px', height: '12px' }}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation()

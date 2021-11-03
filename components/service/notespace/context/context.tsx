@@ -9,12 +9,11 @@ interface INoteContextProps {
   contextPosition: IContextPosition
   setOpenContext: React.Dispatch<React.SetStateAction<boolean>>
   setSelectFile: React.Dispatch<React.SetStateAction<IFileView | null>>
-  fileViewList: IFileView[] | null
-  setAddFile: React.Dispatch<React.SetStateAction<boolean>>
+  setAddFile:any
 }
 
 function Context(props: INoteContextProps) {
-  const { contextPosition, setOpenContext, setSelectFile, fileViewList, setAddFile } = props
+  const { contextPosition, setOpenContext, setSelectFile,setAddFile } = props
   const classes = noteStyle()
   const ws: any = useWs()
 
@@ -71,17 +70,8 @@ function Context(props: INoteContextProps) {
 
   const handleDeleteClick = (event: any) => {
     event.stopPropagation()
+    deleteNote(contextPosition.target)
     setOpenContext(false)
-    if (fileViewList === null) return
-
-    const node = fileViewList.find((v) => v.noteId === contextPosition.target)
-    if (node !== undefined) {
-      for (const fileView of fileViewList) {
-        if (fileView.path.includes(node.path)) {
-          deleteNote(fileView.noteId)
-        }
-      }
-    }
     getNote()
     setSelectFile(null)
   }

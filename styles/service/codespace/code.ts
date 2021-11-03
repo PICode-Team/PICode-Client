@@ -211,6 +211,7 @@ export const terminalStyle = makeStyles((theme: IThemeStyle) =>
         outline: 'none',
       },
       overflow: 'hidden',
+      paddingBottom:"24px"
     },
     resizerBar: {
       height: '10px',

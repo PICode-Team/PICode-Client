@@ -40,6 +40,8 @@ export default function CodeSpace() {
     const [openTerminalCount, setOpenTerminalCount] = React.useState<number>(0);
     const [terminalContent, setTerminalContent] = React.useState<Record<string, string[]>>({});
     const tmpTerminalTest = React.useRef<Record<string, string[]>>({});
+    const tmpTerminalUpdateRef = React.useRef<number>(0);
+    const focusTerminalRef = React.useRef<string>("");
     const [termialUpdate, setTerminalUpdate] = React.useState<number>(0);
 
     const clickToChildren = (viewState: any, name: string[]) => {
@@ -126,6 +128,15 @@ export default function CodeSpace() {
         }
     }, []);
 
+    useEffect(()=>{
+        if(focusTerminalRef.current!==""){
+            let terminal = document.getElementById(`terminal${openTerminalCount}`)
+            if (terminal !== null) {
+                terminal.focus()
+            }
+        }
+    },[termialUpdate])
+
     const fileWebsocketHanlder = (msg: any) => {
         const message = JSON.parse(msg.data);
         if (message.category === "code") {
@@ -159,7 +170,9 @@ export default function CodeSpace() {
                         tmpContent[message.data.uuid as string].push(message.data.message);
                         tmpTerminalTest.current = tmpContent
                     }
-                    setTerminalUpdate(termialUpdate + 1);
+                    tmpTerminalUpdateRef.current+=1;
+                    focusTerminalRef.current=message.data.uuid;
+                    setTerminalUpdate(tmpTerminalUpdateRef.current);
                     break;
                 }
                 case "deleteTerminal": {
