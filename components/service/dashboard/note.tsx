@@ -30,6 +30,8 @@ function NoteView(props: INoteViewProps) {
     if (message.category === 'note') {
       switch (message.type) {
         case 'getNote':
+          console.log(message.data)
+
           setFileView(message.data)
           break
       }
@@ -50,7 +52,7 @@ function NoteView(props: INoteViewProps) {
     } else {
       setWsCheck(wsCheck + 1)
     }
-  }, [])
+  }, [ws?.readyState])
 
   return (
     <div className={classes.note}>
