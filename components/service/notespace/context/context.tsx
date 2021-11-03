@@ -70,6 +70,7 @@ function Context(props: INoteContextProps) {
 
   const handleDeleteClick = (event: any) => {
     event.stopPropagation()
+    deleteNote(contextPosition.target)
     setOpenContext(false)
     getNote()
     setSelectFile(null)

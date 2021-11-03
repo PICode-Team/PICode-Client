@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
-import { clone, cloneDeep } from 'lodash'
-
+import { cloneDeep } from 'lodash'
 import { IconButton } from '@material-ui/core'
 import { DragIndicator, Add, ExpandMoreRounded, Description, Delete } from '@material-ui/icons'
-
 import NoteContext from './context/context'
-import NoteSidebar from './sidebar/sidebar'
 import { noteStyle } from '../../../styles/service/notespace/note'
 import { IContextPosition, IFileView, INoteContent, IPosition } from '../../../types/note.types'
 import { useWs } from '../../context/websocket'
 import DrawDiagram from './content/diagram'
-import { fetchSet } from '../../context/fetch'
-import e from 'express'
 
 const initialPositionState: IPosition = {
   x: 0,
@@ -37,7 +32,7 @@ function Note(props: INoteProps) {
   const { } = props
   const classes = noteStyle()
   const [contextPosition, setContextPosition] = useState<IContextPosition>(initialContextPositionState)
-  const [selectFile, setSelectFile] = useState<any  | null>(null)
+  const [selectFile, setSelectFile] = useState<any>(undefined)
   const [noteList,setNoteList] = React.useState<any>();
   const [sideFileList,setSideFileList] = React.useState<any>();
   const [openNote,setOpenNote] = React.useState<string[]>([]);
@@ -45,6 +40,7 @@ function Note(props: INoteProps) {
   const [openContext, setOpenContext] = useState<boolean>(false)
   const [contextName,setContextName] = useState<string>();
   const [openNum, setOpenNum] = React.useState<number>(0)
+  const selectFileRef=React.useRef<any>();
   const dragId=React.useRef<string>("");
   const ws: any = useWs()
 
@@ -63,13 +59,34 @@ function Note(props: INoteProps) {
     }
   }
 
+  useEffect(()=>{
+    selectFileRef.current=selectFile
+    if(selectFile!==undefined){
+      let node = document.getElementById(`${selectFile.noteId}NoteContent`)
+      if(node!==null){
+        node.textContent=selectFile.content;
+      }
+    }
+    
+    const timer = setInterval(() => {
+      getNote(selectFile?.noteId);
+    }, 1000);
+    return () => {
+        clearInterval(timer);
+    };
+  },[selectFile])
+
   const noteWebSocketHandler = (msg: any) => {
     const message = JSON.parse(msg.data)
 
     if (message.category === 'note') {
       switch (message.type) {
         case 'getNote':
-          setNoteList(message.data)
+          if(selectFileRef.current===undefined){
+            setNoteList(message.data)
+          }else{
+            setSelectFile(message.data[0])
+          }
           break
         case 'updateNote':
           break
@@ -193,12 +210,19 @@ function Note(props: INoteProps) {
             }
           }
           if(!tmpResult){
-            console.log("drop",v.noteId)
+            ws.send(JSON.stringify({
+              category:"note",
+              type:"updateNote",
+              data:{
+                noteId:dragId.current,
+                newNotePath:v.noteId+"/"+dragNote[dragNote.length-1]
+              }
+            }))
+            getNote();
           }
         }}
         onContextMenu={(event)=>{
           event.preventDefault();
-          console.log(1)
           setOpenContext(true);
           setContextPosition({
               x: event.currentTarget.getBoundingClientRect().left,
@@ -235,11 +259,28 @@ function Note(props: INoteProps) {
               paddingLeft:`${16*number+(checkChildren(v.noteId) === "file" ? 24 : 0)}px`
             }}>
               <input placeholder={'untitled'} autoFocus onBlur={(e)=>{
-                console.log(e.target.value)
+                if(e.target.value!==""){
+                  ws.send(JSON.stringify({
+                    category:"note",
+                    type:"createNote",
+                    data:{
+                      path:v.noteId+"/"+e.target.value
+                    }
+                  }))
+                  getNote();
+                }
                 setAddFile(false)
               }} onKeyDown={(e)=>{
                 if(e.key==="Enter"){
-                  console.log(e.currentTarget.value)
+                  ws.send(JSON.stringify({
+                    category:"note",
+                    type:"createNote",
+                    data:{
+                      path:v.noteId+"/"+e.currentTarget.value
+                    }
+                  }))
+                  getNote();
+                  setAddFile(false)
                 }
               }} />
               <IconButton className={classes.delete} onClick={handleDeleteClick}>
@@ -276,13 +317,29 @@ function Note(props: INoteProps) {
            {(addFile && contextPosition.target==="") && 
             <div className={classes.fileRow}>
               <input placeholder={'untitled'} autoFocus onBlur={(e)=>{
-                console.log(e.target.value)
+                if(e.target.value!==""){
+                  ws.send(JSON.stringify({
+                    category:"note",
+                    type:"createNote",
+                    data:{
+                      path:"/"+e.currentTarget.value
+                    }
+                  }))
+                  getNote();
+                }
                 setAddFile(false)
               }} onKeyDown={(e)=>{
                 if(e.key==="Enter"){
-                  console.log(e.currentTarget.value)
+                  ws.send(JSON.stringify({
+                    category:"note",
+                    type:"createNote",
+                    data:{
+                      path:"/"+e.currentTarget.value
+                    }
+                  }))
+                  getNote();
+                  setAddFile(false);
                 }
-                
               }} />
               <IconButton className={classes.delete} onClick={handleDeleteClick}>
                 <Delete className={classes.buttonColor} />
@@ -291,7 +348,7 @@ function Note(props: INoteProps) {
           }
         </div>
       </div>
-      {selectFile !== null && (
+      {selectFile !== undefined && (
         <div id="writeSomeThing" className={classes.content}>
           <div className={classes.title}>
             <div className={classes.titleContent}>
@@ -306,22 +363,35 @@ function Note(props: INoteProps) {
               <DrawDiagram selectFile={selectFile} />
             </div>
           ) : (
-            <>
-            </>
-            // <div className={classes.writeRoot} onKeyDown={handleCtrlZ}>
-            //   <div id="writeContent" className={classes.writeContent} onClick={handleClickContent}>
-            //     {show && (
-            //       <div className={classes.settingTool} style={{ left: position.x, top: position.y }}>
-            //         <div className={classes.settingLine}>
-            //           <span>Title</span>
-            //           <button className={classes.settingButton} onClick={handleClickSetting}>
-            //             H1
-            //           </button>
-            //         </div>
-            //       </div>
-            //     )}
-            //   </div>
-            // </div>
+            <div  className={clsx(classes.contentWrapper)}>
+              <div className={classes.write}>
+                <div 
+                  contentEditable={true}
+                  id={selectFile.noteId+"NoteContent"}
+                  className={clsx(classes.defaultInput)}
+                  onKeyDown={(event) => {
+                  }}
+                  onInput={(e)=>{
+                    let node = document.getElementById(selectFile.noteId)?.focus()
+                    let result = e.currentTarget.innerText
+                    ws.send(
+                      JSON.stringify({
+                        category: 'note',
+                        type: 'saveNote',
+                        data: {
+                          noteData:{
+                            noteId:selectFile.noteId,
+                            content:result
+                          }
+                        },
+                      })
+                    )
+                    getNote(selectFile.noteId)
+                  }}
+                  >
+                  </div>
+              </div>
+            </div>
           )}
         </div>
       )}
