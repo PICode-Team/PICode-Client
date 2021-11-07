@@ -18,11 +18,11 @@ If you are going to start a project, you need a program for document management 
 
 -   code edit function
 
-![module_code](https://user-images.githubusercontent.com/28240077/132558933-19ab1a1d-b240-40b1-bac4-1f18dbdc7f4e.gif)
+![codespacegif](https://user-images.githubusercontent.com/37172677/140647058-60321941-dc6e-4f3c-be4c-9882ad6b657c.gif)
 
 -   chat function
 
-![module_chat](https://user-images.githubusercontent.com/28240077/132558942-65d9b40e-072b-4097-8e30-511b2222bd52.gif)
+![chatspace](https://user-images.githubusercontent.com/37172677/140647008-74eb4717-81dc-49e4-9fec-51b6ca466745.gif)
 
 -   note function
 
@@ -36,19 +36,9 @@ Through PICode real-time communication, you can see in real time where your team
 
 ### Visualization
 
-Through container visualization, you can see all workspace structures and states. In addition, you can simply control network creation, container and network connection, and connection between containers by clicking nodes and buttons.
+Through container visualization, you can see all workspace structures and states. In addition, you can simply control network creation, container and network connection, and connection between containers by clicking nodes and buttons. Also you can turn on and off Container in this page.
 
--   visualization view
-
-![visualization_hover](https://user-images.githubusercontent.com/28240077/132559247-3b0667b1-6486-4267-bc90-1913c6a57f69.gif)
-
--   power on the container through visualization view
-
-![visualization_poweron](https://user-images.githubusercontent.com/28240077/132559253-f06e02dd-362b-4a8e-9410-d1b95ed5ab75.gif)
-
--   connect container to network through visualization view
-
-![visualization_connect](https://user-images.githubusercontent.com/28240077/132559258-15ac563e-d60c-41f2-a6d4-ea24dbf0357a.gif)
+![container3](https://user-images.githubusercontent.com/37172677/140646913-59bcb934-9193-46b7-a31a-62e06f60fbbb.gif)
 
 ### Work without changing environment
 
@@ -74,10 +64,10 @@ Connect with PICode server, input ID and password in the vscode extension. Once 
 2. Create .env file (essential)
 3. Enter in env file. (essential)
 ```
-PORT=frontServerPortNum 
-NEXT_FE_API_URL=be_url
-NEXT_WS_PORT=ws_port
-NEXT_PUBLIC_WS_URL=frontendUrl(not includes port)
+PORT=Front server port
+NEXT_FE_API_URL=Backend server url
+NEXT_PUBLIC_WS_PORT=Plz write websocket port you want 
+NEXT_PUBLIC_WS_URL=Front end URL(not includes port, protocol)
 NODE_ENV=production
 ```
 6. Enter `npm run-script build` on terminal
@@ -99,13 +89,13 @@ Documentation is on our website.
 
 If you want contribute our projcect, please read it!
 
-[contribute](https://github.com/PICode-Team/PICode/blob/develop/contribute.md)
+[contribute](https://github.com/PICode-Team/PICode/blob/develop/contribute)
 
 ## LICENSE
 
 ---
 
-[license](https://github.com/PICode-Team/PICode/blob/develop/license.md/)
+[license](https://github.com/PICode-Team/PICode/blob/develop/license)
 
 ## Contact us
 
