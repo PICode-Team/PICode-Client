@@ -95,7 +95,7 @@ If you want contribute our projcect, please read it!
 
 ---
 
-[license](https://github.com/PICode-Team/PICode/blob/develop/license)
+[license](https://github.com/PICode-Team/PICode-Client/blob/develop/License)
 
 ## Contact us
 
